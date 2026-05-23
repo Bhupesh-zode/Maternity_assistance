@@ -108,6 +108,25 @@ python manage.py runserver
 
 Open **http://127.0.0.1:8000/**
 
+### 7. Pregnancy assistant (Gemini)
+
+1. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey).
+2. Add to `.env`:
+   ```env
+   GEMINI_API_KEY=your_key_here
+   ```
+3. Install the Gemini client (if not already):
+   ```powershell
+   pip install google-generativeai
+   ```
+4. Run migrations (creates `chat_messages` table):
+   ```powershell
+   python manage.py migrate
+   ```
+5. Log in as a user → open **Assistant** in the menu or visit **http://127.0.0.1:8000/user-chat**
+
+The assistant uses **safety rules + curated tips** first; Gemini answers when a key is set. Without a key, quick topics and rule-based replies still work.
+
 ---
 
 ## Daily use
@@ -146,6 +165,8 @@ Hardcoded in `mainapp/views.py` (not stored in MySQL).
 
 New users register at `/register` with status **pending** until an admin approves them.
 
+| **Pregnancy assistant** | http://127.0.0.1:8000/user-chat | Requires user login + `GEMINI_API_KEY` in `.env` (optional) |
+
 ---
 
 ## Main URLs
@@ -158,6 +179,7 @@ New users register at `/register` with status **pending** until an admin approve
 | `/user-dashboard` | User dashboard |
 | `/user-predict` | Childbirth prediction form |
 | `/user-profile` | User profile |
+| `/user-chat` | Pregnancy assistant (Gemini + safety rules) |
 | `/adminlogin` | Admin login |
 | `/admin-dashboard` | Admin dashboard |
 | `/admin-all-users` | Manage users |

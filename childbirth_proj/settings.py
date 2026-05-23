@@ -62,7 +62,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mainapp',
     'adminapp',
-    'userapp'
+    'userapp',
+    'chatapp',
 ]
 
 MIDDLEWARE = [
@@ -148,8 +149,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets/static')]
 
-MEDIA_URL = 'media/'
-MEDIAFILES_DIRS = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Gemini pregnancy assistant (set GEMINI_API_KEY in .env)
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

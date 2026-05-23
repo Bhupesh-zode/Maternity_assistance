@@ -1,0 +1,47 @@
+{
+  "welcome": "Hello! I am your pregnancy wellness assistant. I can share general tips for your journey, explain how to use this app, and remind you about checkups. I cannot diagnose or prescribe — always follow your doctor's advice.",
+  "trimester_1": [
+    "Start or continue folic acid only as prescribed by your doctor.",
+    "Schedule your first antenatal visit if you have not already.",
+    "Rest when tired; mild nausea is common in early pregnancy.",
+    "Avoid alcohol, smoking, and unprescribed medicines.",
+    "Eat small, frequent meals and stay hydrated."
+  ],
+  "trimester_2": [
+    "Attend all scheduled antenatal appointments.",
+    "Continue gentle activity (walking) if your doctor approves.",
+    "Eat protein, iron-rich foods, fruits, and vegetables daily.",
+    "Sleep on your side as your bump grows.",
+    "Watch for swelling; mention sudden severe swelling to your doctor."
+  ],
+  "trimester_3": [
+    "Know your birth plan and discuss delivery options with your provider.",
+    "Pack a hospital bag and plan how you will reach care in labour.",
+    "Monitor baby movements; report reduced movement promptly.",
+    "Rest often; avoid heavy lifting unless cleared by your doctor.",
+    "Learn true labour signs vs practice contractions from your care team."
+  ],
+  "red_flags": [
+    "Heavy vaginal bleeding",
+    "Severe abdominal pain that does not ease",
+    "High fever",
+    "Severe headache with vision changes",
+    "Sudden swelling of face or hands",
+    "Reduced or no baby movements (later pregnancy)",
+    "Leaking fluid before term",
+    "Thoughts of harming yourself — seek urgent help immediately"
+  ],
+  "general_wellness": [
+    "Take prescribed supplements only; do not self-medicate.",
+    "Drink plenty of water through the day.",
+    "Attend every antenatal visit and ask questions.",
+    "Get adequate sleep and manage stress with support from family.",
+    "Use this app's Predict feature only as a guide — your clinician decides care."
+  ],
+  "app_help": {
+    "predict": "Go to Predict in the menu, fill in your health details, and submit. The app suggests a delivery mode using our ML model — discuss results with your doctor.",
+    "profile": "Open My Profile to update your name, contact details, and photo.",
+    "register": "New users register on the site; an admin must approve your account before you can log in.",
+    "pending": "If login says pending, wait for admin approval or contact support."
+  }
+}

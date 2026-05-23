@@ -89,6 +89,7 @@
 				<li class="nav-item active"><a class="nav-link" href="{% url 'user_dash' %}">Dashboard</a></li>    
                 <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' %}">My Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'user_predict' %}">Predict</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'user_chat' %}">Assistant</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Logout</a></li>
 
 			</ul>
@@ -174,12 +175,13 @@
 			<div class="col-lg-4 col-md-6 col-sm-6">
 				<div class="service-item mb-4">
 					<div class="icon d-flex align-items-center">
-						<i class="icofont-laboratory text-lg"></i>
-						<h4 class="mt-3 mb-3">Laboratory services</h4>
+						<i class="icofont-ui-chat text-lg"></i>
+						<h4 class="mt-3 mb-3">Pregnancy Assistant</h4>
 					</div>
 
 					<div class="content">
-						<p class="mb-4">Saepe nulla praesentium eaque omnis perferendis a doloremque.</p>
+						<p class="mb-4">Chat for trimester tips, wellness guidance, and help using this app.</p>
+						<a href="{% url 'user_chat' %}" class="btn btn-main btn-sm">Open assistant</a>
 					</div>
 				</div>
 			</div>

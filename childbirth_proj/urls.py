@@ -18,6 +18,7 @@ from django.urls import path
 from adminapp import views as admin_views
 from mainapp import views as main_views
 from userapp import views as user_views
+from chatapp import views as chat_views
 from django.conf import settings
 from django.conf.urls.static import static 
 
@@ -51,6 +52,7 @@ urlpatterns = [
     path('user-profile', user_views.user_profile, name ="user_profile"),
     path('user-predict', user_views.user_predict, name ="user_predict"),
     path('user_predict_result/<str:result>/<str:con>',user_views.user_predict_result,name="user_predict_result"),
+    path('user-chat', chat_views.user_chat, name='user_chat'),
 
     #BUTTON FUNCTIONS URLS
     path('allow/<int:id>',admin_views.allow,name="allow"),
