@@ -3,7 +3,12 @@ from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 
 from chatapp.models import ChatMessage
-from chatapp.services import generate_assistant_reply, get_quick_reply, load_tips
+from chatapp.services import (
+    generate_assistant_reply,
+    get_predict_help_reply,
+    get_quick_reply,
+    load_tips,
+)
 from chatapp.utils import get_logged_in_user, user_login_required
 
 MAX_HISTORY = 50
@@ -35,16 +40,20 @@ def user_chat(request):
         if quick_key and not user_text:
             user_text = f'[Quick topic: {quick_key.replace("_", " ")}]'
 
-        if quick_key:
+        if quick_key == 'predict_help':
+            assistant_text = get_predict_help_reply(request, tips)
+        elif quick_key:
             assistant_text = get_quick_reply(quick_key, tips)
             if not assistant_text:
-                assistant_text = generate_assistant_reply(user, user_text or quick_key, _get_history(user))
+                assistant_text = generate_assistant_reply(
+                    user, user_text or quick_key, _get_history(user), request
+                )
         else:
             if not user_text:
                 messages.warning(request, 'Please enter a message.')
                 return redirect('user_chat')
             recent = _get_history(user)
-            assistant_text = generate_assistant_reply(user, user_text, recent)
+            assistant_text = generate_assistant_reply(user, user_text, recent, request)
 
         ChatMessage.objects.create(
             user_sno=user.sno, role=ChatMessage.ROLE_USER, content=user_text or quick_key

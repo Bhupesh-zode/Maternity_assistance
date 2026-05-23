@@ -71,3 +71,7 @@ websockets==10.4
 xgboost==1.7.4
 zipp==3.11.0
 google-generativeai>=0.8.0
+
+# ML pickles (*.pkl) were saved with sklearn 1.2.1.
+# On Python 3.13+, pip installs newer sklearn; ml_compat.py patches OrdinalEncoder at load.
+# Long-term: re-export pickles or use Python 3.10 + scikit-learn==1.2.1.

@@ -40,6 +40,7 @@
   ],
   "app_help": {
     "predict": "Go to Predict in the menu, fill in your health details, and submit. The app suggests a delivery mode using our ML model — discuss results with your doctor.",
+    "predict_after": "You have already used Predict in this session.\n\nYour latest ML suggestion: {mode}\n\nThis is a guide only — not a diagnosis. Your doctor will decide the safest delivery plan based on your full checkups, scans, and hospital guidelines.\n\n• Ask your provider what this suggestion means for you.\n• Share any new symptoms or test results at your next visit.\n• To try again with updated numbers, open Predict in the menu and submit the form again.",
     "profile": "Open My Profile to update your name, contact details, and photo.",
     "register": "New users register on the site; an admin must approve your account before you can log in.",
     "pending": "If login says pending, wait for admin approval or contact support."
