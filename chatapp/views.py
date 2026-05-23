@@ -5,7 +5,7 @@ from django.views.decorators.http import require_http_methods
 from chatapp.models import ChatMessage
 from chatapp.services import (
     generate_assistant_reply,
-    get_predict_help_reply,
+    get_predict_guidance_reply,
     get_quick_reply,
     load_tips,
 )
@@ -41,7 +41,7 @@ def user_chat(request):
             user_text = f'[Quick topic: {quick_key.replace("_", " ")}]'
 
         if quick_key == 'predict_help':
-            assistant_text = get_predict_help_reply(request, tips)
+            assistant_text = get_predict_guidance_reply(user, request, tips)
         elif quick_key:
             assistant_text = get_quick_reply(quick_key, tips)
             if not assistant_text:

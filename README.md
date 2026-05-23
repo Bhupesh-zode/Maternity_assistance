@@ -124,7 +124,7 @@ python manage.py check
 python manage.py check_ml_pickles
 ```
 
-This creates Django tables including **`chat_messages`** for the pregnancy assistant (`chatapp`). `check_ml_pickles` verifies ML model files load (optional but useful after setup).
+This creates Django tables including **`chat_messages`** (`chatapp`) and **`user_predictions`** (saved Predict per user). `check_ml_pickles` verifies ML model files load (optional but useful after setup).
 
 ### 6. Run the server
 
@@ -181,9 +181,9 @@ New users register at `/register` with status **pending** until an admin approve
 | Access | User login required (session `sno`) |
 | Gemini | Optional — set `GEMINI_API_KEY` in `.env` |
 | Without API key | Quick topics and rule-based / curated tips still work |
-| After Predict | **About Predict** uses your latest result for this login (stored in session, not the database) |
+| After Predict | **About Predict** and Gemini use your **saved** result and form details from MySQL (`user_predictions`), updated each time you submit Predict |
 
-From the user dashboard, use **Assistant** in the navbar or the **Open assistant** card. Submit **Predict** at least once per login so the assistant can reference your latest ML suggestion.
+From the user dashboard, use **Assistant** in the navbar or the **Open assistant** card. Each account has its own saved prediction; logging in on another browser still loads your data.
 
 ---
 
@@ -213,6 +213,7 @@ From the user dashboard, use **Assistant** in the navbar or the **Open assistant
 - **Logic:** `chatapp/services.py` — emergency phrases, JSON tips, Gemini with model fallbacks
 - **Data:** `chatapp/data/pregnancy_tips.json`
 - **History:** `ChatMessage` model → MySQL table `chat_messages`
+- **Predict memory:** `UserPrediction` model → MySQL table `user_predictions` (one row per user, updated on each Predict submit)
 - **Auth:** Custom session check (`chatapp/utils.py` — `session["sno"]`)
 
 **Safety:** The assistant is informational only, not medical advice. Severe symptoms trigger urgent-care messaging.

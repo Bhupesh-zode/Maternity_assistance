@@ -38,9 +38,86 @@
     "Get adequate sleep and manage stress with support from family.",
     "Use this app's Predict feature only as a guide — your clinician decides care."
   ],
+  "delivery_guidance": {
+    "vacuum_extraction": {
+      "precautions": [
+        "Discuss with your obstetric team why assisted delivery may be considered and what alternatives exist.",
+        "Ask about pain relief options (epidural, local anaesthetic) before the procedure.",
+        "Understand possible effects such as temporary swelling or bruising for you and minor marks for the baby — most heal well."
+      ],
+      "assistance": [
+        "Have a birth partner and clear hospital contact numbers ready.",
+        "Rest and use ice packs on the perineal area as your clinician advises after birth.",
+        "Start gentle movement when approved; accept help with feeding and household tasks in the first weeks.",
+        "Attend postnatal checks and mention any heavy bleeding, fever, or severe pain promptly."
+      ]
+    },
+    "forceps_delivery": {
+      "precautions": [
+        "Review the reasons for forceps with your doctor; ask about risks, benefits, and timing in labour.",
+        "A full bladder is usually emptied before assisted delivery — follow staff instructions.",
+        "Perineal tears or an episiotomy are sometimes needed; ask how tears will be repaired and cared for."
+      ],
+      "assistance": [
+        "Plan recovery time: sitting may be uncomfortable for several days — use cushions and side-lying positions.",
+        "Take prescribed pain relief and stool softeners if recommended to ease healing.",
+        "Watch for infection signs (foul discharge, increasing pain, fever) and seek care early.",
+        "Pelvic floor exercises can often start after your provider clears you — ask at your postnatal visit."
+      ]
+    },
+    "cesarean_birth": {
+      "precautions": [
+        "If this is a planned cesarean, follow fasting and medication instructions from your hospital.",
+        "Ask about blood clots prevention (early mobilisation, stockings, injections if offered).",
+        "Know signs of wound problems: redness spreading, pus, fever, or worsening abdominal pain."
+      ],
+      "assistance": [
+        "Arrange help at home for 2–4 weeks — avoid lifting anything heavier than your baby until cleared.",
+        "Support your incision when coughing or laughing; keep the wound clean and dry as instructed.",
+        "Gradually increase walking to aid recovery; do not drive until your doctor says it is safe.",
+        "Discuss breastfeeding positions that avoid pressure on your abdomen."
+      ]
+    },
+    "emergency_cesarean": {
+      "precautions": [
+        "Emergency cesarean can feel sudden — it is normal to feel shaken; ask staff to explain each step.",
+        "Tell your team about allergies, medications, and if you ate recently.",
+        "After birth, monitoring of you and your baby may be closer — this is routine, not necessarily a complication."
+      ],
+      "assistance": [
+        "Debrief with your provider when you are ready — understanding events can help emotional recovery.",
+        "Accept pain control early; moving your legs and deep breathing help once nurses say it is safe.",
+        "Look for support groups or counselling if the birth was traumatic; partners may need support too.",
+        "Follow up on anaemia, blood pressure, and wound checks at all postnatal appointments."
+      ]
+    },
+    "vaginal_birth": {
+      "precautions": [
+        "Continue antenatal visits; discuss labour signs (contractions, waters breaking, bleeding).",
+        "Know when to go to hospital: regular painful contractions, bleeding, reduced baby movements, or concerns your doctor listed.",
+        "Prepare for perineal care: maternity pads, comfortable clothing, and questions about tearing or episiotomy."
+      ],
+      "assistance": [
+        "Practise breathing and comfort measures taught in antenatal classes or by your midwife.",
+        "Stay hydrated and eat light energy foods in early labour if your provider allows.",
+        "Skin-to-skin contact soon after birth supports bonding and feeding when clinically safe.",
+        "Rest when the baby sleeps; ask visitors to help with meals and chores."
+      ]
+    },
+    "default": {
+      "precautions": [
+        "Treat the app's suggestion as one input only — your care team makes the final decision.",
+        "Keep all antenatal appointments and bring a list of questions about delivery options."
+      ],
+      "assistance": [
+        "Build a simple birth plan with your preferences and flexibility for medical needs.",
+        "Pack essentials for hospital and know your route to maternity care.",
+        "Identify who will support you during labour and after you return home."
+      ]
+    }
+  },
   "app_help": {
-    "predict": "Go to Predict in the menu, fill in your health details, and submit. The app suggests a delivery mode using our ML model — discuss results with your doctor.",
-    "predict_after": "You have already used Predict in this session.\n\nYour latest ML suggestion: {mode}\n\nThis is a guide only — not a diagnosis. Your doctor will decide the safest delivery plan based on your full checkups, scans, and hospital guidelines.\n\n• Ask your provider what this suggestion means for you.\n• Share any new symptoms or test results at your next visit.\n• To try again with updated numbers, open Predict in the menu and submit the form again.",
+    "predict": "Go to Predict in the menu, fill in your health details, and submit. The app suggests a delivery mode using our ML model — then use About Predict here for precautions and support tips.",
     "profile": "Open My Profile to update your name, contact details, and photo.",
     "register": "New users register on the site; an admin must approve your account before you can log in.",
     "pending": "If login says pending, wait for admin approval or contact support."

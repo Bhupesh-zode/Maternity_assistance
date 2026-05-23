@@ -25,6 +25,13 @@ EMERGENCY_PATTERNS = [
 
 TIPS_PATH = Path(__file__).resolve().parent / 'data' / 'pregnancy_tips.json'
 
+GEMINI_MODEL_FALLBACKS = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash-lite',
+    'gemini-2.0-flash',
+    'gemini-1.5-flash',
+]
+
 SYSTEM_PROMPT = """You are a supportive pregnancy wellness assistant for the Maternity Assistance web app.
 
 Rules (always follow):
@@ -58,27 +65,158 @@ def _format_bullets(items):
     return '\n'.join(f'• {item}' for item in items)
 
 
+def format_chat_plaintext(text):
+    """Normalize model output for the chat UI (plain text, single-level bullets)."""
+    if not text:
+        return text
+    lines = []
+    for raw in text.replace('\r\n', '\n').split('\n'):
+        line = raw.strip()
+        if not line:
+            lines.append('')
+            continue
+        line = re.sub(r'\*\*([^*]+)\*\*', r'\1', line)
+        line = re.sub(r'\*([^*]+)\*', r'\1', line)
+        if re.match(r'^[-*]\s+', line):
+            line = '• ' + line.lstrip('-* ').strip()
+        elif re.match(r'^\*\s+\*', line):
+            line = '• ' + line.replace('*', '', 2).strip()
+        lines.append(line)
+    out = '\n'.join(lines)
+    while '\n\n\n' in out:
+        out = out.replace('\n\n\n', '\n\n')
+    return out.strip()
+
+
 def get_last_prediction(request):
     if request is None:
         return None
-    data = request.session.get('last_prediction')
-    if not isinstance(data, dict):
+    user_sno = request.session.get('sno')
+    if user_sno is None:
         return None
-    mode = (data.get('mode') or '').strip()
-    if not mode:
-        return None
-    return data
+    from userapp.prediction_store import get_user_prediction
+
+    return get_user_prediction(user_sno)
 
 
-def get_predict_help_reply(request, tips):
+def _normalize_delivery_key(mode):
+    m = (mode or '').lower()
+    if 'vacuum' in m:
+        return 'vacuum_extraction'
+    if 'forceps' in m:
+        return 'forceps_delivery'
+    if 'emergency' in m and 'cesarean' in m:
+        return 'emergency_cesarean'
+    if 'cesarean' in m:
+        return 'cesarean_birth'
+    if 'vaginal' in m:
+        return 'vaginal_birth'
+    return 'default'
+
+
+def _rule_based_delivery_guidance(mode, tips, user_name=None):
+    guidance = tips.get('delivery_guidance', {})
+    key = _normalize_delivery_key(mode)
+    block = guidance.get(key) or guidance.get('default', {})
+    precautions = block.get('precautions', [])
+    assistance = block.get('assistance', [])
+    greeting = f'Hi {user_name},\n\n' if user_name else ''
+
+    lines = [
+        f'{greeting}Your app\'s ML suggestion: {mode}',
+        '(Guide only — not a diagnosis. Your doctor decides your delivery plan.)',
+        '',
+        'PRECAUTIONS',
+        _format_bullets(precautions),
+        '',
+        'SUPPORT & RECOVERY',
+        _format_bullets(assistance),
+        '',
+        'WHEN TO SEEK URGENT CARE',
+        '• Heavy bleeding, severe or worsening pain, high fever',
+        '• Sudden fluid leakage or concerns about baby\'s movement',
+        '• Any symptom your maternity team told you to report immediately',
+    ]
+    return '\n'.join(lines)
+
+
+def get_gemini_predict_guidance(user_name, mode, form_data):
+    """Precautions and assistance for the saved prediction — no form field dump."""
+    api_key = os.environ.get('GEMINI_API_KEY', '').strip()
+    if not api_key:
+        return None
+
+    try:
+        import google.generativeai as genai
+    except ImportError:
+        return None
+
+    # Short internal context for the model only (not echoed as a data list).
+    context_bits = []
+    fd = form_data or {}
+    if fd.get('Gestational'):
+        context_bits.append(f"gestational age about {fd['Gestational']} weeks")
+    if fd.get('parity') is not None:
+        context_bits.append(f"parity {fd['parity']}")
+    if str(fd.get('Number_of_previous_Cesarean', '')).strip() not in ('', '0'):
+        context_bits.append('has previous cesarean history')
+    clinical_hint = ', '.join(context_bits) if context_bits else 'no extra clinical detail'
+
+    prompt = (
+        f"You are a pregnancy wellness assistant speaking to {user_name}.\n"
+        f"The ML model suggested this delivery mode: {mode}\n"
+        f"Internal context only (do not list as form fields): {clinical_hint}.\n\n"
+        "Write a plain-text reply. STRICT formatting rules:\n"
+        "- No markdown, no **bold**, no nested lists, no numbered lists\n"
+        "- Line 1: Hi {name}, + one sentence naming {mode} and that this is not a diagnosis\n"
+        "- Then exactly these section headers on their own line:\n"
+        "  PRECAUTIONS\n"
+        "  SUPPORT & RECOVERY\n"
+        "  WHEN TO SEEK URGENT CARE\n"
+        "- Under each header, 3-4 bullet lines starting with the character •\n"
+        "- Do NOT mention exploring the app, app features, or antenatal checkups in general\n"
+        "- Focus only on precautions and practical help for {mode}\n"
+        "- Maximum 220 words\n"
+    ).format(name=user_name, mode=mode)
+
+    preferred = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash').strip()
+    models_to_try = [preferred] if preferred else []
+    for name in GEMINI_MODEL_FALLBACKS:
+        if name not in models_to_try:
+            models_to_try.append(name)
+
+    genai.configure(api_key=api_key)
+    for model_name in models_to_try:
+        try:
+            model = genai.GenerativeModel(model_name)
+            response = model.generate_content(prompt)
+            text = format_chat_plaintext((response.text or '').strip())
+            if text and mode.lower() in text.lower():
+                return text
+        except Exception:
+            continue
+    return None
+
+
+def get_predict_guidance_reply(user, request, tips):
+    """Precautions and patient assistance for the user's saved Predict result."""
     last = get_last_prediction(request)
-    if last:
-        template = tips['app_help'].get(
-            'predict_after',
-            'Your latest ML suggestion: {mode}. Discuss this with your doctor.',
-        )
-        return template.format(mode=last['mode'])
-    return tips['app_help']['predict']
+    if not last:
+        return tips['app_help']['predict']
+
+    mode = last['mode']
+    # Curated tips: consistent plain-text sections (no markdown / nested lists).
+    return _rule_based_delivery_guidance(mode, tips, user.name)
+
+
+def get_predict_help_reply(user, request, tips):
+    """Alias for predict quick-topic and keyword handling."""
+    if user is None:
+        last = get_last_prediction(request)
+        if last:
+            return _rule_based_delivery_guidance(last['mode'], tips, None)
+        return tips['app_help']['predict']
+    return get_predict_guidance_reply(user, request, tips)
 
 
 def _predict_keywords_in(text):
@@ -102,7 +240,7 @@ def _predict_keywords_in(text):
     )
 
 
-def match_rule_reply(text, tips, request=None):
+def match_rule_reply(text, tips, request=None, user=None):
     lowered = text.lower()
 
     if any(w in lowered for w in ('red flag', 'warning sign', 'danger', 'emergency sign')):
@@ -118,7 +256,7 @@ def match_rule_reply(text, tips, request=None):
         return 'Third trimester tips:\n' + _format_bullets(tips['trimester_3'])
 
     if _predict_keywords_in(text):
-        return get_predict_help_reply(request, tips)
+        return get_predict_help_reply(user, request, tips)
 
     if any(w in lowered for w in ('profile', 'update photo', 'my account')):
         return tips['app_help']['profile']
@@ -154,10 +292,12 @@ def _prediction_context_for_prompt(request):
     last = get_last_prediction(request)
     if not last:
         return ''
+    from userapp.prediction_store import format_prediction_context_for_ai
+
     return (
-        f"\nApp context: The user completed Predict recently. "
-        f"Latest ML-suggested delivery mode: {last['mode']}. "
-        "If they ask about predict or their result, refer to this and stress it is not a diagnosis.\n"
+        '\nApp context (saved Predict data for this user):\n'
+        + format_prediction_context_for_ai(last)
+        + '\nIf they ask about predict or their result, use the above and stress it is not a diagnosis.\n'
     )
 
 
@@ -167,14 +307,6 @@ def _history_for_gemini(recent_messages):
         prefix = 'User' if msg.role == 'user' else 'Assistant'
         lines.append(f'{prefix}: {msg.content}')
     return '\n'.join(lines)
-
-
-GEMINI_MODEL_FALLBACKS = [
-    'gemini-2.5-flash',
-    'gemini-2.0-flash-lite',
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
-]
 
 
 def get_gemini_reply(user_name, user_message, recent_messages, request=None):
@@ -210,7 +342,7 @@ def get_gemini_reply(user_name, user_message, recent_messages, request=None):
         try:
             model = genai.GenerativeModel(model_name)
             response = model.generate_content(prompt)
-            text = (response.text or '').strip()
+            text = format_chat_plaintext((response.text or '').strip())
             if text:
                 return text
         except Exception as exc:
@@ -239,7 +371,7 @@ def generate_assistant_reply(user, user_message, recent_messages, request=None):
     if gemini:
         return gemini
 
-    quick = match_rule_reply(text, tips, request)
+    quick = match_rule_reply(text, tips, request, user)
     if quick:
         return quick
 
