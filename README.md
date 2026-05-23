@@ -240,6 +240,7 @@ Maternity_assistance/
 ├── y_encoder.pkl          # label encoder
 ├── XGB.pkl                # trained XGBoost model
 ├── manage.py
+├── ml_compat.py           # sklearn 1.2.x pickle loader (user + admin predict)
 ├── requirements.txt
 ├── .env.example           # template — copy to .env
 └── .venv/                 # local virtual environment (gitignored)
@@ -323,7 +324,27 @@ Ensure `GEMINI_API_KEY` is set in `.env` for AI replies. Check the terminal for 
 
 ### Prediction errors after form submit
 
-Often caused by scikit-learn / XGBoost version mismatch with the `.pkl` files. Use the versions in `requirements.txt`, or retrain/export models with your installed library versions.
+**`'OrdinalEncoder' object has no attribute '_infrequent_enabled'`**
+
+The `.pkl` files were saved with **scikit-learn 1.2.1**, but Python 3.13 often installs a newer sklearn (e.g. 1.8). The app patches encoders on load in `ml_compat.py`. Restart `runserver` after pulling this fix, then submit the predict form again.
+
+If you still see errors, check versions:
+
+```powershell
+python -c "import sklearn, xgboost; print(sklearn.__version__, xgboost.__version__)"
+```
+
+Long-term fix: re-export `encoder_newf.pkl`, `y_encoder.pkl`, and `XGB.pkl` with the same sklearn/xgboost versions you use in production.
+
+**Smoke test** (loads all pickles + one sample prediction):
+
+```powershell
+python manage.py check_ml_pickles
+```
+
+Shared loader: `ml_compat.py` (used by `userapp` and `adminapp`).
+
+**Note:** Admin “Gradient Boost” (`GradientBoostingClassifier.pkl`) may not load on sklearn 1.8+; XGBoost and logistic regression admin runs use the same compat loader for encoders.
 
 ---
 

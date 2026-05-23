@@ -58,7 +58,51 @@ def _format_bullets(items):
     return '\n'.join(f'• {item}' for item in items)
 
 
-def match_rule_reply(text, tips):
+def get_last_prediction(request):
+    if request is None:
+        return None
+    data = request.session.get('last_prediction')
+    if not isinstance(data, dict):
+        return None
+    mode = (data.get('mode') or '').strip()
+    if not mode:
+        return None
+    return data
+
+
+def get_predict_help_reply(request, tips):
+    last = get_last_prediction(request)
+    if last:
+        template = tips['app_help'].get(
+            'predict_after',
+            'Your latest ML suggestion: {mode}. Discuss this with your doctor.',
+        )
+        return template.format(mode=last['mode'])
+    return tips['app_help']['predict']
+
+
+def _predict_keywords_in(text):
+    lowered = text.lower()
+    return any(
+        w in lowered
+        for w in (
+            'predict',
+            'prediction',
+            'delivery mode',
+            'cesarean',
+            'c-section',
+            'normal delivery',
+            'childbirth result',
+            'my result',
+            'already filled',
+            'already submitted',
+            'filled the form',
+            'submitted the form',
+        )
+    )
+
+
+def match_rule_reply(text, tips, request=None):
     lowered = text.lower()
 
     if any(w in lowered for w in ('red flag', 'warning sign', 'danger', 'emergency sign')):
@@ -73,8 +117,8 @@ def match_rule_reply(text, tips):
     if any(w in lowered for w in ('trimester 3', 'third trimester', 'late pregnancy', '3rd trimester')):
         return 'Third trimester tips:\n' + _format_bullets(tips['trimester_3'])
 
-    if any(w in lowered for w in ('predict', 'prediction', 'delivery mode', 'cesarean', 'c-section', 'normal delivery')):
-        return tips['app_help']['predict']
+    if _predict_keywords_in(text):
+        return get_predict_help_reply(request, tips)
 
     if any(w in lowered for w in ('profile', 'update photo', 'my account')):
         return tips['app_help']['profile']
@@ -102,9 +146,19 @@ def get_quick_reply(quick_key, tips):
         'trimester_3': 'Third trimester tips:\n' + _format_bullets(tips['trimester_3']),
         'red_flags': 'Seek care immediately if you notice:\n' + _format_bullets(tips['red_flags']),
         'wellness': 'General wellness:\n' + _format_bullets(tips['general_wellness']),
-        'predict_help': tips['app_help']['predict'],
     }
     return mapping.get(quick_key)
+
+
+def _prediction_context_for_prompt(request):
+    last = get_last_prediction(request)
+    if not last:
+        return ''
+    return (
+        f"\nApp context: The user completed Predict recently. "
+        f"Latest ML-suggested delivery mode: {last['mode']}. "
+        "If they ask about predict or their result, refer to this and stress it is not a diagnosis.\n"
+    )
 
 
 def _history_for_gemini(recent_messages):
@@ -123,7 +177,7 @@ GEMINI_MODEL_FALLBACKS = [
 ]
 
 
-def get_gemini_reply(user_name, user_message, recent_messages):
+def get_gemini_reply(user_name, user_message, recent_messages, request=None):
     api_key = os.environ.get('GEMINI_API_KEY', '').strip()
     if not api_key:
         return None
@@ -145,6 +199,7 @@ def get_gemini_reply(user_name, user_message, recent_messages):
     history = _history_for_gemini(recent_messages[-10:])
     prompt = (
         SYSTEM_PROMPT.format(user_name=user_name)
+        + _prediction_context_for_prompt(request)
         + '\n\nRecent conversation:\n'
         + (history or '(no prior messages)')
         + f'\n\nUser: {user_message}\n\nAssistant:'
@@ -170,7 +225,7 @@ def get_gemini_reply(user_name, user_message, recent_messages):
     return None
 
 
-def generate_assistant_reply(user, user_message, recent_messages):
+def generate_assistant_reply(user, user_message, recent_messages, request=None):
     tips = load_tips()
     text = (user_message or '').strip()
     if not text:
@@ -180,11 +235,11 @@ def generate_assistant_reply(user, user_message, recent_messages):
     if emergency:
         return emergency
 
-    gemini = get_gemini_reply(user.name, text, recent_messages)
+    gemini = get_gemini_reply(user.name, text, recent_messages, request)
     if gemini:
         return gemini
 
-    quick = match_rule_reply(text, tips)
+    quick = match_rule_reply(text, tips, request)
     if quick:
         return quick
 

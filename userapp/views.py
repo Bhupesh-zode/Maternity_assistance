@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from mainapp.models import mainModel
 from django.contrib import messages
-from pickle import load
 import pandas as pd
-from sklearn.preprocessing import OrdinalEncoder
+
+from ml_compat import load_sklearn_pickle
 
 
 
@@ -107,8 +107,8 @@ def user_predict(request):
                                 'CARDIOTOCOGRAPHY  ':Cardiotocography,'MATERNAL EDUCATION':Maternal_Education}
         df = pd.DataFrame(data, index=[0])
 
-        encoder=load(open('encoder_newf.pkl','rb'))
-        y_encoder=load(open('y_encoder.pkl','rb'))
+        encoder = load_sklearn_pickle('encoder_newf.pkl')
+        y_encoder = load_sklearn_pickle('y_encoder.pkl')
         print(df,'llllllllllllllllllllllllllllllllllllllllllllllllllllllll')
 
  
@@ -147,7 +147,7 @@ def user_predict(request):
         
         # X=encoder.transform(df)
 
-        model = load(open('XGB.pkl','rb'))
+        model = load_sklearn_pickle('XGB.pkl')
         prediction=model.predict(df)
         
 
@@ -157,6 +157,11 @@ def user_predict(request):
 
 
         con = type[0]
+        request.session['last_prediction'] = {
+            'mode': con,
+            'summary': f'The best way of child birth is {con}',
+        }
+        request.session.modified = True
         messages.success(request,f'The best way of child birth is  {type[0]}')
         resul=f'The best way of child birth is  {type[0]}'
         return redirect('user_predict_result',resul,con)

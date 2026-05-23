@@ -5,8 +5,9 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 import pandas as pd
-from pickle import load
 from sklearn.model_selection import train_test_split
+
+from ml_compat import load_sklearn_pickle
 from sklearn.metrics import accuracy_score,f1_score, recall_score, precision_score, auc, roc_auc_score, roc_curve
 # Create your views here.
 
@@ -114,12 +115,12 @@ def ada_runalgo(request,id):
     # print(file,'kjhgdfdfghjkhgfdhhhhhhhhhhhhhhhhhhhhhhhhhh')
     df=pd.read_csv(file)
     df['NUMBER OF PREV CESAREAN'] = df['NUMBER OF PREV CESAREAN'].astype('object')
-    encoder=load(open('encoder.pkl','rb'))
-    y_encoder=load(open('y_encoder.pkl','rb'))
+    encoder = load_sklearn_pickle('encoder.pkl')
+    y_encoder = load_sklearn_pickle('y_encoder.pkl')
     X=encoder.transform(df.drop(['TYPE OF BIRTH    '],axis=1))
     Y=y_encoder.transform(df[['TYPE OF BIRTH    ']])
     x_train,x_test,y_train,y_test=train_test_split(X,Y,test_size=0.2,random_state=0)
-    model = load(open('GradientBoostingClassifier.pkl','rb'))
+    model = load_sklearn_pickle('GradientBoostingClassifier.pkl')
     prediction=model.predict(x_test)
     Accuracy = accuracy_score(prediction,y_test)
     precision = precision_score(prediction,y_test,average = 'macro')
@@ -141,14 +142,14 @@ def xg_runalgo(request,id):
     df=pd.read_csv(file)
     print(len(df.columns),'ghfhfhfhfyfhc')
     df['NUMBER OF PREV CESAREAN'] = df['NUMBER OF PREV CESAREAN'].astype('object')
-    encoder=load(open('encoder.pkl','rb'))
-    y_encoder=load(open('y_encoder.pkl','rb'))
+    encoder = load_sklearn_pickle('encoder.pkl')
+    y_encoder = load_sklearn_pickle('y_encoder.pkl')
     
     X=encoder.transform(df.drop(['TYPE OF BIRTH    '],axis=1))
     Y=y_encoder.transform(df[['TYPE OF BIRTH    ']])
     x_train,x_test,y_train,y_test=train_test_split(X,Y,test_size=0.2,random_state=0)
 
-    model = load(open('XGB.pkl','rb'))
+    model = load_sklearn_pickle('XGB.pkl')
     prediction=model.predict(x_test)
     Accuracy = accuracy_score(prediction,y_test)
     precision = precision_score(prediction,y_test,average = 'macro')
@@ -171,12 +172,12 @@ def lr_runalgo(request,id):
     # print(len(df.columns),'ghfhfhfhfyfhc')
     df['NUMBER OF PREV CESAREAN'] = df['NUMBER OF PREV CESAREAN'].astype('object')
 
-    encoder=load(open('encoder.pkl','rb'))
-    y_encoder=load(open('y_encoder.pkl','rb'))
+    encoder = load_sklearn_pickle('encoder.pkl')
+    y_encoder = load_sklearn_pickle('y_encoder.pkl')
     X=encoder.transform(df.drop(['TYPE OF BIRTH    '],axis=1))
     Y=y_encoder.transform(df[['TYPE OF BIRTH    ']])
     x_train,x_test,y_train,y_test=train_test_split(X,Y,test_size=0.2,random_state=0)
-    model = load(open('LogisticRegression.pkl','rb'))
+    model = load_sklearn_pickle('LogisticRegression.pkl')
     prediction=model.predict(x_test)
     Accuracy = accuracy_score(prediction,y_test)
     precision = precision_score(prediction,y_test,average = 'macro')
