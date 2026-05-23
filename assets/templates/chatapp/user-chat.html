@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pregnancy Assistant</title>
+  <link rel="stylesheet" href="{% static 'userapp/plugins/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'userapp/plugins/icofont/icofont.min.css' %}">
+  <link rel="stylesheet" href="{% static 'userapp/css/style.css' %}">
+  <style>
+    .chat-wrap { max-width: 900px; margin: 0 auto; }
+    .chat-log {
+      height: 420px;
+      overflow-y: auto;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .chat-bubble {
+      max-width: 85%;
+      padding: 0.65rem 1rem;
+      border-radius: 12px;
+      margin-bottom: 0.75rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .chat-bubble.user {
+      background: #223a66;
+      color: #fff;
+      margin-left: auto;
+    }
+    .chat-bubble.assistant {
+      background: #fff;
+      border: 1px solid #dee2e6;
+      color: #333;
+    }
+    .chat-meta { font-size: 0.75rem; opacity: 0.75; margin-bottom: 0.25rem; }
+    .quick-btn { margin: 0.25rem; }
+    .disclaimer-box {
+      background: #fff3cd;
+      border: 1px solid #ffecb5;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body id="top">
+
+<header>
+  <nav class="navbar navbar-expand-lg navigation mb-2" id="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'user_dash' %}">
+        <img src="{% static 'userapp/images/resized.png' %}" alt="" class="img-fluid" style="max-height: 48px;">
+      </a>
+      <div class="collapse navbar-collapse show">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'user_dash' %}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' %}">My Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'user_predict' %}">Predict</a></li>
+          <li class="nav-item active"><a class="nav-link" href="{% url 'user_chat' %}">Assistant</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<section class="page-title bg-2">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block text-center">
+          <h1 class="text-capitalize mb-3 text-lg">Pregnancy Journey Assistant</h1>
+          <p class="text-white mb-0">Hello, {{ user.name }} — ask for general tips and app help.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-4 pb-5">
+  <div class="container chat-wrap">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+    <div class="disclaimer-box mb-3">
+      <strong>Important:</strong> {{ disclaimer }}
+    </div>
+
+    <div class="chat-log mb-3" id="chatLog">
+      {% if chat_messages %}
+        {% for msg in chat_messages %}
+          <div class="d-flex flex-column {% if msg.role == 'user' %}align-items-end{% else %}align-items-start{% endif %}">
+            <span class="chat-meta">{% if msg.role == 'user' %}You{% else %}Assistant{% endif %} · {{ msg.created_at|date:"M d, H:i" }}</span>
+            <div class="chat-bubble {{ msg.role }}">{{ msg.content }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted mb-0">No messages yet. Say hello or pick a topic below.</p>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <form method="post" class="d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="send">
+        <input type="hidden" name="quick" value="trimester_1">
+        <button type="submit" class="btn btn-outline-primary btn-sm quick-btn">1st trimester</button>
+      </form>
+      <form method="post" class="d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="send">
+        <input type="hidden" name="quick" value="trimester_2">
+        <button type="submit" class="btn btn-outline-primary btn-sm quick-btn">2nd trimester</button>
+      </form>
+      <form method="post" class="d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="send">
+        <input type="hidden" name="quick" value="trimester_3">
+        <button type="submit" class="btn btn-outline-primary btn-sm quick-btn">3rd trimester</button>
+      </form>
+      <form method="post" class="d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="send">
+        <input type="hidden" name="quick" value="red_flags">
+        <button type="submit" class="btn btn-outline-danger btn-sm quick-btn">Red flags</button>
+      </form>
+      <form method="post" class="d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="send">
+        <input type="hidden" name="quick" value="predict_help">
+        <button type="submit" class="btn btn-outline-secondary btn-sm quick-btn">About Predict</button>
+      </form>
+      <form method="post" class="d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="send">
+        <input type="hidden" name="quick" value="wellness">
+        <button type="submit" class="btn btn-outline-secondary btn-sm quick-btn">Wellness tips</button>
+      </form>
+    </div>
+
+    <form method="post" class="mb-2">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="send">
+      <div class="input-group">
+        <input type="text" name="message" class="form-control" placeholder="Ask about your pregnancy journey..." autocomplete="off" maxlength="2000">
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-main">Send</button>
+        </div>
+      </div>
+    </form>
+
+    <form method="post" class="text-right">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="clear">
+      <button type="submit" class="btn btn-link btn-sm text-danger" onclick="return confirm('Clear all chat history?');">Clear history</button>
+    </form>
+  </div>
+</section>
+
+<script src="{% static 'userapp/plugins/jquery/jquery.js' %}"></script>
+<script src="{% static 'userapp/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script>
+  var log = document.getElementById('chatLog');
+  if (log) { log.scrollTop = log.scrollHeight; }
+</script>
+</body>
+</html>
