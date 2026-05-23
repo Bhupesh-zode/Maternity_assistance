@@ -40,16 +40,21 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 
 pip install --upgrade pip
-pip install -r requirements.txt
 ```
 
-> Ignore old folders `childenv3.11.1` and `env_testing3` if present — they were copied from another machine. Use **`.venv`** only.
-
-Minimal install (core packages only):
+**Recommended (Python 3.10–3.13)** — core app only; avoids broken pins in the full freeze:
 
 ```powershell
 pip install Django==4.1.7 pandas scikit-learn xgboost Pillow mysqlclient google-generativeai
 ```
+
+Optional full lockfile (may fail on Python 3.13, e.g. `PyYAML==6.0` build errors):
+
+```powershell
+pip install -r requirements.txt
+```
+
+> Use **`.venv`** only. Ignore old folders `childenv3.11.1` / `env_testing3` if you copied them from another machine.
 
 ### 2. Start MySQL
 
@@ -116,9 +121,10 @@ Database connection (`childbirth_proj/settings.py`):
 .\.venv\Scripts\Activate.ps1
 python manage.py migrate
 python manage.py check
+python manage.py check_ml_pickles
 ```
 
-This creates Django tables including **`chat_messages`** for the pregnancy assistant (`chatapp`).
+This creates Django tables including **`chat_messages`** for the pregnancy assistant (`chatapp`). `check_ml_pickles` verifies ML model files load (optional but useful after setup).
 
 ### 6. Run the server
 
@@ -175,8 +181,9 @@ New users register at `/register` with status **pending** until an admin approve
 | Access | User login required (session `sno`) |
 | Gemini | Optional — set `GEMINI_API_KEY` in `.env` |
 | Without API key | Quick topics and rule-based / curated tips still work |
+| After Predict | **About Predict** uses your latest result for this login (stored in session, not the database) |
 
-From the user dashboard, use **Assistant** in the navbar or the **Open assistant** card.
+From the user dashboard, use **Assistant** in the navbar or the **Open assistant** card. Submit **Predict** at least once per login so the assistant can reference your latest ML suggestion.
 
 ---
 
@@ -241,7 +248,8 @@ Maternity_assistance/
 ├── XGB.pkl                # trained XGBoost model
 ├── manage.py
 ├── ml_compat.py           # sklearn 1.2.x pickle loader (user + admin predict)
-├── requirements.txt
+├── userapp/management/commands/check_ml_pickles.py
+├── requirements.txt       # full freeze; use minimal pip install on Python 3.13
 ├── .env.example           # template — copy to .env
 └── .venv/                 # local virtual environment (gitignored)
 ```
@@ -273,7 +281,7 @@ Expected output: `/user-chat`
 
 Run PowerShell **as Administrator**.
 
-### MySQL stops immediately — `Permission denied` on `BHUSHAN-bin.index`
+### MySQL stops immediately — `Permission denied` on `*-bin.index`
 
 Grant the service account access to the data folder (Admin PowerShell):
 
@@ -282,7 +290,7 @@ icacls "C:\ProgramData\MySQL\MySQL Server 8.0\Data" /grant "NT AUTHORITY\NETWORK
 net start MySQL80
 ```
 
-Optional: comment out `log-bin="BHUSHAN-bin"` in `C:\ProgramData\MySQL\MySQL Server 8.0\my.ini` if binary logging is not needed.
+Optional: disable binary logging in `C:\ProgramData\MySQL\MySQL Server 8.0\my.ini` (e.g. comment out `log-bin=...`) if you do not need replication logs.
 
 ### `ERROR 1045` — Access denied for `root`
 
@@ -321,6 +329,10 @@ python manage.py migrate chatapp
 ```
 
 Ensure `GEMINI_API_KEY` is set in `.env` for AI replies. Check the terminal for Gemini quota or API errors.
+
+### `pip install -r requirements.txt` fails on `PyYAML` (Python 3.13)
+
+The committed lockfile includes old packages (Sphinx, PyQt5, `PyYAML==6.0`, etc.) that the app does not need. Use the **recommended minimal install** in [First-time setup](#1-clone-and-virtual-environment) instead.
 
 ### Prediction errors after form submit
 
@@ -374,10 +386,12 @@ notepad .env
 
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install --upgrade pip
+pip install Django==4.1.7 pandas scikit-learn xgboost Pillow mysqlclient google-generativeai
 
-# Import childbirth.sql, then:
+# Import childbirth.sql, set .env, then:
 python manage.py migrate
+python manage.py check_ml_pickles
 python manage.py runserver
 ```
 
@@ -393,8 +407,6 @@ git push -u origin feature/short-description
 ```
 
 Open a **Pull Request** on GitHub to merge into `main`. Review, merge, then `git pull` on `main`.
-
-**Chatbot feature branch (example):** `Feature-Chatbot-integration-for-safe-Pregnancy-Planning`
 
 ### What is tracked in Git
 
