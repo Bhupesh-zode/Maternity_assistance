@@ -1,0 +1,451 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="description" content="healthcare, pregnancy, Childbirth, newborn, baby">
+  <meta name="author" content="codebook.in">
+
+  <title>Prediction</title>
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'userapp/images/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'userapp/images/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'userapp/images/favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static 'userapp/images/site.webmanifest' %}">
+  <link rel="mask-icon" href="{% static 'userapp/images/safari-pinned-tab.svg' %}" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- bootstrap.min css -->
+  <link rel="stylesheet" href="{% static 'userapp/plugins/bootstrap/css/bootstrap.min.css' %}">
+  <!-- Icon Font CSS -->
+  <link rel="stylesheet" href="{% static 'userapp/plugins/icofont/icofont.min.css' %}">
+  <!-- Slick Slider  CSS -->
+  <link rel="stylesheet" href="{% static 'userapp/plugins/slick-carousel/slick/slick.css' %}">
+  <link rel="stylesheet" href="{% static 'userapp/plugins/slick-carousel/slick/slick-theme.css' %}">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{% static 'userapp/css/style.css' %}">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+</head>
+
+<body id="top">
+
+  {% csrf_token %}
+  {% if messages %}
+  {% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+  
+  <script>swal({
+          title: "Successfull!",
+          text: "{{message}}",
+          icon: "success",
+          button: "OK",
+      });
+  </script>
+  
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+  <script>swal({
+          title: "Warning :)",
+          text: "{{message}}",
+          icon: "warning",
+          button: "OK",
+      });
+  </script>
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+  <script>swal({
+          title: "error :)",
+          text: "{{message}}",
+          icon: "error",
+          button: "OK",
+      });
+  </script>
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+  <script>swal({
+          title: "error :)",
+          text: "{{message}}",
+          icon: "error",
+          button: "OK",
+      });
+  </script>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+<header>
+	
+	<nav class="navbar navbar-expand-lg navigation mb-2" id="navbar">
+		<div class="container">
+		 	 <a class="navbar-brand" href="#">
+			  	<img src="{% static 'userapp/images/resized.png' %}" alt="" class="img-fluid">
+			  </a>
+
+		  	<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarmain" aria-controls="navbarmain" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="icofont-navigation-menu"></span>
+		  </button>
+	  
+		  <div class="collapse navbar-collapse" id="navbarmain">
+			<ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'user_dash' %}">Dashboard</a></li>    
+                <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' %}">My Profile</a></li>
+                <li class="nav-item active"><a class="nav-link" href="{% url 'user_predict' %}">Predict</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Logout</a></li>
+            </ul>
+		  </div>
+		</div>
+	</nav>
+</header>
+	
+
+
+
+<!-- content start -->
+
+
+<section class="page-title bg-2">
+    <div class="overlay"></div>
+    
+    <div class="container">
+        
+      <div class="row">
+        <div class="col-md-12">
+          <div class="block text-center">
+            <h1 class="text-capitalize mb-5 text-lg">Predict</h1>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <div class="container-fluid bg-gray py-4">
+    <div class="row h-100 align-items-center justify-content-center" style="min-height: 80vh;">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-6">
+            <div class="bg-light rounded p-sm-4 my-2 mx-3">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                        <h2><span class="text-primary">Prediction</span></h2>
+
+                </div>
+                <div class="form formrow">  
+                    <form method="post"  enctype='multipart/form-data' name="myform" onsubmit="">
+                        {% csrf_token %}
+                        <div class="row">   
+                            <div class="col"> 
+                                <div class="form-floating">      
+                                <label for="floatingInput" >Age</label>
+                                <input type="text" class="form-control" name="age" id="floatingInput" placeholder="Enter your age" autofocus>
+                                </div>
+                            </div>
+                            <div class="col"> 
+                                <div class="form-floating">      
+                                <label for="floatingInput" >Body Mass Index</label>
+                                <input type="text" class="form-control" name="BMI" id="floatingInput" placeholder="Enter your BMI" autofocus>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col"> 
+                                <div class="form-floating">      
+                                <label for="floatingInput" >Weight</label>
+                                <input required type="text" class="form-control" name="Weight" id="floatingInput" placeholder="Enter your age" autofocus>
+                                </div>
+                            </div>
+                            <div class="col"> 
+                                <div class="form-floating">      
+                                <label for="floatingInput" >Height</label>
+                                <input required type="text" class="form-control" name="Height" id="floatingInput" placeholder="Enter your BMI" autofocus>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="form-label">Complications? </label>
+                                <select required name="Complications" class="form-control">
+                                    <option value=' t                  '>True</option>
+                                    <option value=' f                  '>False</option>
+                                  </select>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Robson Group: </label>
+                                <select required name="Robson" class="form-control">
+                                    <option value=' group 1     '>Group 1</option>
+                                    <option value=' group 2a    '>Group 2a</option>
+                                    <option value=' group 2b    '>Group 2b</option>
+                                    <option value=' group 3     '>Group 3</option>
+                                    <option value=' group 4a    '>Group 4a</option>
+                                    <option value=' group 4b    '>Group 4b</option>
+                                    <option value=" group 5     ">Group 5</option>
+                                    <option value=' group 6     '>Group 6</option>
+                                    <option value=' group 7     '>Group 7</option>
+                                    <option value=' group 8     '>Group 8</option>
+                                    <option value=' group 9     '>Group 9</option>
+                                    <option value=' group 10    '>Group 10</option>
+                                  </select>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Art Mode? </label>
+                                <select required name ="art" class="form-control">
+                                    <option value=' FIV     '>FIV</option>
+                                    <option value=' IAC     '>IAC</option>
+                                    <option value=' IAD     '>IAD</option>
+                                    <option value=' ICSI    '>ICSI</option>
+                                    <option value=' Ovodón  '>Ovodón</option>
+                                    <option value='others'>Others</option>
+                                         
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            
+                            
+                            <div class="col">
+                                <label class="form-label">Amniocentesis?</label>
+                                <select required name="Amniocentesis" class="form-control">
+                                    <option value=' t                     '>True</option>
+                                    <option value=' f                     '>False</option>
+                                  </select> 
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                <label class="form-label">EPISITOMY? </label>
+                                <select required name="EPISITOMY" class="form-control">
+                                    <option value='T'>True</option>
+                                    <option value='F'>False</option>
+                                    <option value='Other'>Other</option>
+                                  </select>  
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Previous Cesarean </label>
+                                <select required name="Previous" class="form-control">
+                                    <option  value=' t                   '>True</option>
+                                    <option value=' f                   '>False</option>
+                                  </select>
+
+                            </div>
+                            
+                            
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col"> 
+                                    <div class="form-floating">      
+                                    <label for="floatingInput" >Parity</label>                 
+                                    <input required type="text" name= "parity" class="form-control" id="floatingInput" placeholder="Enter a number" autofocus>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Obstetric Risk</label>
+                                <select required name="Obstetric" class="form-control">
+                                    <option value=' t                    '>True</option>
+                                    <option  value=' f                    ' >False</option>
+                                  </select> 
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Comorbidity</label>
+                                <select required name= "Comorbidity" required class="form-control">
+                                    <option value=' t                '>True</option>
+                                    <option value=' f                '>False</option>
+                                  </select>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col"> 
+                                    <div class="form-floating">      
+                                    <label for="floatingInput" >Number of previous Cesarean Operations</label>                 
+                                    <input required name="Number_of_previous_Cesarean" type="text" class="form-control" id="floatingInput" placeholder="Enter a number" autofocus>
+                                
+                                </div>
+                            </div>
+                            <div class="col"> 
+                                <div class="form-floating">      
+                                <label for="floatingInput">Weight increased during pregnancy (in kg)</label>                 
+                                <input required name="Weight_increased_during" type="text" class="form-control" id="floatingInput" placeholder="Enter a number" autofocus>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label">Start of Antenatal Care</label>
+                                <select required name="Start_of_Antenatal_Care" class="form-control">
+                                    <option value='1º trimester' >1º trimester</option>
+                                    <option value='2º trimester' >2º trimester</option>
+                                    <option value='3º trimester' >3º trimester</option>
+                                    <option value='Desconocido'>Desconocido</option>
+                                  </select> 
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label">ART</label>
+                                <select required name="ArT"  class="form-control">
+                                    <option value=' t       '>True</option>
+                                    <option value=' f       ' >False</option>
+                                  </select>
+                            </div>
+                            
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label class="form-label">Amniotic Liquid? </label>
+                                <select required name="Amniotic_Liquid" class="form-control">
+                                    <option value= ' clear        '>Clear</option>
+                                    <option value= ' stained +    ' >Stained+</option>
+                                    <option value= ' stained ++   '>Stained++</option>
+                                    <option value= ' stained +++  '>Stained+++</option>
+                                    <option value=' Hemorrágico  ' >Hemorrágico</option>
+                                  </select>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label">Repeated Miscarriages? </label>
+                                <select required name="Repeated_Miscarriages" class="form-control">
+                                    <option  value='t' >True</option>
+                                    <option value='f' >False</option>
+                                  </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col"> 
+                                <div class="form-floating">      
+                                <label for="floatingInput">Gestational Age</label>                 
+                                <input required type="text" name="Gestational" class="form-control" id="floatingInput" placeholder="Enter a number" autofocus>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Cardiotocography </label>
+                                <select required name="Cardiotocography" class="form-control">
+                                    <option value= 'no'>No</option>
+                                    <option value='continuous'  >Continuous</option>
+                                    <option value='discontinuous'>Discontinuous</option>
+                                  </select>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Maternal Education?</label>
+                                <select required name="Maternal_Education" class="form-control">
+                                    <option value='Without studies'>No Education</option>
+                                    <option value='secondary'>Secondary</option>
+                                    <option value='university'>University</option>
+                                  </select>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            
+                            
+                            
+                        </div>
+ 
+
+                    <button type="submit" class="btn btn-main btn-round-full btn-sub py-3 ">Predict</button>
+                   
+                </form>
+
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- content end -->
+
+
+
+
+
+<!-- footer Start -->
+<footer class="footer section gray-bg">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4 mr-auto col-sm-6">
+				<div class="widget mb-4 mb-lg-0">
+					
+					<p>Codebook Organization.<br>Use the below links to follow us on Facebook,Twitter and linkedin</p>
+
+					<ul class="list-inline footer-socials mt-4">
+						<li class="list-inline-item"><a href="https://www.facebook.com/themefisher"><i class="icofont-facebook"></i></a></li>
+						<li class="list-inline-item"><a href="https://twitter.com/themefisher"><i class="icofont-twitter"></i></a></li>
+						<li class="list-inline-item"><a href="https://www.pinterest.com/themefisher/"><i class="icofont-linkedin"></i></a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 col-sm-6">
+				<div class="widget widget-contact mb-5 mb-lg-0">
+					<h4 class="text-capitalize mb-3">Get in Touch</h4>
+					<div class="divider mb-4"></div>
+
+					<div class="footer-contact-block mb-3">
+						<div class="icon d-flex align-items-center">
+							<i class="icofont-email mr-3"></i>
+							<span class="h6 mb-0">Support Available for 24/7</span>
+						</div>
+						<h4 class="mt-2"><a href="tel:+23-345-67890">info@codebook.in</h4>
+					</div>
+
+					<div class="footer-contact-block">
+						<div class="icon d-flex align-items-center">
+							<i class="icofont-support mr-3"></i>
+							<span class="h6 mb-0">Mon to Fri : 08:30 - 18:00</span>
+						</div>
+						<h4 class="mt-2"><a href="tel:+23-345-67890">+91 9912 2210 87</a></h4>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="footer-btm py-2 mt-3">
+			<div class="row align-items-center justify-content-center">
+				<div class="col-lg-auto">
+					<div class="copyright">
+						&copy; Copyright Reserved to <span class="text-color">Codebook</span>
+					</div>
+				</div>
+				
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					<a class="backtop js-scroll-trigger" href="#top">
+						<i class="icofont-long-arrow-up"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+
+   
+
+    <!-- 
+    Essential Scripts
+    =====================================-->
+
+    
+    <!-- Main jQuery -->
+    <script src="{% static 'userapp/plugins/jquery/jquery.js' %}"></script>
+    <!-- Bootstrap 4.3.2 -->
+    <script src="{% static 'userapp/plugins/bootstrap/js/popper.js' %}"></script>
+    <script src="{% static 'userapp/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'userapp/plugins/counterup/jquery.easing.js' %}"></script>
+    <!-- Slick Slider -->
+    <script src="{% static 'userapp/plugins/slick-carousel/slick/slick.min.js' %}"></script>
+    <!-- Counterup -->
+    <script src="{% static 'userapp/plugins/counterup/jquery.waypoints.min.js' %}"></script>
+    
+    <script src="{% static 'userapp/plugins/shuffle/shuffle.min.js' %}"></script>
+    <script src="{% static 'userapp/plugins/counterup/jquery.counterup.min.js' %}"></script> 
+    
+    <script src="{% static 'userapp/js/script.js' %}"></script>
+    <script src="{% static 'userapp/js/contact.js' %}"></script>
+
+  </body>
+  </html>
+   

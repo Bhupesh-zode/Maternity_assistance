@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+childenv*/
+env_testing*/
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+*.log
+local_settings.py
+
+# Secrets (each developer copies .env.example → .env)
+.env
+
+# User uploads
+media/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Optional local / generated
+my_data.csv
+
+# Large local recordings (keep screenshots if needed)
+*.mkv
+*.mp4
