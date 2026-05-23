@@ -1,4 +1,4 @@
-# Childbirth Prediction (Django)
+# Maternity Assistance — Childbirth Prediction (Django)
 
 Web application that predicts the recommended mode of childbirth (e.g. vaginal vs cesarean) using an XGBoost model. Includes a public site, user portal (predict, profile), and admin portal (users, dataset, algorithm metrics).
 
