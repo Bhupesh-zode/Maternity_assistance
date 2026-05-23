@@ -4,6 +4,7 @@ from django.contrib import messages
 import pandas as pd
 
 from ml_compat import load_sklearn_pickle
+from userapp.prediction_store import save_user_prediction
 
 
 
@@ -20,8 +21,8 @@ def userlogin(request):
             if user.status == "pending":
                 messages.info(request,'your account is on pending')
                 return redirect('userlogin')
-            request.session["sno"] = user.sno
-            print(request.session["sno"],'qweerty')
+            request.session['sno'] = user.sno
+            print(request.session['sno'], 'qweerty')
             messages.success(request,'Logged in successfully')
             return redirect("user_dash")
         except:
@@ -157,11 +158,31 @@ def user_predict(request):
 
 
         con = type[0]
-        request.session['last_prediction'] = {
-            'mode': con,
-            'summary': f'The best way of child birth is {con}',
+        form_snapshot = {
+            'age': age,
+            'BMI': BMI,
+            'Weight': Weight,
+            'Height': Height,
+            'parity': parity,
+            'Gestational': Gestational,
+            'Weight_increased_during': Weight_increased_during,
+            'Number_of_previous_Cesarean': Number_of_previous_Cesarean,
+            'Complications': Complications,
+            'Robson': Robson,
+            'art': art,
+            'Amniocentesis': Amniocentesis,
+            'EPISITOMY': EPISITOMY,
+            'Previous': request.POST.get('Previous'),
+            'Obstetric': Obstetric,
+            'Comorbidity': Comorbidity,
+            'Start_of_Antenatal_Care': Start_of_Antenatal_Care,
+            'ArT': ArT,
+            'Amniotic_Liquid': Amniotic_Liquid,
+            'Repeated_Miscarriages': Repeated_Miscarriages,
+            'Cardiotocography': Cardiotocography,
+            'Maternal_Education': Maternal_Education,
         }
-        request.session.modified = True
+        save_user_prediction(request.session.get('sno'), con, form_snapshot)
         messages.success(request,f'The best way of child birth is  {type[0]}')
         resul=f'The best way of child birth is  {type[0]}'
         return redirect('user_predict_result',resul,con)
