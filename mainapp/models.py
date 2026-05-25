@@ -13,4 +13,4 @@ class mainModel(models.Model):
     status = models.CharField(default="pending",max_length=20,null=True)
     
     class Meta:
-        db_table = "User Details"
+        db_table = "user details"
