@@ -1,9 +1,9 @@
 {% include 'userapp/includes/user-page-shell-start.html' with page_title='Prediction History' page_heading='Prediction History' page_subtitle='Every childbirth prediction you have run' %}
 
 {% if history %}
-<div class="table-responsive bg-white rounded shadow-sm p-3">
-  <table class="table table-hover mb-0">
-    <thead>
+<div class="portal-panel portal-table-wrap p-0">
+  <table class="table table-hover mb-0 portal-table-mobile">
+    <thead class="thead-light">
       <tr>
         <th>Date</th>
         <th>Result</th>
@@ -15,10 +15,10 @@
     <tbody>
       {% for row in history %}
       <tr>
-        <td>{{ row.created_at|date:"M d, Y H:i" }}</td>
-        <td><strong>{{ row.predicted_mode }}</strong></td>
-        <td>{{ row.form_data.Gestational|default:"—" }}</td>
-        <td>{{ row.form_data.BMI|default:"—" }}</td>
+        <td data-label="Date">{{ row.created_at|date:"M d, Y H:i" }}</td>
+        <td data-label="Result"><strong class="text-primary">{{ row.predicted_mode }}</strong></td>
+        <td data-label="Gestational age">{{ row.form_data.Gestational|default:"—" }}</td>
+        <td data-label="BMI">{{ row.form_data.BMI|default:"—" }}</td>
         <td><a href="{% url 'user_prediction_detail' row.id %}" class="btn btn-sm btn-main">Details</a></td>
       </tr>
       {% endfor %}
@@ -26,7 +26,7 @@
   </table>
 </div>
 <nav class="mt-3">
-  <ul class="pagination">
+  <ul class="pagination justify-content-center">
     {% if history.has_previous %}
     <li class="page-item"><a class="page-link" href="?page={{ history.previous_page_number }}">Previous</a></li>
     {% endif %}
@@ -37,7 +37,12 @@
   </ul>
 </nav>
 {% else %}
-<p class="text-muted text-center py-5">No predictions yet. <a href="{% url 'user_predict' %}">Run your first predict</a>.</p>
+<div class="portal-panel portal-empty-state">
+  <i class="icofont-laboratory"></i>
+  <h5 class="text-primary mb-2">No predictions yet</h5>
+  <p class="mb-3">Run your first childbirth mode prediction to see results here.</p>
+  <a href="{% url 'user_predict' %}" class="btn btn-main btn-sm">Run your first prediction</a>
+</div>
 {% endif %}
 
 {% include 'userapp/includes/user-page-shell-end.html' %}

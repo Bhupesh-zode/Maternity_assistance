@@ -1,9 +1,16 @@
-{% load static %}
+{% if wrap_content != False %}
   </div>
 </section>
-<script src="{% static 'userapp/plugins/jquery/jquery.js' %}"></script>
-<script src="{% static 'userapp/plugins/bootstrap/js/popper.js' %}"></script>
-<script src="{% static 'userapp/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'userapp/js/script.js' %}"></script>
+{% endif %}
+{% if show_footer != False %}
+{% include 'includes/footer.html' %}
+{% endif %}
+{% load static %}
+{% include 'includes/user-portal-scripts.html' %}
+<script src="{% static 'userapp/js/portal-theme.js' %}"></script>
+<script src="{% static 'userapp/js/alerts-fab.js' %}"></script>
+{% if marketing_scripts %}
+{% include 'includes/user-portal-scripts-marketing.html' %}
+{% endif %}
 </body>
 </html>

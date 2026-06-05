@@ -48,6 +48,7 @@ urlpatterns = [
 
     #USER URLS
     path('userlogin', user_views.userlogin, name ="userlogin" ),
+    path('user-logout', user_views.user_logout, name='user_logout'),
     path('user-dashboard', user_views.user_dash, name ="user_dash"),
     path('user-profile', user_views.user_profile, name ="user_profile"),
     path('user-predict', user_views.user_predict, name ="user_predict"),

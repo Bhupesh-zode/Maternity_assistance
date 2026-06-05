@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% firstof page_description 'Healthcare, pregnancy, childbirth, and maternity assistance.' %}">
+  <title>{{ page_title }}</title>
+  {% include 'includes/favicons.html' %}
+  <link rel="stylesheet" href="{% static 'userapp/plugins/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'userapp/plugins/icofont/icofont.min.css' %}">
+  <link rel="stylesheet" href="{% static 'userapp/plugins/slick-carousel/slick/slick.css' %}">
+  <link rel="stylesheet" href="{% static 'userapp/plugins/slick-carousel/slick/slick-theme.css' %}">
+  <link rel="stylesheet" href="{% static 'userapp/css/style.css' %}">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  {% endblock %}
+</head>
+<body id="top">
+{% include 'includes/flash-messages.html' %}
+{% block navbar %}{% endblock %}
+{% block content %}{% endblock %}
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'userapp/plugins/jquery/jquery.js' %}"></script>
+<script src="{% static 'userapp/plugins/bootstrap/js/popper.js' %}"></script>
+<script src="{% static 'userapp/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'userapp/plugins/counterup/jquery.easing.js' %}"></script>
+<script src="{% static 'userapp/plugins/slick-carousel/slick/slick.min.js' %}"></script>
+<script src="{% static 'userapp/plugins/counterup/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'userapp/plugins/shuffle/shuffle.min.js' %}"></script>
+<script src="{% static 'userapp/plugins/counterup/jquery.counterup.min.js' %}"></script>
+<script src="{% static 'userapp/js/script.js' %}"></script>
+<script src="{% static 'userapp/js/contact.js' %}"></script>
+{% endblock %}
+</body>
+</html>

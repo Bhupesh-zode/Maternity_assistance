@@ -1,353 +1,101 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="zxx">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="description" content="healthcare, pregnancy, Childbirth, newborn, baby">
-  <meta name="author" content="codebook.in">
+{% include 'userapp/includes/user-page-shell-start.html' with page_title='User Dashboard' page_heading='User Dashboard' page_subtitle='Your pregnancy care hub' wrap_content=False %}
 
-  <title>User Dashboard</title>
+<section class="dashboard-section bg-gray">
+  <div class="container">
 
-  <!-- Favicon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'userapp/images/apple-touch-icon.png' %}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'userapp/images/favicon-32x32.png' %}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'userapp/images/favicon-16x16.png' %}">
-  <link rel="manifest" href="{% static 'userapp/images/site.webmanifest' %}">
-  <link rel="mask-icon" href="{% static 'userapp/images/safari-pinned-tab.svg' %}" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-
-  <!-- bootstrap.min css -->
-  <link rel="stylesheet" href="{% static 'userapp/plugins/bootstrap/css/bootstrap.min.css' %}">
-  <!-- Icon Font CSS -->
-  <link rel="stylesheet" href="{% static 'userapp/plugins/icofont/icofont.min.css' %}">
-  <!-- Slick Slider  CSS -->
-  <link rel="stylesheet" href="{% static 'userapp/plugins/slick-carousel/slick/slick.css' %}">
-  <link rel="stylesheet" href="{% static 'userapp/plugins/slick-carousel/slick/slick-theme.css' %}">
-
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="{% static 'userapp/css/style.css' %}">
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-</head>
-
-<body id="top">
-	{% if messages %}
-  {% for message in messages %}
-  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-  <script>swal({
-          title: "Success!",
-          text: "{{message}}",
-          icon: "success",
-          button: "OK",
-      });
-  </script>
-  
-  {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-  <script>swal({
-          title: "Warning :)",
-          text: "{{message}}",
-          icon: "warning",
-          button: "OK",
-       
-      });
-  </script>
-  {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-  <script>swal({
-          title: "info :)",
-          text: "{{message}}",
-          icon: "info",
-          button: "OK",
-      });
-  </script>
-  {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-  <script>swal({
-          title: "error :)",
-          text: "{{message}}",
-          icon: "error",
-          button: "OK",
-      });
-  </script>
-  {% endif %}
-  {% endfor %}
-  {% endif %}
-
-{% include 'userapp/includes/user-header.html' %}
-	
-
-
-
-<!-- content start -->
-
-
-<section class="page-title bg-2">
-    <div class="overlay"></div>
-    
-    <div class="container">
-        
-      <div class="row">
-        <div class="col-md-12">
-          <div class="block text-center">
-            <h1 class="text-capitalize mb-5 text-lg">User Dashboard</h1>
-
+    <div class="dashboard-welcome-panel mb-4">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h3 class="dashboard-welcome-title">Hello, {{ user.name }}</h3>
+          <p class="dashboard-welcome-text mb-0">
+            <strong>Maternity Assistance</strong> supports you with personalized childbirth insights, pregnancy guidance, direct care-team messaging, and easy appointment booking — all in one place.
+          </p>
+        </div>
+        <div class="col-lg-4 text-lg-right mt-3 mt-lg-0">
+          {% if latest_prediction %}
+          <div class="dashboard-latest-pill">
+            <span class="small text-muted d-block mb-1">Latest prediction</span>
+            <strong>{{ latest_prediction.predicted_mode }}</strong>
+            <span class="small text-muted d-block mt-1">{{ latest_prediction.created_at|date:"M d, Y" }}</span>
           </div>
+          {% else %}
+          <a href="{% url 'user_predict' %}" class="btn btn-main btn-sm">Run your first prediction</a>
+          {% endif %}
         </div>
       </div>
     </div>
-  </section>
 
-  <div class="bg-gray">
-  <section class="cta-section">
-	<div class="container">
-		<div class="cta position-relative">
-			<div class="row">
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="counter-stat">
-						<i class="icofont-doctor"></i>
-						<span class="h3">58</span>k
-						<p>Happy People</p>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="counter-stat">
-						<i class="icofont-flag"></i>
-						<span class="h3">700</span>+
-						<p>Surgery Comepleted</p>
-					</div>
-				</div>
-				
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="counter-stat">
-						<i class="icofont-badge"></i>
-						<span class="h3">40</span>+
-						<p>Expert Doctors</p>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="counter-stat">
-						<i class="icofont-globe"></i>
-						<span class="h3">20</span>
-						<p>Worldwide Branch</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+      {% include 'userapp/includes/dashboard-stat-card.html' with icon='icofont-laboratory' value=user_stats.predictions label='Predictions run' hint='Your childbirth predictions' %}
+      {% include 'userapp/includes/dashboard-stat-card.html' with icon='icofont-calendar' value=user_stats.appointments label='Appointments' hint=user_stats.appointments_hint %}
+      {% include 'userapp/includes/dashboard-stat-card.html' with icon='icofont-envelope' value=unread_message_count|default:0 label='Unread messages' hint='From admin support' %}
+    </div>
+
+    <div class="row justify-content-center mt-4 mb-2">
+      <div class="col-lg-8 text-center">
+        <div class="section-title">
+          <h2>Your activity</h2>
+          <div class="divider mx-auto mb-3"></div>
+          <p class="text-muted mb-0">Live charts from your predictions and appointments.</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      {% url 'user_predict' as predict_url %}
+      {% url 'user_appointments' as appt_url %}
+      {% include 'userapp/includes/dashboard-chart-panel.html' with chart_id='activityChart' title='Predictions over time' subtitle='Monthly trend — last 6 months' summary=chart_data.summaries.activity width=6 chart_type='line' empty_message='No predictions in the last 6 months yet.' empty_cta_url=predict_url empty_cta_text='Run prediction' %}
+      {% include 'userapp/includes/dashboard-chart-panel.html' with chart_id='appointmentChart' title='Appointments by status' subtitle='Current breakdown' summary=chart_data.summaries.appointments width=6 chart_type='doughnut' empty_message='No appointments booked yet.' empty_cta_url=appt_url empty_cta_text='Book appointment' %}
+    </div>
+
+    <div class="dashboard-about-panel mt-2 mb-4">
+      <div class="row">
+        <div class="col-lg-7">
+          <h4 class="dashboard-about-title">About Maternity Assistance</h4>
+          <p class="dashboard-about-text">
+            Maternity Assistance is your digital companion through pregnancy and childbirth planning. We combine your health information with trusted clinical models to help you understand possible delivery options, stay informed at every stage, and connect with our care team when you need support.
+          </p>
+          <p class="dashboard-about-text mb-lg-0">
+            Everything you see on this dashboard — predictions, messages, and appointments — is private to your account. Use the tools below to explore features at your own pace, and always discuss important health decisions with your doctor or midwife.
+          </p>
+        </div>
+        <div class="col-lg-5 mt-4 mt-lg-0">
+          <p class="dashboard-about-subtitle mb-3">What you can do here</p>
+          <ul class="dashboard-feature-list">
+            <li><i class="icofont-laboratory"></i><span>Receive childbirth mode insights based on your clinical details</span></li>
+            <li><i class="icofont-ui-chat"></i><span>Get trimester tips and answers from the pregnancy assistant</span></li>
+            <li><i class="icofont-envelope"></i><span>Message our support team privately, with file sharing when needed</span></li>
+            <li><i class="icofont-calendar"></i><span>Book consultations and follow appointment updates in real time</span></li>
+            <li><i class="icofont-history"></i><span>Review your full prediction history whenever you need it</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mb-1">
+      <div class="col-lg-8 text-center">
+        <div class="section-title">
+          <h2>Essentials</h2>
+          <div class="divider mx-auto mb-3"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      {% url 'user_predict' as predict_url %}
+      {% include 'userapp/includes/portal-action-card.html' with icon='icofont-laboratory' title='Run Prediction' description='Get a childbirth mode recommendation from the ML model.' link=predict_url button_text='Start prediction' %}
+      {% url 'user_chat' as chat_url %}
+      {% include 'userapp/includes/portal-action-card.html' with icon='icofont-ui-chat' title='Pregnancy Assistant' description='Trimester tips, wellness guidance, and app help.' link=chat_url button_text='Open assistant' %}
+      {% url 'user_support' as support_url %}
+      {% include 'userapp/includes/portal-action-card.html' with icon='icofont-envelope' title='Message Admin' description='Send questions or updates to the admin team.' link=support_url button_text='Open messages' badge=unread_message_count %}
+      {% url 'user_appointments' as appt_url %}
+      {% include 'userapp/includes/portal-action-card.html' with icon='icofont-calendar' title='Book Appointment' description='Request a consultation and track status.' link=appt_url button_text='Book now' %}
+      {% url 'user_prediction_history' as history_url %}
+      {% include 'userapp/includes/portal-action-card.html' with icon='icofont-history' title='Prediction History' description='Review every prediction you have run.' link=history_url button_text='View history' %}
+    </div>
+  </div>
 </section>
 
-<section class="section service bg-gray">
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-lg-7 text-center">
-				<div class="section-title">
-					<h2>Award winning patient care</h2>
-					<div class="divider mx-auto mb-4"></div>
-					<p>Lets know moreel necessitatibus dolor asperiores illum possimus sint voluptates incidunt molestias nostrum laudantium. Maiores porro cumque quaerat.</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="service-item mb-4">
-					<div class="icon d-flex align-items-center">
-						<i class="icofont-ui-chat text-lg"></i>
-						<h4 class="mt-3 mb-3">Pregnancy Assistant</h4>
-					</div>
-
-					<div class="content">
-						<p class="mb-4">Chat for trimester tips, wellness guidance, and help using this app.</p>
-						<a href="{% url 'user_chat' %}" class="btn btn-main btn-sm">Open assistant</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="service-item mb-4">
-					<div class="icon d-flex align-items-center">
-						<i class="icofont-envelope text-lg"></i>
-						<h4 class="mt-3 mb-3">Message Admin</h4>
-					</div>
-					<div class="content">
-						<p class="mb-4">Send private questions or updates directly to the admin team.</p>
-						<a href="{% url 'user_support' %}" class="btn btn-main btn-sm">Open messages{% if unread_message_count %} ({{ unread_message_count }}){% endif %}</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="service-item mb-4">
-					<div class="icon d-flex align-items-center">
-						<i class="icofont-calendar text-lg"></i>
-						<h4 class="mt-3 mb-3">Book Appointment</h4>
-					</div>
-					<div class="content">
-						<p class="mb-4">Request a consultation slot and track confirmation status.</p>
-						<a href="{% url 'user_appointments' %}" class="btn btn-main btn-sm">Book now</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="service-item mb-4">
-					<div class="icon d-flex align-items-center">
-						<i class="icofont-history text-lg"></i>
-						<h4 class="mt-3 mb-3">Prediction History</h4>
-					</div>
-					<div class="content">
-						<p class="mb-4">Review every childbirth prediction you have run.</p>
-						<a href="{% url 'user_prediction_history' %}" class="btn btn-main btn-sm">View history</a>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="service-item mb-4">
-					<div class="icon d-flex align-items-center">
-						<i class="icofont-tooth text-lg"></i>
-						<h4 class="mt-3 mb-3">Dental Care</h4>
-					</div>
-					<div class="content">
-						<p class="mb-4">Saepe nulla praesentium eaque omnis perferendis a doloremque.</p>
-					</div>
-				</div>
-			</div>
-
-
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="service-item mb-4">
-					<div class="icon d-flex align-items-center">
-						<i class="icofont-crutch text-lg"></i>
-						<h4 class="mt-3 mb-3">Body Surgery</h4>
-					</div>
-
-					<div class="content">
-						<p class="mb-4">Saepe nulla praesentium eaque omnis perferendis a doloremque.</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="service-item mb-4">
-					<div class="icon d-flex align-items-center">
-						<i class="icofont-brain-alt text-lg"></i>
-						<h4 class="mt-3 mb-3">Neurology Sargery</h4>
-					</div>
-					<div class="content">
-						<p class="mb-4">Saepe nulla praesentium eaque omnis perferendis a doloremque.</p>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="service-item mb-4">
-					<div class="icon d-flex align-items-center">
-						<i class="icofont-dna-alt-1 text-lg"></i>
-						<h4 class="mt-3 mb-3">Gynecology</h4>
-					</div>
-					<div class="content">
-						<p class="mb-4">Saepe nulla praesentium eaque omnis perferendis a doloremque.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-</div>
-
-<!-- content end -->
-
-
-
-
-
-<!-- footer Start -->
-<footer class="footer section gray-bg">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-4 mr-auto col-sm-6">
-				<div class="widget mb-4 mb-lg-0">
-					
-					<p>Codebook Organization.<br>Use the below links to follow us on Facebook,Twitter and linkedin<p>
-
-					<ul class="list-inline footer-socials mt-4">
-						<li class="list-inline-item"><a href="https://www.facebook.com/themefisher"><i class="icofont-facebook"></i></a></li>
-						<li class="list-inline-item"><a href="https://twitter.com/themefisher"><i class="icofont-twitter"></i></a></li>
-						<li class="list-inline-item"><a href="https://www.pinterest.com/themefisher/"><i class="icofont-linkedin"></i></a></li>
-					</ul>
-				</div>
-			</div>
-
-			<div class="col-lg-3 col-md-6 col-sm-6">
-				<div class="widget widget-contact mb-5 mb-lg-0">
-					<h4 class="text-capitalize mb-3">Get in Touch</h4>
-					<div class="divider mb-4"></div>
-
-					<div class="footer-contact-block mb-3">
-						<div class="icon d-flex align-items-center">
-							<i class="icofont-email mr-3"></i>
-							<span class="h6 mb-0">Support Available for 24/7</span>
-						</div>
-						<h4 class="mt-2"><a href="tel:+23-345-67890">info@codebook.in</h4>
-					</div>
-
-					<div class="footer-contact-block">
-						<div class="icon d-flex align-items-center">
-							<i class="icofont-support mr-3"></i>
-							<span class="h6 mb-0">Mon to Fri : 08:30 - 18:00</span>
-						</div>
-						<h4 class="mt-2"><a href="tel:+91 9912 2210 87">+91 9912 2210 87</h4>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<div class="footer-btm py-2 mt-3">
-			<div class="row align-items-center justify-content-center">
-				<div class="col-lg-auto">
-					<div class="copyright">
-						&copy; Copyright Reserved to <span class="text-color">Codebook</span>
-					</div>
-				</div>
-				
-			</div>
-
-			<div class="row">
-				<div class="col-lg-4">
-					<a class="backtop js-scroll-trigger" href="#top">
-						<i class="icofont-long-arrow-up"></i>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-</footer>
-
-   
-
-    <!-- 
-    Essential Scripts
-    =====================================-->
-
-    
-    <!-- Main jQuery -->
-    <script src="{% static 'userapp/plugins/jquery/jquery.js' %}"></script>
-    <!-- Bootstrap 4.3.2 -->
-    <script src="{% static 'userapp/plugins/bootstrap/js/popper.js' %}"></script>
-    <script src="{% static 'userapp/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'userapp/plugins/counterup/jquery.easing.js' %}"></script>
-    <!-- Slick Slider -->
-    <script src="{% static 'userapp/plugins/slick-carousel/slick/slick.min.js' %}"></script>
-    <!-- Counterup -->
-    <script src="{% static 'userapp/plugins/counterup/jquery.waypoints.min.js' %}"></script>
-    
-    <script src="{% static 'userapp/plugins/shuffle/shuffle.min.js' %}"></script>
-    <script src="{% static 'userapp/plugins/counterup/jquery.counterup.min.js' %}"></script> 
-    
-    <script src="{% static 'userapp/js/script.js' %}"></script>
-    <script src="{% static 'userapp/js/contact.js' %}"></script>
-
-  </body>
-  </html>
-   
+{{ chart_data|json_script:"dashboard-chart-data" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="{% static 'userapp/js/dashboard-charts.js' %}"></script>
+{% include 'userapp/includes/user-page-shell-end.html' with wrap_content=False show_footer=True %}
