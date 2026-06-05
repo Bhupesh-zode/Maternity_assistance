@@ -3,8 +3,9 @@
 <html lang="en">
 <head>
   {% include 'includes/user-portal-head.html' with page_title='User Sign In' %}
+  {% include 'includes/theme-head.html' with theme_scope='public' %}
 </head>
-<body id="top">
+<body id="top" class="public-portal-page">
 {% include 'includes/flash-messages.html' %}
 {% include 'includes/public-navbar.html' with active_page='user' %}
 
@@ -45,5 +46,6 @@
 {% include 'includes/footer.html' %}
 {% include 'includes/user-portal-scripts.html' %}
 <script src="{% static 'userapp/js/swal.js' %}"></script>
+<script src="{% static 'userapp/js/app-theme.js' %}"></script>
 </body>
 </html>

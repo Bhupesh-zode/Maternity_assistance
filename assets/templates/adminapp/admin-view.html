@@ -31,9 +31,10 @@
 
     <!-- Template Stylesheet -->
     <link href="{% static 'adminapp/css/style.css' %}" rel="stylesheet">
+    {% include 'includes/theme-head.html' with theme_scope='admin' %}
 </head>
 
-<body>
+<body class="admin-portal-page">
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Spinner Start -->
         <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -144,22 +145,7 @@
              }
          </style>
         <!-- Table End -->
-
-            <!-- Footer Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light rounded-top p-4 mt-auto">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Codebook.in</a>, All Rights Reserved. 
-                        </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-end">
-                            Designed By <a href="#">Codebook.in</a>
-                        </br>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Footer End -->
+            {% include 'includes/footer.html' %}
         </div>
         <!-- Content End -->
 
@@ -218,6 +204,9 @@
 
     <!-- Template Javascript -->
     <script src="{% static 'adminapp/js/main.js' %} "></script>
+
+    {% include 'includes/theme-toggle-float.html' %}
+    <script src="{% static 'userapp/js/app-theme.js' %}"></script>
 </body>
 
 </html>

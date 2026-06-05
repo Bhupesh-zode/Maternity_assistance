@@ -3,14 +3,61 @@
   padding-bottom: 12px;
 }
 
-#navbar .navbar-brand img {
+#navbar .navbar-brand img,
+#navbar .site-brand .site-logo {
   max-height: none;
   height: auto;
+}
+
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-right: 1rem;
+}
+
+.site-brand .site-logo {
+  width: 75px;
+  display: block;
+}
+
+.site-brand .site-logo-wordmark {
+  fill: #1a1a1a;
+  transition: fill 0.25s ease;
+}
+
+html.ma-theme-dark .site-brand .site-logo-wordmark,
+body.public-portal-page[data-theme="dark"] .site-brand .site-logo-wordmark,
+body.user-portal-page[data-theme="dark"] .site-brand .site-logo-wordmark {
+  fill: #edf2f7;
+}
+
+html.ma-theme-dark .site-brand .site-logo-mark,
+body.public-portal-page[data-theme="dark"] .site-brand .site-logo-mark,
+body.user-portal-page[data-theme="dark"] .site-brand .site-logo-mark {
+  filter: brightness(1.05) saturate(1.08);
 }
 
 #navbar .navbar-nav .nav-link {
   white-space: nowrap;
   padding: 0.5rem 0.75rem;
+}
+
+/* Landing hero — feature cards overlap upward into banner */
+.banner {
+  z-index: 1;
+}
+
+.features {
+  position: relative;
+  z-index: 2;
+}
+
+.feature-block,
+.feature-item {
+  position: relative;
+  z-index: 1;
 }
 
 .nav-badge {
@@ -680,6 +727,10 @@
 .footer-medium {
   padding-top: 2.25rem;
   padding-bottom: 0.75rem;
+}
+
+body.admin-portal-page .content .footer-medium {
+  margin-top: 1.5rem;
 }
 
 .footer-brand-title {
