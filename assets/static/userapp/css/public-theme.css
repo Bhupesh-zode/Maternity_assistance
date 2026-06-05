@@ -1,0 +1,375 @@
+/* Public site dark mode */
+
+html.ma-theme-dark body.public-portal-page,
+body.public-portal-page[data-theme="dark"] {
+  --dash-bg: #13171e;
+  --dash-bg-soft: #181d27;
+  --dash-surface: #1e2736;
+  --dash-surface-alt: #283244;
+  --dash-text: #edf2f7;
+  --dash-text-muted: #9aadc0;
+  --dash-border: rgba(255, 255, 255, 0.1);
+  --dash-accent: #e85a7f;
+  --dash-nav-bg: #181d27;
+  --dash-hero-from: #1a2230;
+  --dash-hero-to: #13171e;
+  color-scheme: dark;
+  background: var(--dash-bg);
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.public-portal-page .bg-gray,
+html.ma-theme-dark body.public-portal-page .gray-bg,
+body.public-portal-page[data-theme="dark"] .bg-gray,
+body.public-portal-page[data-theme="dark"] .gray-bg {
+  background: var(--dash-bg) !important;
+}
+
+html.ma-theme-dark body.public-portal-page #navbar.navigation,
+body.public-portal-page[data-theme="dark"] #navbar.navigation {
+  background: var(--dash-nav-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+html.ma-theme-dark body.public-portal-page #navbarmain .nav-link,
+body.public-portal-page[data-theme="dark"] #navbarmain .nav-link {
+  color: #c5d3e0;
+}
+
+html.ma-theme-dark body.public-portal-page #navbarmain .nav-item.active .nav-link,
+body.public-portal-page[data-theme="dark"] #navbarmain .nav-item.active .nav-link {
+  color: var(--dash-accent);
+}
+
+html.ma-theme-dark body.public-portal-page .page-title.bg-2,
+body.public-portal-page[data-theme="dark"] .page-title.bg-2 {
+  background: linear-gradient(160deg, var(--dash-hero-from) 0%, var(--dash-hero-to) 100%) !important;
+  background-image: none !important;
+}
+
+html.ma-theme-dark body.public-portal-page .page-title .overlay:before,
+body.public-portal-page[data-theme="dark"] .page-title .overlay:before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.25) 100%);
+  opacity: 1;
+}
+
+html.ma-theme-dark body.public-portal-page .page-title .block h1,
+body.public-portal-page[data-theme="dark"] .page-title .block h1 {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.public-portal-page .page-title .block p,
+body.public-portal-page[data-theme="dark"] .page-title .block p {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.public-portal-page .section,
+html.ma-theme-dark body.public-portal-page .service-block,
+html.ma-theme-dark body.public-portal-page .card.bg-light,
+body.public-portal-page[data-theme="dark"] .section,
+body.public-portal-page[data-theme="dark"] .service-block,
+body.public-portal-page[data-theme="dark"] .card.bg-light {
+  background: var(--dash-surface);
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.public-portal-page .card,
+body.public-portal-page[data-theme="dark"] .card {
+  background: var(--dash-surface);
+  border-color: var(--dash-border);
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.public-portal-page .text-primary,
+body.public-portal-page[data-theme="dark"] .text-primary {
+  color: #9bb5d8 !important;
+}
+
+html.ma-theme-dark body.public-portal-page .text-muted,
+body.public-portal-page[data-theme="dark"] .text-muted {
+  color: var(--dash-text-muted) !important;
+}
+
+html.ma-theme-dark body.public-portal-page h1,
+html.ma-theme-dark body.public-portal-page h2,
+html.ma-theme-dark body.public-portal-page h3,
+html.ma-theme-dark body.public-portal-page h4,
+html.ma-theme-dark body.public-portal-page h5,
+body.public-portal-page[data-theme="dark"] h1,
+body.public-portal-page[data-theme="dark"] h2,
+body.public-portal-page[data-theme="dark"] h3,
+body.public-portal-page[data-theme="dark"] h4,
+body.public-portal-page[data-theme="dark"] h5 {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.public-portal-page .form-control,
+body.public-portal-page[data-theme="dark"] .form-control {
+  background: var(--dash-surface-alt);
+  border-color: var(--dash-border);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.public-portal-page .form-control:focus,
+body.public-portal-page[data-theme="dark"] .form-control:focus {
+  background: var(--dash-surface-alt);
+  border-color: rgba(155, 181, 216, 0.45);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.public-portal-page label,
+body.public-portal-page[data-theme="dark"] label {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.public-portal-page .btn-main,
+body.public-portal-page[data-theme="dark"] .btn-main {
+  background: #3d5a80;
+  border-color: #3d5a80;
+}
+
+html.ma-theme-dark body.public-portal-page .btn-main:hover,
+body.public-portal-page[data-theme="dark"] .btn-main:hover {
+  background: var(--dash-accent);
+  border-color: var(--dash-accent);
+}
+
+html.ma-theme-dark body.public-portal-page .footer.gray-bg,
+body.public-portal-page[data-theme="dark"] .footer.gray-bg {
+  background: var(--dash-nav-bg) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .footer .footer-brand-title,
+html.ma-theme-dark body.public-portal-page .footer .footer-lead,
+html.ma-theme-dark body.public-portal-page .footer .footer-legal,
+html.ma-theme-dark body.public-portal-page .footer .footer-contact-list li,
+body.public-portal-page[data-theme="dark"] .footer .footer-brand-title,
+body.public-portal-page[data-theme="dark"] .footer .footer-lead,
+body.public-portal-page[data-theme="dark"] .footer .footer-legal,
+body.public-portal-page[data-theme="dark"] .footer .footer-contact-list li {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.public-portal-page .footer .footer-contact-list a,
+body.public-portal-page[data-theme="dark"] .footer .footer-contact-list a {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.public-portal-page .footer-socials li a,
+body.public-portal-page[data-theme="dark"] .footer-socials li a {
+  background: var(--dash-surface-alt);
+  border: 1px solid var(--dash-border);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.public-portal-page .container-fluid.bg-gray,
+body.public-portal-page[data-theme="dark"] .container-fluid.bg-gray {
+  background: var(--dash-bg) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .card.bg-light.rounded,
+body.public-portal-page[data-theme="dark"] .card.bg-light.rounded {
+  background: var(--dash-surface) !important;
+  border: 1px solid var(--dash-border);
+}
+
+html.ma-theme-dark body.public-portal-page .intro,
+html.ma-theme-dark body.public-portal-page .feature,
+html.ma-theme-dark body.public-portal-page .about,
+html.ma-theme-dark body.public-portal-page .service,
+body.public-portal-page[data-theme="dark"] .intro,
+body.public-portal-page[data-theme="dark"] .feature,
+body.public-portal-page[data-theme="dark"] .about,
+body.public-portal-page[data-theme="dark"] .service {
+  background: var(--dash-bg);
+}
+
+html.ma-theme-dark body.public-portal-page .slider,
+body.public-portal-page[data-theme="dark"] .slider {
+  background: var(--dash-bg-soft);
+}
+
+/* Landing page — hero banner */
+html.ma-theme-dark body.public-portal-page .banner,
+body.public-portal-page[data-theme="dark"] .banner {
+  background-color: var(--dash-bg) !important;
+  background-image: url("../images/bg/slider-bg-2.jpg") !important;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+html.ma-theme-dark body.public-portal-page .banner::before,
+body.public-portal-page[data-theme="dark"] .banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(19, 23, 30, 0.94) 0%,
+    rgba(19, 23, 30, 0.82) 42%,
+    rgba(19, 23, 30, 0.62) 68%,
+    rgba(19, 23, 30, 0.45) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+html.ma-theme-dark body.public-portal-page .banner::after,
+body.public-portal-page[data-theme="dark"] .banner::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent, var(--dash-bg));
+  z-index: 0;
+  pointer-events: none;
+}
+
+html.ma-theme-dark body.public-portal-page .banner .container,
+body.public-portal-page[data-theme="dark"] .banner .container {
+  position: relative;
+  z-index: 2;
+}
+
+html.ma-theme-dark body.public-portal-page .banner .block h1,
+body.public-portal-page[data-theme="dark"] .banner .block h1 {
+  color: var(--dash-text) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .banner .block span,
+body.public-portal-page[data-theme="dark"] .banner .block span {
+  color: var(--dash-text-muted) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .banner .block p,
+body.public-portal-page[data-theme="dark"] .banner .block p {
+  color: var(--dash-text-muted) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .banner .btn-main-2,
+body.public-portal-page[data-theme="dark"] .banner .btn-main-2 {
+  background: var(--dash-accent);
+  border-color: var(--dash-accent);
+  color: #fff;
+}
+
+html.ma-theme-dark body.public-portal-page .banner .btn-main-2:hover,
+body.public-portal-page[data-theme="dark"] .banner .btn-main-2:hover {
+  background: #3d5a80;
+  border-color: #3d5a80;
+  color: #fff;
+}
+
+html.ma-theme-dark body.public-portal-page .features,
+body.public-portal-page[data-theme="dark"] .features {
+  background: transparent;
+  z-index: 3;
+}
+
+/* Landing page — service cards */
+html.ma-theme-dark body.public-portal-page .service .service-item,
+body.public-portal-page[data-theme="dark"] .service .service-item {
+  background: var(--dash-surface) !important;
+  border: 1px solid var(--dash-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  color: var(--dash-text-muted);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+html.ma-theme-dark body.public-portal-page .service .service-item:hover,
+body.public-portal-page[data-theme="dark"] .service .service-item:hover {
+  background: var(--dash-surface-alt) !important;
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+html.ma-theme-dark body.public-portal-page .service .service-item h4,
+body.public-portal-page[data-theme="dark"] .service .service-item h4 {
+  color: var(--dash-text) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .service .service-item .content p,
+body.public-portal-page[data-theme="dark"] .service .service-item .content p {
+  color: var(--dash-text-muted) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .service .service-item i,
+body.public-portal-page[data-theme="dark"] .service .service-item i {
+  color: var(--dash-accent) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .section-title h2,
+body.public-portal-page[data-theme="dark"] .section-title h2 {
+  color: var(--dash-text) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .section-title p,
+body.public-portal-page[data-theme="dark"] .section-title p {
+  color: var(--dash-text-muted) !important;
+}
+
+/* Landing page — feature cards (appointment, hours, emergency) */
+html.ma-theme-dark body.public-portal-page .feature-item,
+body.public-portal-page[data-theme="dark"] .feature-item {
+  background: var(--dash-surface) !important;
+  border: 1px solid var(--dash-border);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  color: var(--dash-text-muted);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+html.ma-theme-dark body.public-portal-page .feature-item:hover,
+body.public-portal-page[data-theme="dark"] .feature-item:hover {
+  background: var(--dash-surface-alt) !important;
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.32);
+}
+
+html.ma-theme-dark body.public-portal-page .feature-item .feature-icon i,
+body.public-portal-page[data-theme="dark"] .feature-item .feature-icon i {
+  color: #9bb5d8 !important;
+}
+
+html.ma-theme-dark body.public-portal-page .feature-item > span,
+body.public-portal-page[data-theme="dark"] .feature-item > span {
+  color: var(--dash-text-muted) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .feature-item h4,
+body.public-portal-page[data-theme="dark"] .feature-item h4 {
+  color: var(--dash-text) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .feature-item p,
+body.public-portal-page[data-theme="dark"] .feature-item p {
+  color: var(--dash-text-muted) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .feature-item .w-hours li,
+body.public-portal-page[data-theme="dark"] .feature-item .w-hours li {
+  color: var(--dash-text-muted);
+  border-bottom-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.public-portal-page .feature-item .w-hours li span,
+body.public-portal-page[data-theme="dark"] .feature-item .w-hours li span {
+  color: var(--dash-text) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .feature-item .btn-main,
+body.public-portal-page[data-theme="dark"] .feature-item .btn-main {
+  background: #3d5a80;
+  border-color: #3d5a80;
+  color: #fff;
+}
+
+html.ma-theme-dark body.public-portal-page .feature-item .btn-main:hover,
+body.public-portal-page[data-theme="dark"] .feature-item .btn-main:hover {
+  background: var(--dash-accent);
+  border-color: var(--dash-accent);
+  color: #fff;
+}

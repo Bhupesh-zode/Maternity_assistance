@@ -14,7 +14,7 @@
 <script>
 (function () {
   try {
-    var theme = localStorage.getItem('ma-user-theme') || localStorage.getItem('ma-dashboard-theme');
+    var theme = localStorage.getItem('ma-theme') || localStorage.getItem('ma-user-theme') || localStorage.getItem('ma-dashboard-theme');
     if (theme === 'dark') {
       document.documentElement.classList.add('ma-theme-dark');
     }

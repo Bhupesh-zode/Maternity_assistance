@@ -1,0 +1,23 @@
+{% load static %}
+{% if theme_scope == 'admin' %}
+<link rel="stylesheet" href="{% static 'userapp/plugins/icofont/icofont.min.css' %}">
+{% endif %}
+<link rel="stylesheet" href="{% static 'userapp/css/components.css' %}">
+<link rel="stylesheet" href="{% static 'userapp/css/portal-theme.css' %}">
+{% if theme_scope == 'admin' %}
+<link rel="stylesheet" href="{% static 'userapp/css/admin-theme.css' %}">
+{% elif theme_scope == 'public' %}
+<link rel="stylesheet" href="{% static 'userapp/css/public-theme.css' %}">
+{% endif %}
+<script>
+(function () {
+  try {
+    var theme = localStorage.getItem('ma-theme')
+      || localStorage.getItem('ma-user-theme')
+      || localStorage.getItem('ma-dashboard-theme');
+    if (theme === 'dark') {
+      document.documentElement.classList.add('ma-theme-dark');
+    }
+  } catch (e) {}
+})();
+</script>

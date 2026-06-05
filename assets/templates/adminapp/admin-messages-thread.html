@@ -13,11 +13,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="{% static 'adminapp/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'adminapp/css/style.css' %}" rel="stylesheet">
+    {% include 'includes/theme-head.html' with theme_scope='admin' %}
     <link href="{% static 'userapp/plugins/icofont/icofont.min.css' %}" rel="stylesheet">
     <link href="{% static 'userapp/css/chat.css' %}" rel="stylesheet">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
-<body>
+<body class="admin-portal-page">
     {% if messages %}
   {% for message in messages %}
   {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
@@ -150,21 +151,7 @@
                     </div>
                 </div>
             </div>
-
-            <footer>
-                <div class="container-fluid pt-4 px-4">
-                    <div class="bg-light rounded-top p-4">
-                        <div class="row">
-                            <div class="col-12 col-sm-6 text-center text-sm-start">
-                                &copy; <a href="#">Codebook.in</a>, All Rights Reserved.
-                            </div>
-                            <div class="col-12 col-sm-6 text-center text-sm-end">
-                                Designed By <a href="#">Codebook.in</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            {% include 'includes/footer.html' %}
         </div>
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
@@ -183,5 +170,8 @@
         });
       }
     </script>
+
+    {% include 'includes/theme-toggle-float.html' %}
+    <script src="{% static 'userapp/js/app-theme.js' %}"></script>
 </body>
 </html>

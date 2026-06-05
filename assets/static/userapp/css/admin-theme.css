@@ -1,0 +1,224 @@
+/* Admin portal dark mode */
+
+html.ma-theme-dark body.admin-portal-page,
+body.admin-portal-page[data-theme="dark"] {
+  --dash-bg: #13171e;
+  --dash-bg-soft: #181d27;
+  --dash-surface: #1e2736;
+  --dash-surface-alt: #283244;
+  --dash-surface-hover: #2f3a4f;
+  --dash-text: #edf2f7;
+  --dash-text-muted: #9aadc0;
+  --dash-border: rgba(255, 255, 255, 0.1);
+  --dash-border-soft: rgba(255, 255, 255, 0.06);
+  --dash-accent: #e85a7f;
+  --dash-nav-bg: #181d27;
+  color-scheme: dark;
+  background: var(--dash-bg);
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .container-xxl.bg-white,
+body.admin-portal-page[data-theme="dark"] .container-xxl.bg-white {
+  background: var(--dash-bg) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page #spinner.bg-white,
+body.admin-portal-page[data-theme="dark"] #spinner.bg-white {
+  background: var(--dash-bg) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar,
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar.bg-light,
+html.ma-theme-dark body.admin-portal-page .content .navbar.bg-light,
+body.admin-portal-page[data-theme="dark"] .sidebar,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar.bg-light,
+body.admin-portal-page[data-theme="dark"] .content .navbar.bg-light {
+  background: var(--dash-nav-bg) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .nav-link,
+html.ma-theme-dark body.admin-portal-page .content .navbar .nav-link,
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar-brand h3,
+body.admin-portal-page[data-theme="dark"] .sidebar .nav-link,
+body.admin-portal-page[data-theme="dark"] .content .navbar .nav-link,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar-brand h3 {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .nav-link.active,
+html.ma-theme-dark body.admin-portal-page .sidebar .nav-link:hover,
+body.admin-portal-page[data-theme="dark"] .sidebar .nav-link.active,
+body.admin-portal-page[data-theme="dark"] .sidebar .nav-link:hover {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .text-primary,
+body.admin-portal-page[data-theme="dark"] .text-primary {
+  color: #9bb5d8 !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .bg-light.rounded,
+html.ma-theme-dark body.admin-portal-page .bg-light.rounded-top,
+html.ma-theme-dark body.admin-portal-page .bg-secondary.rounded,
+body.admin-portal-page[data-theme="dark"] .bg-light.rounded,
+body.admin-portal-page[data-theme="dark"] .bg-light.rounded-top,
+body.admin-portal-page[data-theme="dark"] .bg-secondary.rounded {
+  background: var(--dash-surface) !important;
+  color: var(--dash-text-muted);
+  border: 1px solid var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .table,
+html.ma-theme-dark body.admin-portal-page .table td,
+html.ma-theme-dark body.admin-portal-page .table th,
+body.admin-portal-page[data-theme="dark"] .table,
+body.admin-portal-page[data-theme="dark"] .table td,
+body.admin-portal-page[data-theme="dark"] .table th {
+  color: var(--dash-text-muted);
+  border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .table-hover tbody tr:hover,
+body.admin-portal-page[data-theme="dark"] .table-hover tbody tr:hover {
+  background: var(--dash-surface-hover);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .form-control,
+html.ma-theme-dark body.admin-portal-page .form-select,
+body.admin-portal-page[data-theme="dark"] .form-control,
+body.admin-portal-page[data-theme="dark"] .form-select {
+  background: var(--dash-surface-alt);
+  border-color: var(--dash-border);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .form-control:focus,
+body.admin-portal-page[data-theme="dark"] .form-control:focus {
+  background: var(--dash-surface-hover);
+  border-color: rgba(155, 181, 216, 0.45);
+  color: var(--dash-text);
+  box-shadow: 0 0 0 0.2rem rgba(155, 181, 216, 0.15);
+}
+
+html.ma-theme-dark body.admin-portal-page .dropdown-menu,
+body.admin-portal-page[data-theme="dark"] .dropdown-menu {
+  background: var(--dash-surface);
+  border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .dropdown-item,
+body.admin-portal-page[data-theme="dark"] .dropdown-item {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .dropdown-item:hover,
+body.admin-portal-page[data-theme="dark"] .dropdown-item:hover {
+  background: var(--dash-surface-hover);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .text-muted,
+body.admin-portal-page[data-theme="dark"] .text-muted {
+  color: var(--dash-text-muted) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page h4,
+html.ma-theme-dark body.admin-portal-page h5,
+html.ma-theme-dark body.admin-portal-page h6,
+body.admin-portal-page[data-theme="dark"] h4,
+body.admin-portal-page[data-theme="dark"] h5,
+body.admin-portal-page[data-theme="dark"] h6 {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .btn-outline-secondary,
+body.admin-portal-page[data-theme="dark"] .btn-outline-secondary {
+  color: var(--dash-text-muted);
+  border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page footer .bg-light,
+body.admin-portal-page[data-theme="dark"] footer .bg-light {
+  background: var(--dash-nav-bg) !important;
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .footer.footer-medium.gray-bg,
+body.admin-portal-page[data-theme="dark"] .footer.footer-medium.gray-bg {
+  background: var(--dash-nav-bg) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .footer .footer-brand-title,
+html.ma-theme-dark body.admin-portal-page .footer .footer-lead,
+html.ma-theme-dark body.admin-portal-page .footer .footer-legal,
+html.ma-theme-dark body.admin-portal-page .footer .footer-contact-list li,
+body.admin-portal-page[data-theme="dark"] .footer .footer-brand-title,
+body.admin-portal-page[data-theme="dark"] .footer .footer-lead,
+body.admin-portal-page[data-theme="dark"] .footer .footer-legal,
+body.admin-portal-page[data-theme="dark"] .footer .footer-contact-list li {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .footer .footer-contact-list a,
+body.admin-portal-page[data-theme="dark"] .footer .footer-contact-list a {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .footer-socials li a,
+body.admin-portal-page[data-theme="dark"] .footer-socials li a {
+  background: var(--dash-surface-alt);
+  border: 1px solid var(--dash-border);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .footer-medium .footer-btm,
+body.admin-portal-page[data-theme="dark"] .footer-medium .footer-btm {
+  border-top-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .footer-btm .backtop,
+body.admin-portal-page[data-theme="dark"] .footer-btm .backtop {
+  background: var(--dash-surface-alt);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .chat-log--whatsapp,
+body.admin-portal-page[data-theme="dark"] .chat-log--whatsapp {
+  background: #0b141a;
+  box-shadow: inset 0 0 0 1px var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .chat-bubble--out,
+body.admin-portal-page[data-theme="dark"] .chat-bubble--out {
+  background: #005c4b;
+  color: #e9edef;
+}
+
+html.ma-theme-dark body.admin-portal-page .chat-bubble--out::after,
+body.admin-portal-page[data-theme="dark"] .chat-bubble--out::after {
+  border-top-color: #005c4b;
+}
+
+html.ma-theme-dark body.admin-portal-page .chat-bubble--in,
+body.admin-portal-page[data-theme="dark"] .chat-bubble--in {
+  background: #202c33;
+  color: #e9edef;
+}
+
+html.ma-theme-dark body.admin-portal-page .chat-bubble--in::after,
+body.admin-portal-page[data-theme="dark"] .chat-bubble--in::after {
+  border-top-color: #202c33;
+}
+
+html.ma-theme-dark body.admin-portal-page .chat-compose-bar,
+body.admin-portal-page[data-theme="dark"] .chat-compose-bar {
+  background: var(--dash-surface-alt);
+  border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .theme-fab .portal-theme-toggle-track,
+body.admin-portal-page[data-theme="dark"] .theme-fab .portal-theme-toggle-track {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}

@@ -180,6 +180,23 @@ body.user-portal-page[data-theme="dark"] {
   white-space: nowrap;
 }
 
+.theme-fab {
+  position: fixed;
+  left: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 1040;
+}
+
+.portal-theme-toggle--float .portal-theme-toggle-track {
+  width: 56px;
+  height: 32px;
+  box-shadow: 0 4px 16px rgba(34, 58, 102, 0.18);
+}
+
+.portal-theme-toggle--float input:checked + .portal-theme-toggle-track::after {
+  transform: translateX(24px);
+}
+
 /* Page chrome */
 html.ma-theme-dark body.user-portal-page .dashboard-section.bg-gray,
 body.user-portal-page[data-theme="dark"] .dashboard-section.bg-gray {
