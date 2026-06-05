@@ -1,0 +1,23 @@
+<div class="col-lg-{{ width|default:6 }} mb-4">
+  <div class="dashboard-chart-panel h-100">
+    <div class="dashboard-chart-header">
+      <div>
+        <h5 class="dashboard-chart-title">{{ title }}</h5>
+        {% if subtitle %}<p class="dashboard-chart-subtitle mb-0">{{ subtitle }}</p>{% endif %}
+      </div>
+      {% if summary %}<span class="dashboard-chart-summary">{{ summary }}</span>{% endif %}
+    </div>
+    <div class="dashboard-chart-wrap{% if chart_type == 'doughnut' %} dashboard-chart-wrap--donut{% elif chart_type == 'bar-h' %} dashboard-chart-wrap--bar-h{% endif %}">
+      <canvas id="{{ chart_id }}"></canvas>
+      {% if empty_message %}
+      <div class="dashboard-chart-empty" id="{{ chart_id }}-empty">
+        <i class="icofont-chart-line"></i>
+        <p>{{ empty_message }}</p>
+        {% if empty_cta_url %}
+        <a href="{{ empty_cta_url }}" class="btn btn-sm btn-outline-primary mt-2">{{ empty_cta_text }}</a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

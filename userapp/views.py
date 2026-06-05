@@ -1,6 +1,9 @@
-from datetime import date
+from datetime import date, timedelta
 
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_http_methods
@@ -38,13 +41,105 @@ def userlogin(request):
     return render(request, 'userapp/user-login.html')
 
 
+def user_logout(request):
+    request.session.flush()
+    messages.success(request, 'Logged out successfully')
+    return redirect('home')
+
+
 def user_predict_result(request,result,con):
     context = {'result':result,
                'con':con}
     return render(request,'userapp/user-predict-result.html',context)
 
+def _shift_month(year, month, delta):
+    month += delta
+    while month > 12:
+        month -= 12
+        year += 1
+    while month < 1:
+        month += 12
+        year -= 1
+    return year, month
+
+
+def _dashboard_chart_data(user_sno):
+    now = timezone.now()
+    six_months_ago = now - timedelta(days=180)
+    monthly_rows = (
+        PredictionHistory.objects.filter(user_sno=user_sno, created_at__gte=six_months_ago)
+        .annotate(month=TruncMonth('created_at'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+    month_counts = {(row['month'].year, row['month'].month): row['count'] for row in monthly_rows}
+    activity_labels = []
+    activity_values = []
+    for offset in range(5, -1, -1):
+        year, month = _shift_month(now.year, now.month, -offset)
+        activity_labels.append(date(year, month, 1).strftime('%b %Y'))
+        activity_values.append(month_counts.get((year, month), 0))
+    activity_total = sum(activity_values)
+
+    status_order = [
+        Appointment.STATUS_PENDING,
+        Appointment.STATUS_CONFIRMED,
+        Appointment.STATUS_RESCHEDULED,
+        Appointment.STATUS_COMPLETED,
+        Appointment.STATUS_CANCELLED,
+    ]
+    status_map = {
+        Appointment.STATUS_PENDING: 'Pending',
+        Appointment.STATUS_CONFIRMED: 'Confirmed',
+        Appointment.STATUS_RESCHEDULED: 'Rescheduled',
+        Appointment.STATUS_COMPLETED: 'Completed',
+        Appointment.STATUS_CANCELLED: 'Cancelled',
+    }
+    appt_counts = {
+        row['status']: row['count']
+        for row in Appointment.objects.filter(user_sno=user_sno)
+        .values('status')
+        .annotate(count=Count('id'))
+    }
+    appt_labels = [status_map[status] for status in status_order if appt_counts.get(status)]
+    appt_values = [appt_counts[status] for status in status_order if appt_counts.get(status)]
+    appt_total = sum(appt_values)
+
+    return {
+        'activity': {'labels': activity_labels, 'values': activity_values, 'total': activity_total},
+        'appointments': {'labels': appt_labels, 'values': appt_values, 'total': appt_total},
+        'summaries': {
+            'activity': f'{activity_total} in 6 mo',
+            'appointments': f'{appt_total} total',
+        },
+        'has_activity': activity_total > 0,
+        'has_appointments': appt_total > 0,
+    }
+
+
+@user_login_required
 def user_dash(request):
-    return render (request, 'userapp/user-dash.html')
+    user = get_logged_in_user(request)
+    latest_prediction = PredictionHistory.objects.filter(user_sno=user.sno).first()
+    appointment_qs = Appointment.objects.filter(user_sno=user.sno)
+    pending_appointments = appointment_qs.filter(status=Appointment.STATUS_PENDING).count()
+    chart_data = _dashboard_chart_data(user.sno)
+    context = {
+        'user': user,
+        'latest_prediction': latest_prediction,
+        'user_stats': {
+            'predictions': PredictionHistory.objects.filter(user_sno=user.sno).count(),
+            'appointments': appointment_qs.count(),
+            'appointments_hint': (
+                f'{pending_appointments} pending approval'
+                if pending_appointments
+                else 'Book a consultation anytime'
+            ),
+        },
+        'chart_data': chart_data,
+    }
+    return render(request, 'userapp/user-dash.html', context)
 
 def user_profile(request):
     s_id = request.session["sno"]

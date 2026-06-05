@@ -1,27 +1,34 @@
 {% include 'userapp/includes/user-page-shell-start.html' with page_title='Alerts' page_heading='Notifications' page_subtitle='Updates about messages, appointments, and predictions' %}
 
 {% if notifications %}
-<div class="list-group">
-  {% for n in notifications %}
-  <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-start {% if not n.is_read %}border-left border-primary{% endif %}">
-    <div>
-      <div class="d-flex align-items-center mb-1">
-        {% if n.kind == 'message' %}<span class="badge badge-info mr-2">Message</span>
-        {% elif n.kind == 'appointment' %}<span class="badge badge-success mr-2">Appointment</span>
-        {% else %}<span class="badge badge-secondary mr-2">Prediction</span>{% endif %}
-        <strong>{{ n.title }}</strong>
+<div class="portal-panel p-0 overflow-hidden">
+  <div class="list-group list-group-flush">
+    {% for n in notifications %}
+    <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-start {% if not n.is_read %}border-left border-primary{% endif %}" style="border-left-width: 4px !important;">
+      <div class="pr-3">
+        <div class="d-flex align-items-center flex-wrap mb-1">
+          {% if n.kind == 'message' %}<span class="badge badge-info mr-2 mb-1">Message</span>
+          {% elif n.kind == 'appointment' %}<span class="badge badge-success mr-2 mb-1">Appointment</span>
+          {% else %}<span class="badge badge-secondary mr-2 mb-1">Prediction</span>{% endif %}
+          <strong class="text-primary">{{ n.title }}</strong>
+        </div>
+        {% if n.body %}<p class="mb-1 text-muted">{{ n.body }}</p>{% endif %}
+        <small class="text-muted">{{ n.created_at|date:"M d, Y H:i" }}</small>
       </div>
-      {% if n.body %}<p class="mb-1 text-muted">{{ n.body }}</p>{% endif %}
-      <small class="text-muted">{{ n.created_at|date:"M d, Y H:i" }}</small>
+      {% if n.link %}
+      <a href="{{ n.link }}" class="btn btn-sm btn-outline-primary flex-shrink-0">Open</a>
+      {% endif %}
     </div>
-    {% if n.link %}
-    <a href="{{ n.link }}" class="btn btn-sm btn-outline-primary ml-3">Open</a>
-    {% endif %}
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
 {% else %}
-<p class="text-muted text-center py-5">No notifications yet.</p>
+<div class="portal-panel portal-empty-state">
+  <i class="icofont-notification"></i>
+  <h5 class="text-primary mb-2">No notifications yet</h5>
+  <p class="mb-3">You'll see alerts here when you receive messages, appointment updates, or new predictions.</p>
+  <a href="{% url 'user_dash' %}" class="btn btn-main btn-sm">Back to dashboard</a>
+</div>
 {% endif %}
 
 {% include 'userapp/includes/user-page-shell-end.html' %}

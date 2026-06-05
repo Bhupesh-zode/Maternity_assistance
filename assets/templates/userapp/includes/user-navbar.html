@@ -20,10 +20,10 @@
   <li class="nav-item {% if request.resolver_match.url_name == 'user_support' %}active{% endif %}">
     <a class="nav-link" href="{% url 'user_support' %}">Messages{% if unread_message_count %}<span class="nav-badge">{{ unread_message_count }}</span>{% endif %}</a>
   </li>
-  <li class="nav-item {% if request.resolver_match.url_name == 'user_notifications' %}active{% endif %}">
-    <a class="nav-link" href="{% url 'user_notifications' %}">Alerts{% if unread_notification_count %}<span class="nav-badge">{{ unread_notification_count }}</span>{% endif %}</a>
-  </li>
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'home' %}">Logout</a>
+    <a class="nav-link" href="{% url 'user_logout' %}">Logout</a>
+  </li>
+  <li class="nav-item portal-theme-nav-item">
+    {% include 'userapp/includes/portal-theme-toggle.html' %}
   </li>
 </ul>

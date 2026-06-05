@@ -1,0 +1,10 @@
+{% if messages %}
+  {% for message in messages %}
+  <script>swal({
+    title: "{% if message.tags == 'success' %}Success!{% elif message.tags == 'error' %}Error{% elif message.tags == 'warning' %}Warning{% else %}Info{% endif %}",
+    text: "{{ message }}",
+    icon: "{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}",
+    button: "OK"
+  });</script>
+  {% endfor %}
+{% endif %}

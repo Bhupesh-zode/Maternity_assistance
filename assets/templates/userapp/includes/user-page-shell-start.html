@@ -2,21 +2,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ page_title }}</title>
-  <link rel="stylesheet" href="{% static 'userapp/plugins/bootstrap/css/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="{% static 'userapp/plugins/icofont/icofont.min.css' %}">
-  <link rel="stylesheet" href="{% static 'userapp/css/style.css' %}">
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  {% include 'includes/user-portal-head.html' with page_title=page_title extra_css=extra_css page_description=page_description theme_init=True portal_theme=True %}
 </head>
-<body id="top">
-{% if messages %}
-  {% for message in messages %}
-  <script>swal({ title: "{{ message.tags|title }}", text: "{{ message }}", icon: "{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}", button: "OK" });</script>
-  {% endfor %}
-{% endif %}
+<body id="top" class="user-portal-page{% if body_class %} {{ body_class }}{% endif %}">
+{% include 'includes/flash-messages.html' %}
 {% include 'userapp/includes/user-header.html' %}
+{% include 'userapp/includes/alerts-fab.html' %}
 <section class="page-title bg-2">
   <div class="overlay"></div>
   <div class="container">
@@ -30,5 +21,7 @@
     </div>
   </div>
 </section>
+{% if wrap_content != False %}
 <section class="section pt-4 pb-5">
   <div class="container">
+{% endif %}

@@ -1,0 +1,36 @@
+<div class="alerts-fab" id="alertsFab">
+  <button type="button" class="alerts-fab-btn" id="alertsFabToggle" aria-label="Open alerts" aria-expanded="false" aria-controls="alertsFabPanel">
+    <i class="icofont-notification" aria-hidden="true"></i>
+    {% if unread_notification_count %}
+    <span class="alerts-fab-badge">{{ unread_notification_count }}</span>
+    {% endif %}
+  </button>
+  <div class="alerts-fab-panel" id="alertsFabPanel" hidden>
+    <div class="alerts-fab-panel-header">
+      <strong>Alerts</strong>
+      {% if unread_notification_count %}
+      <span class="alerts-fab-panel-count">{{ unread_notification_count }} unread</span>
+      {% endif %}
+    </div>
+    <div class="alerts-fab-panel-body">
+      {% if alert_preview_notifications %}
+      <ul class="alerts-fab-list">
+        {% for n in alert_preview_notifications %}
+        <li class="alerts-fab-item{% if not n.is_read %} alerts-fab-item--unread{% endif %}">
+          <a href="{% if n.link %}{{ n.link }}{% else %}{% url 'user_notifications' %}{% endif %}" class="alerts-fab-item-link">
+            <span class="alerts-fab-item-title">{{ n.title }}</span>
+            {% if n.body %}<span class="alerts-fab-item-body">{{ n.body|truncatechars:72 }}</span>{% endif %}
+            <span class="alerts-fab-item-time">{{ n.created_at|date:"M d, H:i" }}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="alerts-fab-empty mb-0">No alerts yet.</p>
+      {% endif %}
+    </div>
+    <div class="alerts-fab-panel-footer">
+      <a href="{% url 'user_notifications' %}" class="alerts-fab-view-all">View all alerts</a>
+    </div>
+  </div>
+</div>

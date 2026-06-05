@@ -1,0 +1,52 @@
+{% load static %}
+<footer class="footer footer-medium section gray-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-md-6 mb-4 mb-md-0">
+        <h4 class="footer-brand-title mb-2">Maternity Assistance</h4>
+        <p class="footer-lead mb-3">
+          Trusted support for pregnancy care, childbirth planning, and direct access to our coordination team — all in one secure portal.
+        </p>
+        <ul class="list-inline footer-socials mb-0">
+          <li class="list-inline-item"><a href="{% url 'home' %}" title="Home"><i class="icofont-home"></i></a></li>
+          <li class="list-inline-item"><a href="{% url 'about' %}" title="About"><i class="icofont-info-circle"></i></a></li>
+          <li class="list-inline-item"><a href="{% url 'contact' %}" title="Contact"><i class="icofont-envelope"></i></a></li>
+        </ul>
+      </div>
+      <div class="col-lg-6 col-md-6 ml-lg-auto footer-contact-col">
+        <h4 class="footer-brand-title mb-2">Contact us</h4>
+        <div class="divider footer-contact-divider mb-3"></div>
+        <ul class="footer-contact-list">
+          <li>
+            <i class="icofont-email"></i>
+            <a href="mailto:care@maternityassistance.in">care@maternityassistance.in</a>
+          </li>
+          <li>
+            <i class="icofont-phone"></i>
+            <a href="tel:+919876543210">+91 98765 43210</a>
+          </li>
+          <li>
+            <i class="icofont-clock-time"></i>
+            <span>Mon – Sat, 9:00 AM – 7:00 PM</span>
+          </li>
+          <li>
+            <i class="icofont-location-pin"></i>
+            <span>Genesis Women's Health Centre, Pune 411016</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-btm py-2 mt-3">
+      <div class="row align-items-center">
+        <div class="col-md-10">
+          <p class="footer-legal mb-0">
+            &copy; {% now "Y" %} Maternity Assistance. Guidance only — always consult your doctor for medical decisions.
+          </p>
+        </div>
+        <div class="col-md-2 text-md-right">
+          <a class="backtop js-scroll-trigger" href="#top" title="Back to top"><i class="icofont-long-arrow-up"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

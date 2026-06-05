@@ -1,22 +1,27 @@
 {% include 'userapp/includes/user-page-shell-start.html' with page_title='Prediction Details' page_heading='Prediction Details' page_subtitle=record.created_at|date:"M d, Y H:i" %}
 
-<div class="bg-white rounded shadow-sm p-4 mb-4">
+<div class="portal-panel mb-4">
+  <p class="text-muted text-uppercase small mb-1">Recommended mode</p>
   <h4 class="text-primary mb-2">{{ record.predicted_mode }}</h4>
   <p class="text-muted mb-0">{{ record.summary }}</p>
 </div>
 
-<div class="bg-white rounded shadow-sm p-4">
-  <h5 class="mb-3">Form values</h5>
+<div class="portal-panel">
+  <h5 class="portal-form-section-title mb-3"><i class="icofont-listing-box"></i>Form values</h5>
   {% if fields %}
   <div class="row">
     {% for f in fields %}
-    <div class="col-md-6 mb-2">
-      <strong>{{ f.label }}:</strong> {{ f.value }}
+    <div class="col-md-6 mb-3">
+      <div class="portal-field-label">{{ f.label }}</div>
+      <div>{{ f.value }}</div>
     </div>
     {% endfor %}
   </div>
   {% else %}
-  <p class="text-muted mb-0">No form details stored for this run.</p>
+  <div class="portal-empty-state py-4">
+    <i class="icofont-info-circle"></i>
+    <p class="mb-0">No form details stored for this run.</p>
+  </div>
   {% endif %}
 </div>
 

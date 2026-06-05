@@ -1,0 +1,25 @@
+{% load static %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{% firstof page_description 'Healthcare, pregnancy, childbirth, and maternity assistance.' %}">
+<title>{{ page_title }}</title>
+{% include 'includes/favicons.html' %}
+<link rel="stylesheet" href="{% static 'userapp/plugins/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'userapp/plugins/icofont/icofont.min.css' %}">
+<link rel="stylesheet" href="{% static 'userapp/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'userapp/css/components.css' %}">
+{% if portal_theme %}<link rel="stylesheet" href="{% static 'userapp/css/portal-theme.css' %}">{% endif %}
+{% if extra_css %}<link rel="stylesheet" href="{% static extra_css %}">{% endif %}
+{% if theme_init %}
+<script>
+(function () {
+  try {
+    var theme = localStorage.getItem('ma-user-theme') || localStorage.getItem('ma-dashboard-theme');
+    if (theme === 'dark') {
+      document.documentElement.classList.add('ma-theme-dark');
+    }
+  } catch (e) {}
+})();
+</script>
+{% endif %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

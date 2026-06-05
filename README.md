@@ -16,6 +16,7 @@ A Django web application that helps expectant users understand recommended child
 4. [First-time setup](#4-first-time-setup)
 5. [Run the project daily](#5-run-the-project-daily)
 6. [Log in and test](#6-log-in-and-test)
+   - [Seed demo data (college presentation)](#seed-demo-data-college-presentation)
 7. [User guide — step by step](#7-user-guide--step-by-step)
 8. [Admin guide — step by step](#8-admin-guide--step-by-step)
 9. [Feature reference](#9-feature-reference)
@@ -206,6 +207,57 @@ Login URL: http://127.0.0.1:8000/userlogin
 
 New users register at `/register` with status **pending** until an admin approves them.
 
+### Demo account (college presentation)
+
+Use this account to walk through a fully populated user dashboard during demos:
+
+| Field | Value |
+|-------|--------|
+| URL | http://127.0.0.1:8000/userlogin |
+| Email | `bhupeshzode9@gmail.com` |
+| Password | Your registered password for this account |
+| Status | `accepted` (set automatically by the seed command) |
+
+After seeding (below), this account includes prediction history, appointments, AI chat, support messages, and notifications so charts and badges look realistic.
+
+### Seed demo data (college presentation)
+
+A management command fills fake but realistic data for the demo account — predictions spread across the last 6 months (for dashboard charts), mixed appointment statuses, assistant chat, admin support thread, and alerts.
+
+**Run once before a presentation** (with `.venv` activated):
+
+```powershell
+python manage.py seed_demo_user --email bhupeshzode9@gmail.com
+```
+
+**What gets created**
+
+| Data | Count / detail |
+|------|----------------|
+| Prediction history | 8 runs (Vaginal birth & Cesarean section) over 6 months |
+| Latest prediction | Synced to `user_predictions` for dashboard pill |
+| Appointments | 4 — pending, confirmed, completed, rescheduled |
+| AI assistant chat | 6 messages (trimester tips + how to use Predict) |
+| Admin support | 4 messages with 1 unread admin reply |
+| Notifications | 4 alerts with 2 unread |
+
+**Re-run anytime** — the command clears existing demo data for that user first, then re-seeds from scratch.
+
+**Seed a different user** (must already exist in the database):
+
+```powershell
+python manage.py seed_demo_user --email other@example.com
+```
+
+If the account is not `accepted`, the command sets status to `accepted` so login works.
+
+**Demo checklist**
+
+1. Run `seed_demo_user` (see above).
+2. Log in as `bhupeshzode9@gmail.com`.
+3. Open **Dashboard** — stats and all 3 activity charts should show data.
+4. Open **Prediction History**, **Appointments**, **Messages**, and **Alerts** — each section should have content and unread badges where expected.
+
 ---
 
 ## 7. User guide — step by step
@@ -215,7 +267,14 @@ After logging in, the navbar gives access to all user features.
 ### 7.1 Dashboard
 
 - URL: `/user-dashboard`
-- Overview cards for Assistant, Message Admin, Book Appointment, and Prediction History.
+- Welcome panel with your name and latest prediction summary.
+- Stat cards: total predictions, appointments, and unread messages.
+- **Your activity** — three Chart.js charts from your real data:
+  - Predictions over the last 6 months (line chart)
+  - Appointments by status (doughnut chart)
+  - Prediction outcomes (horizontal bar chart)
+- Quick-action cards: Predict, Assistant, Messages, Appointments, and History.
+- For a populated demo, run `python manage.py seed_demo_user` (see [Seed demo data](#seed-demo-data-college-presentation)).
 
 ### 7.2 Childbirth prediction
 
@@ -427,7 +486,9 @@ Maternity_assistance/
 │   ├── models.py             # UserPrediction, PredictionHistory, Appointment, …
 │   ├── prediction_store.py   # Save latest + history on predict
 │   ├── context_processors.py # Unread badges for templates
-│   └── management/commands/check_ml_pickles.py
+│   └── management/commands/
+│       ├── check_ml_pickles.py
+│       └── seed_demo_user.py   # Fake data for college demos
 ├── adminapp/                 # admin dashboard, users, algorithms, appointments
 ├── chatapp/                  # pregnancy assistant + user–admin messaging
 │   ├── data/pregnancy_tips.json
@@ -579,6 +640,9 @@ pip install Django==4.1.7 pandas scikit-learn xgboost Pillow mysqlclient google-
 python manage.py migrate
 python manage.py check_ml_pickles
 python manage.py runserver
+
+# Optional — before a college demo:
+python manage.py seed_demo_user --email bhupeshzode9@gmail.com
 ```
 
 ### Branch workflow
