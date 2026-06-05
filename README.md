@@ -1,6 +1,6 @@
-# Maternity Assistance — Childbirth Prediction (Django)
+# Maternity Assistance — Childbirth Prediction
 
-Web application that predicts the recommended mode of childbirth (e.g. vaginal vs cesarean) using an XGBoost model. Includes a public site, user portal (predict, profile, **pregnancy assistant**), and admin portal (users, dataset, algorithm metrics).
+A Django web application that helps expectant users understand recommended childbirth modes (e.g. vaginal vs cesarean) using an XGBoost ML model. The platform also includes a pregnancy assistant, direct admin support chat, appointment booking, prediction history, and in-app notifications.
 
 **Repository:** [github.com/Bhupesh-zode/Maternity_assistance](https://github.com/Bhupesh-zode/Maternity_assistance)
 
@@ -8,29 +8,81 @@ Web application that predicts the recommended mode of childbirth (e.g. vaginal v
 
 ---
 
-## Features
+## Table of contents
 
-| Area | What it does |
-|------|----------------|
-| **Public** | Home, about, contact, user registration |
-| **User** | Login, dashboard, profile, ML prediction form |
-| **Assistant** | Logged-in pregnancy chat at `/user-chat` — emergency keyword checks, curated tips (`chatapp/data/pregnancy_tips.json`), optional Gemini AI |
-| **Admin** | Approve users, dataset upload/view, algorithm comparison (SVM, decision tree, KNN, random forest, AdaBoost, XGBoost, logistic regression) |
+1. [What this application does](#1-what-this-application-does)
+2. [How the three portals work](#2-how-the-three-portals-work)
+3. [Prerequisites](#3-prerequisites)
+4. [First-time setup](#4-first-time-setup)
+5. [Run the project daily](#5-run-the-project-daily)
+6. [Log in and test](#6-log-in-and-test)
+7. [User guide — step by step](#7-user-guide--step-by-step)
+8. [Admin guide — step by step](#8-admin-guide--step-by-step)
+9. [Feature reference](#9-feature-reference)
+10. [URL map](#10-url-map)
+11. [Database tables](#11-database-tables)
+12. [Project structure](#12-project-structure)
+13. [Configuration](#13-configuration)
+14. [Troubleshooting](#14-troubleshooting)
+15. [Security (development only)](#15-security-development-only)
+16. [GitHub collaboration](#16-github-collaboration)
 
 ---
 
-## Prerequisites
+## 1. What this application does
 
-- **Python 3.10+** (developed with 3.13)
-- **MySQL Server 8.0** (Windows service name: `MySQL80`)
-- **Windows:** Visual C++ build tools may be required if `mysqlclient` fails to install (pre-built wheels usually work on 3.13)
-- **Optional:** [Google AI Studio](https://aistudio.google.com/apikey) API key for the pregnancy assistant
+| Goal | How the app helps |
+|------|-------------------|
+| **Predict childbirth mode** | User fills a clinical form → XGBoost model returns a recommendation |
+| **Pregnancy guidance** | AI assistant with trimester tips, red-flag checks, and optional Gemini replies |
+| **Talk to admin** | Private user–admin messaging with text and file attachments |
+| **Book consultations** | Users request appointment slots; admin confirms or reschedules |
+| **Track predictions** | Every predict run is saved; users and admins can review history |
+| **Stay informed** | Unread badges and an alerts page for messages, appointments, and predictions |
 
 ---
 
-## First-time setup
+## 2. How the three portals work
 
-### 1. Clone and virtual environment
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  PUBLIC SITE          │  USER PORTAL         │  ADMIN PORTAL      │
+│  (no login)           │  (session: sno)      │  (admin session)   │
+├───────────────────────┼──────────────────────┼────────────────────┤
+│  Home, About, Contact │  Dashboard           │  Dashboard         │
+│  Register             │  Predict + History   │  Manage users      │
+│  User / Admin login   │  Profile             │  Dataset + ML runs │
+│                       │  Assistant (AI chat) │  Algorithm compare │
+│                       │  Messages + files    │  User messages     │
+│                       │  Appointments        │  Appointments      │
+│                       │  Alerts              │  Prediction history│
+└───────────────────────┴──────────────────────┴────────────────────┘
+```
+
+**Typical user flow:** Register → Admin approves → Login → Predict → Use assistant / message admin / book appointment.
+
+**Typical admin flow:** Login → Approve pending users → Reply to messages → Manage appointments → Review predictions and datasets.
+
+---
+
+## 3. Prerequisites
+
+| Requirement | Notes |
+|-------------|--------|
+| **Python 3.10+** | Developed with 3.13 |
+| **MySQL Server 8.0** | Windows service name: `MySQL80` |
+| **Git** | For clone and collaboration |
+| **Optional** | [Google AI Studio](https://aistudio.google.com/apikey) API key for Gemini assistant |
+
+On Windows, if `mysqlclient` fails to build, pre-built wheels usually work on Python 3.13. Visual C++ build tools may be needed otherwise.
+
+---
+
+## 4. First-time setup
+
+Follow these steps in order. Do not skip `.env` or migrations.
+
+### Step 1 — Clone and create a virtual environment
 
 ```powershell
 git clone https://github.com/Bhupesh-zode/Maternity_assistance.git
@@ -38,25 +90,20 @@ cd Maternity_assistance
 
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-
 pip install --upgrade pip
 ```
 
-**Recommended (Python 3.10–3.13)** — core app only; avoids broken pins in the full freeze:
+**Recommended install** (Python 3.10–3.13):
 
 ```powershell
 pip install Django==4.1.7 pandas scikit-learn xgboost Pillow mysqlclient google-generativeai
 ```
 
-Optional full lockfile (may fail on Python 3.13, e.g. `PyYAML==6.0` build errors):
+> Use **`.venv`** only. Ignore old folders like `childenv3.11.1` or `env_testing3` if copied from another machine.
 
-```powershell
-pip install -r requirements.txt
-```
+Optional: `pip install -r requirements.txt` — may fail on Python 3.13 (e.g. `PyYAML==6.0`).
 
-> Use **`.venv`** only. Ignore old folders `childenv3.11.1` / `env_testing3` if you copied them from another machine.
-
-### 2. Start MySQL
+### Step 2 — Start MySQL
 
 Open **PowerShell as Administrator**:
 
@@ -64,11 +111,9 @@ Open **PowerShell as Administrator**:
 net start MySQL80
 ```
 
-If the service fails to start, see [Troubleshooting](#troubleshooting).
+### Step 3 — Import the database
 
-### 3. Import the database
-
-Adjust the path to your clone location:
+Adjust the path to your project folder:
 
 ```powershell
 & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -pYOUR_PASSWORD -e "source C:/path/to/Maternity_assistance/childbirth.sql"
@@ -80,42 +125,25 @@ Verify:
 & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -pYOUR_PASSWORD -e "USE childbirth; SHOW TABLES;"
 ```
 
-### 4. Local secrets (`.env`)
+### Step 4 — Create `.env`
 
 ```powershell
 copy .env.example .env
 notepad .env
 ```
 
-Example `.env` (do **not** commit this file):
+Example (do **not** commit this file):
 
 ```env
 MYSQL_PASSWORD=your_mysql_root_password
 DJANGO_SECRET_KEY=change-me-to-a-random-secret-key
 
-# Pregnancy assistant (https://aistudio.google.com/apikey)
+# Optional — pregnancy assistant
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-2.5-flash
 ```
 
-| Variable | Purpose |
-|----------|---------|
-| `MYSQL_PASSWORD` | MySQL `root` password (loaded into `settings.py`) |
-| `DJANGO_SECRET_KEY` | Django secret key |
-| `GEMINI_API_KEY` | Optional — enables Gemini replies in the assistant |
-| `GEMINI_MODEL` | Optional — default `gemini-2.5-flash` |
-
-Database connection (`childbirth_proj/settings.py`):
-
-| Setting | Value |
-|---------|--------|
-| Database | `childbirth` |
-| User | `root` |
-| Password | from `.env` → `MYSQL_PASSWORD` |
-| Host | `localhost` |
-| Port | `3306` |
-
-### 5. Django migrations
+### Step 5 — Run Django migrations
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
@@ -124,9 +152,9 @@ python manage.py check
 python manage.py check_ml_pickles
 ```
 
-This creates Django tables including **`chat_messages`** (`chatapp`) and **`user_predictions`** (saved Predict per user). `check_ml_pickles` verifies ML model files load (optional but useful after setup).
+`migrate` creates all app tables (users, chat, support messages, predictions, appointments, notifications). `check_ml_pickles` verifies ML model files load correctly.
 
-### 6. Run the server
+### Step 6 — Start the server
 
 ```powershell
 python manage.py runserver
@@ -134,17 +162,19 @@ python manage.py runserver
 
 Open **http://127.0.0.1:8000/**
 
-After pulling new code or changing `urls.py` / `settings.py`, **restart** `runserver` if pages fail with URL or settings errors.
+> Always activate `.venv` before `runserver`. Using system Python without dependencies causes errors such as `No module named 'pandas'`.
+
+> After pulling new code or editing `urls.py` / `settings.py`, restart the server (Ctrl+C, then `runserver` again).
 
 ---
 
-## Daily use
+## 5. Run the project daily
 
 ```powershell
 cd path\to\Maternity_assistance
 .\.venv\Scripts\Activate.ps1
 
-# Ensure MySQL is running (Admin PowerShell if stopped):
+# If MySQL stopped (Admin PowerShell):
 # net start MySQL80
 
 python manage.py runserver
@@ -152,231 +182,386 @@ python manage.py runserver
 
 ---
 
-## Logins
+## 6. Log in and test
 
-### Admin portal
+### Admin
 
 | Field | Value |
 |-------|--------|
 | URL | http://127.0.0.1:8000/adminlogin |
-| Email | `admin` |
+| Username | `admin` |
 | Password | `admin` |
 
-Hardcoded in `mainapp/views.py` (not stored in MySQL). Change before any public deployment.
+Credentials are hardcoded in `mainapp/views.py`. Change before any public deployment.
 
-### User portal (sample accounts from `childbirth.sql`)
+### Sample users (from `childbirth.sql`)
 
-| URL | Email | Password | Status |
-|-----|-------|----------|--------|
-| http://127.0.0.1:8000/userlogin | `deepika@gmail.com` | `Dee258369` | accepted |
-| http://127.0.0.1:8000/userlogin | `admin@gmail.com` | `1234` | accepted |
-| http://127.0.0.1:8000/userlogin | `marnus@gmail.com` | `Ma12346` | restricted |
+| Email | Password | Status |
+|-------|----------|--------|
+| `deepika@gmail.com` | `Dee258369` | accepted |
+| `admin@gmail.com` | `1234` | accepted |
+| `marnus@gmail.com` | `Ma12346` | restricted |
+
+Login URL: http://127.0.0.1:8000/userlogin
 
 New users register at `/register` with status **pending** until an admin approves them.
 
-### Pregnancy assistant
+---
 
-| URL | http://127.0.0.1:8000/user-chat |
-|-----|----------------------------------|
-| Access | User login required (session `sno`) |
-| Gemini | Optional — set `GEMINI_API_KEY` in `.env` |
-| Without API key | Quick topics and rule-based / curated tips still work |
-| After Predict | **About Predict** and Gemini use your **saved** result and form details from MySQL (`user_predictions`), updated each time you submit Predict |
+## 7. User guide — step by step
 
-From the user dashboard, use **Assistant** in the navbar or the **Open assistant** card. Each account has its own saved prediction; logging in on another browser still loads your data.
+After logging in, the navbar gives access to all user features.
+
+### 7.1 Dashboard
+
+- URL: `/user-dashboard`
+- Overview cards for Assistant, Message Admin, Book Appointment, and Prediction History.
+
+### 7.2 Childbirth prediction
+
+1. Go to **Predict** (`/user-predict`).
+2. Fill in the clinical form and submit.
+3. View the result page.
+4. Latest result is saved to `user_predictions` and appended to **History**.
+
+### 7.3 Prediction history
+
+- URL: `/user-prediction-history`
+- Lists every predict run with date, result, and key fields.
+- Click **Details** on any row for the full form snapshot.
+
+### 7.4 Pregnancy assistant (AI chat)
+
+- URL: `/user-chat`
+- General pregnancy tips, quick topics, red-flag checks.
+- Optional Gemini AI if `GEMINI_API_KEY` is set in `.env`.
+- Uses your **latest saved prediction** when you ask about predict results.
+- **Not** the same as admin messaging — this is automated guidance only.
+
+### 7.5 Message admin (private support)
+
+- URL: `/user-messages`
+- Private thread between you and admin only.
+- Send text and/or attach files (images, PDF, DOC — max 10 MB).
+- Unread admin replies show a badge on **Messages** in the navbar.
+
+### 7.6 Book an appointment
+
+1. Go to **Appointments** (`/user-appointments`).
+2. Choose a future date and time slot (9 AM–4 PM).
+3. Add optional notes and submit.
+4. Track status: Pending → Confirmed / Rescheduled / Completed / Cancelled.
+5. Cancel a request while it is still **Pending**.
+
+### 7.7 Alerts and notifications
+
+- URL: `/user-notifications`
+- Badge on **Alerts** when you have unread items.
+- Notifications are created when:
+  - Admin replies in chat
+  - A prediction is saved
+  - An appointment status changes
 
 ---
 
-## Main URLs
+## 8. Admin guide — step by step
+
+Use the sidebar on any admin page. Badges highlight unread messages and pending appointments.
+
+### 8.1 Approve new users
+
+1. **Manage Users → Pending Users** (`/admin-pending-users`)
+2. Approve or reject registrations.
+
+### 8.2 Reply to user messages
+
+1. Open **Messages** (`/admin-messages`) — inbox lists all user conversations.
+2. Click **Open chat** on a user.
+3. Reply with text and/or attach files (same rules as user side).
+4. Unread count badge updates when users send new messages.
+
+### 8.3 Manage appointments
+
+1. Open **Appointments** (`/admin-appointments`).
+2. For each request you can:
+   - **Confirm** — accepts the user’s preferred slot
+   - **Reschedule** — set a new date/time and optional note
+   - **Cancel** — cancel with optional note to user
+   - **Mark completed** — after a confirmed visit
+3. User receives an in-app notification for each update.
+
+### 8.4 View prediction history
+
+- **Predictions** (`/admin-prediction-history`) — all users’ predict runs in one table.
+
+### 8.5 Dataset and algorithms (existing)
+
+- Upload / view dataset
+- Run and compare ML algorithms (logistic regression, gradient boost, XGBoost, etc.)
+
+---
+
+## 9. Feature reference
+
+### Public
+
+| Feature | Description |
+|---------|-------------|
+| Home, About, Contact | Marketing and information pages |
+| Register | New user signup (pending until admin approval) |
+| User / Admin login | Entry points for each portal |
+
+### User portal
+
+| Feature | URL | Description |
+|---------|-----|-------------|
+| Dashboard | `/user-dashboard` | Main hub after login |
+| Profile | `/user-profile` | Edit name, contact, photo |
+| Predict | `/user-predict` | ML childbirth mode prediction |
+| History | `/user-prediction-history` | All past predict runs |
+| Appointments | `/user-appointments` | Book and track consultations |
+| Assistant | `/user-chat` | AI pregnancy chat (Gemini optional) |
+| Messages | `/user-messages` | Private admin chat + file sharing |
+| Alerts | `/user-notifications` | In-app notification center |
+
+### Admin portal
+
+| Feature | URL | Description |
+|---------|-----|-------------|
+| Dashboard | `/admin-dashboard` | Admin home |
+| Pending / All users | `/admin-pending-users`, `/admin-all-users` | User management |
+| Messages | `/admin-messages` | User support inbox |
+| Appointments | `/admin-appointments` | Confirm / reschedule bookings |
+| Predictions | `/admin-prediction-history` | All users’ predict logs |
+| Dataset | `/upload-dataset`, `/view-dataset` | CSV dataset management |
+| Algorithms | `/algorithm-analysis`, etc. | Model training and comparison |
+
+### Messaging and files
+
+| Item | Detail |
+|------|--------|
+| Isolation | Each user has a separate conversation thread |
+| Text | Optional caption with any message |
+| Images | JPG, PNG, GIF, WEBP — shown as thumbnails |
+| Documents | PDF, DOC, DOCX — download links |
+| Max size | 10 MB per file |
+| Storage | `media/support_messages/{user_id}/` |
+
+### Notifications
+
+| Trigger | User sees |
+|---------|-----------|
+| Admin replies in chat | Alert + Messages badge |
+| Predict form submitted | Alert with result summary |
+| Appointment updated | Alert with new status / slot |
+
+---
+
+## 10. URL map
+
+### Public
 
 | Path | Description |
 |------|-------------|
 | `/` | Home |
+| `/about` | About |
+| `/contact` | Contact |
 | `/register` | User registration |
 | `/userlogin` | User login |
-| `/user-dashboard` | User dashboard |
-| `/user-predict` | Childbirth prediction form |
-| `/user-profile` | User profile |
-| `/user-chat` | Pregnancy assistant |
 | `/adminlogin` | Admin login |
-| `/admin-dashboard` | Admin dashboard |
-| `/admin-all-users` | Manage users |
-| `/admin-pending-users` | Approve pending users |
+
+### User (login required)
+
+| Path | Description |
+|------|-------------|
+| `/user-dashboard` | Dashboard |
+| `/user-profile` | Profile |
+| `/user-predict` | Prediction form |
+| `/user-prediction-history` | Prediction history list |
+| `/user-prediction-history/<id>` | Single prediction detail |
+| `/user-appointments` | Book / view appointments |
+| `/user-chat` | Pregnancy assistant |
+| `/user-messages` | Admin support chat |
+| `/user-notifications` | Alerts |
+
+### Admin (admin login required)
+
+| Path | Description |
+|------|-------------|
+| `/admin-dashboard` | Dashboard |
+| `/admin-pending-users` | Pending registrations |
+| `/admin-all-users` | All users |
+| `/admin-messages` | Message inbox |
+| `/admin-messages/<user_sno>` | Chat with one user |
+| `/admin-appointments` | Appointment management |
+| `/admin-prediction-history` | All prediction runs |
 | `/view-dataset` | View dataset |
+| `/upload-dataset` | Upload dataset |
 | `/algorithm-analysis` | Algorithm comparison |
 
 ---
 
-## Pregnancy assistant (`chatapp`)
+## 11. Database tables
 
-- **View:** `chatapp/views.py` → `user_chat`
-- **Logic:** `chatapp/services.py` — emergency phrases, JSON tips, Gemini with model fallbacks
-- **Data:** `chatapp/data/pregnancy_tips.json`
-- **History:** `ChatMessage` model → MySQL table `chat_messages`
-- **Predict memory:** `UserPrediction` model → MySQL table `user_predictions` (one row per user, updated on each Predict submit)
-- **Auth:** Custom session check (`chatapp/utils.py` — `session["sno"]`)
+Django migrations manage these tables. Key ones:
 
-**Safety:** The assistant is informational only, not medical advice. Severe symptoms trigger urgent-care messaging.
-
-**Gemini notes:**
-
-- Put your API key only in **`.env`**, never in `.env.example` or Git.
-- Default model: `gemini-2.5-flash`. If you hit quota errors, try `gemini-2.0-flash-lite` in `.env`.
-- Rotate your key if it was ever committed or shared.
+| Table | App | Purpose |
+|-------|-----|---------|
+| `User Details` | mainapp | Registered users (legacy table name) |
+| `user_predictions` | userapp | Latest predict result per user (one row each) |
+| `prediction_history` | userapp | Every predict run (append-only log) |
+| `appointments` | userapp | Consultation booking requests |
+| `user_notifications` | userapp | In-app alerts for users |
+| `chat_messages` | chatapp | Pregnancy assistant conversation history |
+| `support_messages` | chatapp | User–admin private messages (+ file paths) |
 
 ---
 
-## Project layout
+## 12. Project structure
 
 ```
 Maternity_assistance/
-├── childbirth_proj/       # settings.py, urls.py, wsgi.py
-├── mainapp/               # home, register, admin login
-├── userapp/               # user dashboard, predict (ML)
-├── adminapp/              # admin dashboard, algorithms
-├── chatapp/               # pregnancy assistant (Gemini + tips)
+├── childbirth_proj/          # settings.py, urls.py, wsgi.py
+├── mainapp/                  # home, register, admin login
+├── userapp/                  # dashboard, predict, appointments, notifications
+│   ├── models.py             # UserPrediction, PredictionHistory, Appointment, …
+│   ├── prediction_store.py   # Save latest + history on predict
+│   ├── context_processors.py # Unread badges for templates
+│   └── management/commands/check_ml_pickles.py
+├── adminapp/                 # admin dashboard, users, algorithms, appointments
+├── chatapp/                  # pregnancy assistant + user–admin messaging
 │   ├── data/pregnancy_tips.json
-│   ├── services.py
-│   ├── views.py
-│   └── migrations/
+│   ├── services.py           # Gemini, tips, emergency checks
+│   └── views.py              # user_chat, user_support, admin inbox
 ├── assets/
-│   ├── templates/         # HTML (userapp, chatapp, adminapp, …)
-│   └── static/            # CSS, JS, images
-├── media/                 # uploaded user images (gitignored)
-├── childbirth.sql         # MySQL dump (schema + sample data)
-├── encoder_newf.pkl       # feature encoder (prediction)
-├── y_encoder.pkl          # label encoder
-├── XGB.pkl                # trained XGBoost model
+│   ├── templates/            # HTML (userapp, chatapp, adminapp, …)
+│   │   └── userapp/includes/ # Shared user header + navbar
+│   └── static/               # CSS, JS, images
+├── media/                    # Uploads (user photos, support attachments)
+├── childbirth.sql            # MySQL dump (schema + sample users)
+├── encoder_newf.pkl          # Feature encoder
+├── y_encoder.pkl             # Label encoder
+├── XGB.pkl                   # Trained XGBoost model
+├── ml_compat.py              # sklearn 1.2.x pickle compatibility
 ├── manage.py
-├── ml_compat.py           # sklearn 1.2.x pickle loader (user + admin predict)
-├── userapp/management/commands/check_ml_pickles.py
-├── requirements.txt       # full freeze; use minimal pip install on Python 3.13
-├── .env.example           # template — copy to .env
-└── .venv/                 # local virtual environment (gitignored)
+├── requirements.txt
+├── .env.example
+└── .venv/                    # Local virtualenv (gitignored)
 ```
 
 Prediction reads `encoder_newf.pkl`, `y_encoder.pkl`, and `XGB.pkl` from the **project root** when the user submits the predict form.
 
 ---
 
-## Troubleshooting
+## 13. Configuration
 
-### `NoReverseMatch: 'user_chat' not found`
+### Environment variables (`.env`)
 
-The template references `{% url 'user_chat' %}`, but the running server does not have that URL registered. Usually means:
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `MYSQL_PASSWORD` | Yes | MySQL `root` password |
+| `DJANGO_SECRET_KEY` | Yes | Django secret key |
+| `GEMINI_API_KEY` | No | Enables Gemini in pregnancy assistant |
+| `GEMINI_MODEL` | No | Default: `gemini-2.5-flash` |
 
-1. You are on a branch **without** the `chatapp` changes — use `main` after merge, or branch `Feature-Chatbot-integration-for-safe-Pregnancy-Planning`.
-2. **`chatapp`** is missing from `INSTALLED_APPS` in `childbirth_proj/settings.py`.
-3. **`user-chat`** route is missing from `childbirth_proj/urls.py`.
-4. The dev server is **stale** — stop it (Ctrl+C) and run `python manage.py runserver` again.
+### Database (`childbirth_proj/settings.py`)
 
-Quick check:
+| Setting | Value |
+|---------|--------|
+| Database | `childbirth` |
+| User | `root` |
+| Password | from `.env` |
+| Host | `localhost` |
+| Port | `3306` |
+
+### Pregnancy assistant notes
+
+- API key belongs in `.env` only — never commit it.
+- Without Gemini, quick topics and rule-based tips still work.
+- Assistant is informational only, not medical advice. Severe symptoms trigger urgent-care messaging.
+- If quota errors occur, try `GEMINI_MODEL=gemini-2.0-flash-lite` in `.env`.
+
+---
+
+## 14. Troubleshooting
+
+### Server / Python
+
+| Problem | Fix |
+|---------|-----|
+| `No module named 'pandas'` | Activate `.venv` and install dependencies (see [Step 1](#step-1--clone-and-create-a-virtual-environment)) |
+| `NoReverseMatch` for a URL name | Restart `runserver`; confirm route exists in `childbirth_proj/urls.py` |
+| Page 404 after git pull | Run `python manage.py migrate` and restart server |
+
+Quick URL check:
 
 ```powershell
-python manage.py shell -c "from django.urls import reverse; print(reverse('user_chat'))"
+python manage.py shell -c "from django.urls import reverse; print(reverse('user_support'))"
 ```
 
-Expected output: `/user-chat`
+Expected: `/user-messages`
 
-### `net start MySQL80` — Access is denied
+### MySQL
 
-Run PowerShell **as Administrator**.
+| Problem | Fix |
+|---------|-----|
+| `net start MySQL80` — Access denied | Run PowerShell as **Administrator** |
+| `ERROR 2003` — Can't connect | Start MySQL: `net start MySQL80` |
+| `ERROR 1045` — Access denied for root | Fix `MYSQL_PASSWORD` in `.env` |
+| `django.db.utils.OperationalError` | Confirm MySQL is running, database `childbirth` exists, re-import `childbirth.sql` if needed |
 
-### MySQL stops immediately — `Permission denied` on `*-bin.index`
-
-Grant the service account access to the data folder (Admin PowerShell):
+MySQL data-folder permission fix (if service stops immediately):
 
 ```powershell
 icacls "C:\ProgramData\MySQL\MySQL Server 8.0\Data" /grant "NT AUTHORITY\NETWORK SERVICE:(OI)(CI)F" /T
 net start MySQL80
 ```
 
-Optional: disable binary logging in `C:\ProgramData\MySQL\MySQL Server 8.0\my.ini` (e.g. comment out `log-bin=...`) if you do not need replication logs.
-
-### `ERROR 1045` — Access denied for `root`
-
-Test with your password:
+### Migrations
 
 ```powershell
-& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -pYOUR_PASSWORD -e "SELECT VERSION();"
-```
-
-Update `MYSQL_PASSWORD` in **`.env`**, not in Git.
-
-### `ERROR 2003` — Can't connect (10061)
-
-MySQL is not running. Start it: `net start MySQL80` (Administrator).
-
-### Remove one-time password reset from `my.ini`
-
-If you used `init_file=C:/mysql-pw-reset.txt` for setup, **remove that line** from `C:\ProgramData\MySQL\MySQL Server 8.0\my.ini`, then:
-
-```powershell
-net stop MySQL80
-net start MySQL80
-```
-
-### Django `django.db.utils.OperationalError`
-
-1. Confirm MySQL is running.
-2. Confirm database exists: `SHOW DATABASES LIKE 'childbirth';`
-3. Re-import `childbirth.sql` if the database is missing.
-4. Check `MYSQL_PASSWORD` in `.env`.
-
-### Assistant / `chat_messages` errors
-
-```powershell
+python manage.py migrate
 python manage.py migrate chatapp
+python manage.py migrate userapp
 ```
 
-Ensure `GEMINI_API_KEY` is set in `.env` for AI replies. Check the terminal for Gemini quota or API errors.
-
-### `pip install -r requirements.txt` fails on `PyYAML` (Python 3.13)
-
-The committed lockfile includes old packages (Sphinx, PyQt5, `PyYAML==6.0`, etc.) that the app does not need. Use the **recommended minimal install** in [First-time setup](#1-clone-and-virtual-environment) instead.
-
-### Prediction errors after form submit
+### ML prediction errors
 
 **`'OrdinalEncoder' object has no attribute '_infrequent_enabled'`**
 
-The `.pkl` files were saved with **scikit-learn 1.2.1**, but Python 3.13 often installs a newer sklearn (e.g. 1.8). The app patches encoders on load in `ml_compat.py`. Restart `runserver` after pulling this fix, then submit the predict form again.
-
-If you still see errors, check versions:
-
-```powershell
-python -c "import sklearn, xgboost; print(sklearn.__version__, xgboost.__version__)"
-```
-
-Long-term fix: re-export `encoder_newf.pkl`, `y_encoder.pkl`, and `XGB.pkl` with the same sklearn/xgboost versions you use in production.
-
-**Smoke test** (loads all pickles + one sample prediction):
+Pickles were saved with sklearn 1.2.x; newer Python may install sklearn 1.8+. The app patches encoders in `ml_compat.py`. Restart server after pulling fixes.
 
 ```powershell
 python manage.py check_ml_pickles
 ```
 
-Shared loader: `ml_compat.py` (used by `userapp` and `adminapp`).
+Long-term: re-export `.pkl` files with the same sklearn/xgboost versions used in production.
 
-**Note:** Admin “Gradient Boost” (`GradientBoostingClassifier.pkl`) may not load on sklearn 1.8+; XGBoost and logistic regression admin runs use the same compat loader for encoders.
+### Template / static errors
+
+| Problem | Fix |
+|---------|-----|
+| `Invalid block tag: 'static'` | Included templates need their own `{% load static %}` |
+| Header looks different on some pages | All user pages use `userapp/includes/user-header.html` — pull latest templates |
+
+### pip / requirements
+
+If `pip install -r requirements.txt` fails on Python 3.13 (e.g. `PyYAML==6.0`), use the minimal install in [Step 1](#step-1--clone-and-create-a-virtual-environment).
 
 ---
 
-## Security notes (development only)
+## 15. Security (development only)
 
-- `DEBUG = True` and a dev-only default `SECRET_KEY` fallback are for local use only.
-- Do not deploy with sample MySQL passwords, admin credentials, or committed API keys.
-- Store secrets in **`.env`** only (listed in `.gitignore`).
-- Rotate `GEMINI_API_KEY` if it was ever pasted into `.env.example` or pushed to GitHub.
+- `DEBUG = True` and default `SECRET_KEY` are for **local use only**.
+- Do not deploy with sample passwords (`admin`/`admin`) or committed API keys.
+- Store all secrets in `.env` (gitignored).
+- Rotate `GEMINI_API_KEY` if it was ever committed or shared.
 
 ---
 
-## GitHub collaboration
+## 16. GitHub collaboration
 
-### Install Git
-
-Download [Git for Windows](https://git-scm.com/download/win). After install, restart PowerShell.
-
-### Clone and run (teammate)
+### Clone and run (teammate quick start)
 
 ```powershell
 git clone https://github.com/Bhupesh-zode/Maternity_assistance.git
@@ -401,22 +586,20 @@ python manage.py runserver
 ```powershell
 git pull
 git checkout -b feature/short-description
-# ... edit code ...
 git add .
 git commit -m "Describe what you changed"
 git push -u origin feature/short-description
 ```
 
-Open a **Pull Request** on GitHub to merge into `main`. Review, merge, then `git pull` on `main`.
+Open a Pull Request on GitHub → review → merge → `git pull` on `main`.
 
-### What is tracked in Git
+### What Git tracks
 
 | Committed | Ignored (`.gitignore`) |
 |-----------|-------------------------|
-| Source code, templates, static assets | `.venv/`, old `childenv*` folders |
+| Source, templates, static assets | `.venv/`, old `childenv*` folders |
 | `childbirth.sql`, `*.pkl` models | `.env` (passwords, API keys) |
-| `requirements.txt`, `README.md`, `.env.example` | `media/` (uploads), `db.sqlite3` |
-| `chatapp/` (assistant code + tips JSON) | Screen recordings (`*.mkv`, etc.) |
+| `requirements.txt`, `README.md`, `.env.example` | `media/` (uploads) |
 
 ---
 
