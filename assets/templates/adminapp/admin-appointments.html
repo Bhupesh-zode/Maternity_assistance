@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Appointments</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{% static 'adminapp/img/favicon.ico' %}" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{% static 'adminapp/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'adminapp/css/style.css' %}" rel="stylesheet">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+        <div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-light navbar-light">
+                <div class="text-center" style="margin: 1em auto;">
+                    <a href="{% url 'admin_dash' %}" class="navbar-brand mx-3"><h3 class="text-center text-primary">Admin<br>Dashboard</h3></a>
+                </div>
+                <div class="navbar-nav w-100">
+                    <a href="{% url 'admin_dash' %}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    {% include 'adminapp/includes/admin-nav-links.html' with active='appointments' %}
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Manage Users</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'pending_users' %}" class="dropdown-item">Pending Users</a>
+                            <a href="{% url 'all_users' %}" class="dropdown-item">All Users</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-database me-2"></i>Dataset</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'upload_dataset' %}" class="dropdown-item">Upload Dataset</a>
+                            <a href="{% url 'view_dataset' %}" class="dropdown-item">View Dataset</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Algorithms</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'svm' %}" class="dropdown-item">Logistic Regression</a>
+                            <a href="{% url 'knn' %}" class="dropdown-item">Gradient Boost</a>
+                            <a href="{% url 'random_forest' %}" class="dropdown-item">XG Boost</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-chart-bar me-2"></i>Analysis</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'algorithm_analysis' %}" class="dropdown-item">Algorithm Comparison</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="content">
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="#" class="sidebar-toggler flex-shrink-0"><i class="fa fa-bars"></i></a>
+                <div class="navbar-nav align-items-center ms-auto">
+                    <a href="{% url 'adminlogin' %}" class="nav-item">Log Out</a>
+                </div>
+            </nav>
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-light rounded p-4">
+                    <h4 class="mb-4">Appointment requests</h4>
+                    {% if appointment_rows %}
+                    {% for row in appointment_rows %}
+                    {% with a=row.appt u=row.user %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between flex-wrap mb-2">
+                                <div>
+                                    <h5 class="mb-1">{% if u %}{{ u.name }} ({{ u.email }}){% else %}User #{{ a.user_sno }}{% endif %}</h5>
+                                    <span class="text-muted">Requested: {{ a.preferred_date }} at {{ a.preferred_time }}</span>
+                                    {% if a.status == 'rescheduled' or a.status == 'confirmed' %}
+                                    <br><span class="text-muted">Scheduled: {{ a.display_date }} at {{ a.display_time }}</span>
+                                    {% endif %}
+                                </div>
+                                <span class="badge {% if a.status == 'pending' %}bg-warning text-dark{% elif a.status == 'confirmed' %}bg-success{% elif a.status == 'rescheduled' %}bg-info{% elif a.status == 'completed' %}bg-secondary{% else %}bg-danger{% endif %}">{{ a.get_status_display }}</span>
+                            </div>
+                            {% if a.notes %}<p class="mb-2"><strong>User notes:</strong> {{ a.notes }}</p>{% endif %}
+                            {% if a.admin_notes %}<p class="mb-2 text-muted"><strong>Admin notes:</strong> {{ a.admin_notes }}</p>{% endif %}
+                            {% if a.status == 'pending' or a.status == 'rescheduled' %}
+                            <form method="post" action="{% url 'admin_update_appointment' a.id %}" class="border-top pt-3 mt-2">
+                                {% csrf_token %}
+                                <div class="row g-2 align-items-end">
+                                    <div class="col-md-3">
+                                        <label class="form-label small">Reschedule date</label>
+                                        <input type="date" name="confirmed_date" class="form-control form-control-sm" value="{{ a.display_date|date:'Y-m-d' }}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Time</label>
+                                        <select name="confirmed_time" class="form-select form-select-sm">
+                                            {% for val, label in time_slots %}
+                                            <option value="{{ val }}" {% if a.display_time == val %}selected{% endif %}>{{ label }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small">Admin notes</label>
+                                        <input type="text" name="admin_notes" class="form-control form-control-sm" placeholder="Optional note to user">
+                                    </div>
+                                    <div class="col-md-3 d-flex flex-wrap gap-1">
+                                        <button type="submit" name="action" value="confirm" class="btn btn-sm btn-success">Confirm</button>
+                                        <button type="submit" name="action" value="reschedule" class="btn btn-sm btn-primary">Reschedule</button>
+                                        <button type="submit" name="action" value="cancel" class="btn btn-sm btn-outline-danger">Cancel</button>
+                                    </div>
+                                </div>
+                            </form>
+                            {% elif a.status == 'confirmed' %}
+                            <form method="post" action="{% url 'admin_update_appointment' a.id %}" class="mt-2">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="complete" class="btn btn-sm btn-secondary">Mark completed</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
+                    <p class="text-muted small mb-0">Page {{ appointments.number }} of {{ appointments.paginator.num_pages }}</p>
+                    {% else %}
+                    <p class="text-muted mb-0">No appointment requests yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'adminapp/js/main.js' %}"></script>
+</body>
+</html>

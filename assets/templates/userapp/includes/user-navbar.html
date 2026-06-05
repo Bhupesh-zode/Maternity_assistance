@@ -1,0 +1,29 @@
+<ul class="navbar-nav ml-auto">
+  <li class="nav-item {% if request.resolver_match.url_name == 'user_dash' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'user_dash' %}">Dashboard</a>
+  </li>
+  <li class="nav-item {% if request.resolver_match.url_name == 'user_profile' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'user_profile' %}">My Profile</a>
+  </li>
+  <li class="nav-item {% if request.resolver_match.url_name == 'user_predict' or request.resolver_match.url_name == 'user_predict_result' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'user_predict' %}">Predict</a>
+  </li>
+  <li class="nav-item {% if request.resolver_match.url_name == 'user_prediction_history' or request.resolver_match.url_name == 'user_prediction_detail' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'user_prediction_history' %}">History</a>
+  </li>
+  <li class="nav-item {% if request.resolver_match.url_name == 'user_appointments' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'user_appointments' %}">Appointments</a>
+  </li>
+  <li class="nav-item {% if request.resolver_match.url_name == 'user_chat' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'user_chat' %}">Assistant</a>
+  </li>
+  <li class="nav-item {% if request.resolver_match.url_name == 'user_support' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'user_support' %}">Messages{% if unread_message_count %}<span class="nav-badge">{{ unread_message_count }}</span>{% endif %}</a>
+  </li>
+  <li class="nav-item {% if request.resolver_match.url_name == 'user_notifications' %}active{% endif %}">
+    <a class="nav-link" href="{% url 'user_notifications' %}">Alerts{% if unread_notification_count %}<span class="nav-badge">{{ unread_notification_count }}</span>{% endif %}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'home' %}">Logout</a>
+  </li>
+</ul>

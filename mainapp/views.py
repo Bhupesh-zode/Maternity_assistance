@@ -4,17 +4,16 @@ from django.contrib import messages
 
 # Create your views here.
 def adminlogin(request):
-    if request.method =="POST":
-        email=request.POST.get("email")
+    if request.method == "POST":
+        email = request.POST.get("email")
         password = request.POST.get("pwd")
-        print(email,password)
-        try:
-           if email=="admin" and password=="admin":
-            messages.success(request,'logined succesfully')
-            return redirect("admin_dash") 
-        except:
-            messages.error(request,'incorrect details')
-            return redirect("register")
+        if email == "admin" and password == "admin":
+            request.session['admin_logged_in'] = True
+            messages.success(request, 'logined succesfully')
+            return redirect("admin_dash")
+        messages.error(request, 'incorrect details')
+        return redirect("adminlogin")
+    request.session.pop('admin_logged_in', None)
     return render(request, 'mainapp/main-admin-login.html')
 
 

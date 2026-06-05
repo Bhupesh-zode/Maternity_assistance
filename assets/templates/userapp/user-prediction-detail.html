@@ -1,0 +1,27 @@
+{% include 'userapp/includes/user-page-shell-start.html' with page_title='Prediction Details' page_heading='Prediction Details' page_subtitle=record.created_at|date:"M d, Y H:i" %}
+
+<div class="bg-white rounded shadow-sm p-4 mb-4">
+  <h4 class="text-primary mb-2">{{ record.predicted_mode }}</h4>
+  <p class="text-muted mb-0">{{ record.summary }}</p>
+</div>
+
+<div class="bg-white rounded shadow-sm p-4">
+  <h5 class="mb-3">Form values</h5>
+  {% if fields %}
+  <div class="row">
+    {% for f in fields %}
+    <div class="col-md-6 mb-2">
+      <strong>{{ f.label }}:</strong> {{ f.value }}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-muted mb-0">No form details stored for this run.</p>
+  {% endif %}
+</div>
+
+<div class="mt-3">
+  <a href="{% url 'user_prediction_history' %}" class="btn btn-outline-secondary">Back to history</a>
+</div>
+
+{% include 'userapp/includes/user-page-shell-end.html' %}

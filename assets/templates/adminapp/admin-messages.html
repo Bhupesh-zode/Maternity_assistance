@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>User Messages</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{% static 'adminapp/img/favicon.ico' %}" rel="icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{% static 'adminapp/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'adminapp/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'adminapp/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'adminapp/css/style.css' %}" rel="stylesheet">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+    {% if messages %}
+  {% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+  <script>swal({ title: "Success!", text: "{{message}}", icon: "success", button: "OK" });</script>
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+  <script>swal({ title: "Warning :)", text: "{{message}}", icon: "warning", button: "OK" });</script>
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+  <script>swal({ title: "info :)", text: "{{message}}", icon: "info", button: "OK" });</script>
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+  <script>swal({ title: "error :)", text: "{{message}}", icon: "error", button: "OK" });</script>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+        <div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-light navbar-light">
+                <div class="text-center" style="margin: 1em auto;">
+                    <a href="{% url 'admin_dash' %}" class="navbar-brand mx-3">
+                    <h3 class="text-center text-primary">Admin<br>Dashboard</h3>
+                    </a>
+                </div>
+                <div class="navbar-nav w-100">
+                    <a href="{% url 'admin_dash' %}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    {% include 'adminapp/includes/admin-nav-links.html' with active='messages' %}
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Manage Users</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'pending_users' %}" class="dropdown-item">Pending Users</a>
+                            <a href="{% url 'all_users' %}" class="dropdown-item">All Users</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-database me-2"></i>Dataset</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'upload_dataset' %}" class="dropdown-item">Upload Dataset</a>
+                            <a href="{% url 'view_dataset' %}" class="dropdown-item">View Dataset</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Algorithms</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'svm' %}" class="dropdown-item">Logistic Regression</a>
+                            <a href="{% url 'knn' %}" class="dropdown-item">Gradient Boost</a>
+                            <a href="{% url 'random_forest' %}" class="dropdown-item">XG Boost</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-chart-bar me-2"></i>Analysis</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'algorithm_analysis' %}" class="dropdown-item">Algorithm Comparison</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="content">
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="{% url 'admin_dash' %}" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0"><i class="fa fa-bars"></i></a>
+                <div class="navbar-nav align-items-center ms-auto">
+                    <div class="nav-item my-3">
+                        <span class="d-none d-lg-inline-flex"><a href="{% url 'adminlogin' %}" class="nav-item">Log Out</a></span>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-light rounded h-100 p-4">
+                    <h4 class="mb-4">User Messages</h4>
+                    <p class="text-muted mb-4">Each row is a separate private conversation. Select a user to read and reply.</p>
+                    {% if conversations %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Last message</th>
+                                    <th>Updated</th>
+                                    <th>Unread</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for conv in conversations %}
+                                <tr>
+                                    <td>{{ conv.user.name }}</td>
+                                    <td>{{ conv.user.email }}</td>
+                                    <td class="text-truncate" style="max-width: 280px;">
+                                        {% if conv.last_message %}
+                                            {% if conv.last_message.sender == 'admin' %}<span class="text-muted">You:</span>{% endif %}
+                                            {% if conv.last_message.content %}
+                                                {{ conv.last_message.content|truncatechars:80 }}
+                                            {% elif conv.last_message.has_attachment %}
+                                                <span class="text-muted"><i class="fa fa-paperclip"></i> {{ conv.last_message.attachment_basename }}</span>
+                                            {% endif %}
+                                        {% else %}—{% endif %}
+                                    </td>
+                                    <td>{{ conv.last_at|date:"M d, H:i" }}</td>
+                                    <td class="text-center">
+                                        {% if conv.unread %}
+                                        <span class="badge bg-danger">{{ conv.unread }}</span>
+                                        {% else %}
+                                        <span class="text-muted">—</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{% url 'admin_support_thread' conv.user.sno %}" class="btn btn-sm btn-primary">
+                                            <i class="fa fa-reply me-1"></i>Open chat
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="fa fa-inbox fa-3x mb-3 d-block"></i>
+                        <p class="mb-0">No user messages yet. Conversations appear here when users send their first message.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <footer>
+                <div class="container-fluid pt-4 px-4">
+                    <div class="bg-light rounded-top p-4">
+                        <div class="row">
+                            <div class="col-12 col-sm-6 text-center text-sm-start">
+                                &copy; <a href="#">Codebook.in</a>, All Rights Reserved.
+                            </div>
+                            <div class="col-12 col-sm-6 text-center text-sm-end">
+                                Designed By <a href="#">Codebook.in</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'adminapp/js/main.js' %}"></script>
+</body>
+</html>

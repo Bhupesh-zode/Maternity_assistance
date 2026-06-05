@@ -1,0 +1,27 @@
+{% include 'userapp/includes/user-page-shell-start.html' with page_title='Alerts' page_heading='Notifications' page_subtitle='Updates about messages, appointments, and predictions' %}
+
+{% if notifications %}
+<div class="list-group">
+  {% for n in notifications %}
+  <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-start {% if not n.is_read %}border-left border-primary{% endif %}">
+    <div>
+      <div class="d-flex align-items-center mb-1">
+        {% if n.kind == 'message' %}<span class="badge badge-info mr-2">Message</span>
+        {% elif n.kind == 'appointment' %}<span class="badge badge-success mr-2">Appointment</span>
+        {% else %}<span class="badge badge-secondary mr-2">Prediction</span>{% endif %}
+        <strong>{{ n.title }}</strong>
+      </div>
+      {% if n.body %}<p class="mb-1 text-muted">{{ n.body }}</p>{% endif %}
+      <small class="text-muted">{{ n.created_at|date:"M d, Y H:i" }}</small>
+    </div>
+    {% if n.link %}
+    <a href="{{ n.link }}" class="btn btn-sm btn-outline-primary ml-3">Open</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="text-muted text-center py-5">No notifications yet.</p>
+{% endif %}
+
+{% include 'userapp/includes/user-page-shell-end.html' %}

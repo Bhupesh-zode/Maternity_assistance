@@ -1,10 +1,17 @@
-from django.shortcuts import render, redirect
+from datetime import date
+
+from django.shortcuts import render, redirect, get_object_or_404
 from adminapp.models import *
 from mainapp.models import *
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.views.decorators.http import require_http_methods
 import pandas as pd
+
+from chatapp.utils import admin_login_required
+from userapp.models import Appointment, PredictionHistory
+from userapp.notifications import notify_user
 from sklearn.model_selection import train_test_split
 
 from ml_compat import load_sklearn_pickle
@@ -226,4 +233,110 @@ def delete(request,id):
     status_delete.delete()
     messages.info(request,'user deleted')
     return redirect('all_users')
+
+
+@admin_login_required
+def admin_appointments(request):
+    appointments = Appointment.objects.all()
+    paginator = Paginator(appointments, 8)
+    page = paginator.get_page(request.GET.get('page'))
+
+    rows = []
+    for appt in page:
+        try:
+            user = mainModel.objects.get(sno=appt.user_sno)
+        except mainModel.DoesNotExist:
+            user = None
+        rows.append({'appt': appt, 'user': user})
+
+    return render(request, 'adminapp/admin-appointments.html', {
+        'appointments': page,
+        'appointment_rows': rows,
+        'time_slots': Appointment.TIME_SLOTS,
+    })
+
+
+@admin_login_required
+@require_http_methods(['POST'])
+def admin_update_appointment(request, appt_id):
+    appt = get_object_or_404(Appointment, id=appt_id)
+    action = request.POST.get('action')
+
+    if action == 'confirm':
+        appt.status = Appointment.STATUS_CONFIRMED
+        appt.confirmed_date = appt.preferred_date
+        appt.confirmed_time = appt.preferred_time
+        appt.admin_notes = (request.POST.get('admin_notes') or '').strip()
+        appt.save()
+        notify_user(
+            appt.user_sno, 'appointment', 'Appointment confirmed',
+            f'Confirmed for {appt.confirmed_date} at {appt.confirmed_time}',
+            '/user-appointments',
+        )
+        messages.success(request, 'Appointment confirmed.')
+
+    elif action == 'reschedule':
+        new_date = request.POST.get('confirmed_date')
+        new_time = request.POST.get('confirmed_time')
+        if not new_date or not new_time:
+            messages.warning(request, 'Date and time required to reschedule.')
+            return redirect('admin_appointments')
+        try:
+            appt.confirmed_date = date.fromisoformat(new_date)
+        except ValueError:
+            messages.warning(request, 'Invalid date.')
+            return redirect('admin_appointments')
+        appt.confirmed_time = new_time
+        appt.status = Appointment.STATUS_RESCHEDULED
+        appt.admin_notes = (request.POST.get('admin_notes') or '').strip()
+        appt.save()
+        notify_user(
+            appt.user_sno, 'appointment', 'Appointment rescheduled',
+            f'New slot: {appt.confirmed_date} at {appt.confirmed_time}',
+            '/user-appointments',
+        )
+        messages.success(request, 'Appointment rescheduled.')
+
+    elif action == 'complete':
+        appt.status = Appointment.STATUS_COMPLETED
+        appt.save()
+        notify_user(
+            appt.user_sno, 'appointment', 'Appointment completed',
+            'Your consultation has been marked complete.',
+            '/user-appointments',
+        )
+        messages.success(request, 'Marked as completed.')
+
+    elif action == 'cancel':
+        appt.status = Appointment.STATUS_CANCELLED
+        appt.admin_notes = (request.POST.get('admin_notes') or '').strip()
+        appt.save()
+        notify_user(
+            appt.user_sno, 'appointment', 'Appointment cancelled',
+            appt.admin_notes or 'Your appointment was cancelled by admin.',
+            '/user-appointments',
+        )
+        messages.info(request, 'Appointment cancelled.')
+
+    return redirect('admin_appointments')
+
+
+@admin_login_required
+def admin_prediction_history(request):
+    history = PredictionHistory.objects.all()
+    paginator = Paginator(history, 10)
+    page = paginator.get_page(request.GET.get('page'))
+
+    rows = []
+    for record in page:
+        try:
+            user = mainModel.objects.get(sno=record.user_sno)
+        except mainModel.DoesNotExist:
+            user = None
+        rows.append({'record': record, 'user': user})
+
+    return render(request, 'adminapp/admin-prediction-history.html', {
+        'history': page,
+        'history_rows': rows,
+    })
 

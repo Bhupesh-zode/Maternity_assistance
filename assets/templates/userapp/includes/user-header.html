@@ -1,0 +1,43 @@
+{% load static %}
+<style>
+  #navbar.navigation {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  #navbar .navbar-brand img {
+    max-height: none;
+    height: auto;
+  }
+  #navbar .navbar-nav .nav-link {
+    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+  }
+  .nav-badge {
+    display: inline-block;
+    min-width: 1.1rem;
+    padding: 0.1rem 0.4rem;
+    margin-left: 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #fff;
+    background: #dc3545;
+    border-radius: 10px;
+    vertical-align: middle;
+  }
+</style>
+<header>
+  <nav class="navbar navbar-expand-lg navigation mb-2" id="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'user_dash' %}">
+        <img src="{% static 'userapp/images/resized.png' %}" alt="" class="img-fluid">
+      </a>
+      <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarmain" aria-controls="navbarmain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="icofont-navigation-menu"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarmain">
+        {% include 'userapp/includes/user-navbar.html' %}
+      </div>
+    </div>
+  </nav>
+</header>

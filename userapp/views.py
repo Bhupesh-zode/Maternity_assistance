@@ -1,10 +1,17 @@
-from django.shortcuts import render, redirect
-from mainapp.models import mainModel
+from datetime import date
+
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.views.decorators.http import require_http_methods
 import pandas as pd
 
+from chatapp.utils import get_logged_in_user, user_login_required
+from mainapp.models import mainModel
 from ml_compat import load_sklearn_pickle
-from userapp.prediction_store import save_user_prediction
+from userapp.models import Appointment, PredictionHistory, UserNotification
+from userapp.notifications import notify_user
+from userapp.prediction_store import FIELD_LABELS, save_user_prediction
 
 
 
@@ -187,3 +194,96 @@ def user_predict(request):
         resul=f'The best way of child birth is  {type[0]}'
         return redirect('user_predict_result',resul,con)
     return render(request, 'userapp/user-predict.html')
+
+
+@user_login_required
+def user_prediction_history(request):
+    user = get_logged_in_user(request)
+    history = PredictionHistory.objects.filter(user_sno=user.sno)
+    paginator = Paginator(history, 8)
+    page = paginator.get_page(request.GET.get('page'))
+    return render(request, 'userapp/user-prediction-history.html', {
+        'user': user,
+        'history': page,
+    })
+
+
+@user_login_required
+def user_prediction_detail(request, history_id):
+    user = get_logged_in_user(request)
+    record = get_object_or_404(PredictionHistory, id=history_id, user_sno=user.sno)
+    fields = []
+    for key, label in FIELD_LABELS.items():
+        val = (record.form_data or {}).get(key)
+        if val is not None and str(val).strip():
+            fields.append({'label': label, 'value': str(val).strip()})
+    return render(request, 'userapp/user-prediction-detail.html', {
+        'user': user,
+        'record': record,
+        'fields': fields,
+    })
+
+
+@user_login_required
+@require_http_methods(['GET', 'POST'])
+def user_appointments(request):
+    user = get_logged_in_user(request)
+
+    if request.method == 'POST':
+        preferred_date = request.POST.get('preferred_date')
+        preferred_time = request.POST.get('preferred_time')
+        notes = (request.POST.get('notes') or '').strip()
+
+        if not preferred_date or not preferred_time:
+            messages.warning(request, 'Please select a date and time slot.')
+            return redirect('user_appointments')
+
+        try:
+            appt_date = date.fromisoformat(preferred_date)
+        except ValueError:
+            messages.warning(request, 'Invalid date selected.')
+            return redirect('user_appointments')
+
+        if appt_date < date.today():
+            messages.warning(request, 'Please choose a future date.')
+            return redirect('user_appointments')
+
+        Appointment.objects.create(
+            user_sno=user.sno,
+            preferred_date=appt_date,
+            preferred_time=preferred_time,
+            notes=notes,
+        )
+        messages.success(request, 'Appointment request submitted. Admin will confirm soon.')
+        return redirect('user_appointments')
+
+    appointments = Appointment.objects.filter(user_sno=user.sno)
+    return render(request, 'userapp/user-appointments.html', {
+        'user': user,
+        'appointments': appointments,
+        'time_slots': Appointment.TIME_SLOTS,
+    })
+
+
+@user_login_required
+def user_cancel_appointment(request, appt_id):
+    user = get_logged_in_user(request)
+    appt = get_object_or_404(Appointment, id=appt_id, user_sno=user.sno)
+    if appt.status != Appointment.STATUS_PENDING:
+        messages.warning(request, 'Only pending requests can be cancelled.')
+        return redirect('user_appointments')
+    appt.status = Appointment.STATUS_CANCELLED
+    appt.save()
+    messages.info(request, 'Appointment request cancelled.')
+    return redirect('user_appointments')
+
+
+@user_login_required
+def user_notifications(request):
+    user = get_logged_in_user(request)
+    UserNotification.objects.filter(user_sno=user.sno, is_read=False).update(is_read=True)
+    items = UserNotification.objects.filter(user_sno=user.sno)[:50]
+    return render(request, 'userapp/user-notifications.html', {
+        'user': user,
+        'notifications': items,
+    })
