@@ -1,0 +1,13 @@
+{% if msg.has_attachment %}
+  <div class="msg-attachment mt-1">
+    {% if msg.is_image_attachment %}
+      <a href="{{ msg.attachment.url }}" target="_blank" rel="noopener">
+        <img src="{{ msg.attachment.url }}" alt="Shared image" class="msg-attachment-img">
+      </a>
+    {% else %}
+      <a href="{{ msg.attachment.url }}" target="_blank" rel="noopener" class="msg-attachment-file">
+        📄 {{ msg.attachment_basename }}
+      </a>
+    {% endif %}
+  </div>
+{% endif %}

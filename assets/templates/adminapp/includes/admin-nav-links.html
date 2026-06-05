@@ -1,0 +1,11 @@
+<a href="{% url 'admin_messages' %}" class="nav-item nav-link{% if active == 'messages' %} active{% endif %}">
+  <i class="fa fa-comments me-2"></i>Messages
+  {% if admin_unread_message_count %}<span class="badge bg-danger ms-1">{{ admin_unread_message_count }}</span>{% endif %}
+</a>
+<a href="{% url 'admin_appointments' %}" class="nav-item nav-link{% if active == 'appointments' %} active{% endif %}">
+  <i class="fa fa-calendar-check me-2"></i>Appointments
+  {% if admin_pending_appointment_count %}<span class="badge bg-warning text-dark ms-1">{{ admin_pending_appointment_count }}</span>{% endif %}
+</a>
+<a href="{% url 'admin_prediction_history' %}" class="nav-item nav-link{% if active == 'predictions' %} active{% endif %}">
+  <i class="fa fa-history me-2"></i>Predictions
+</a>

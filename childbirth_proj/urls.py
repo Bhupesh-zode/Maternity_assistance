@@ -53,6 +53,17 @@ urlpatterns = [
     path('user-predict', user_views.user_predict, name ="user_predict"),
     path('user_predict_result/<str:result>/<str:con>',user_views.user_predict_result,name="user_predict_result"),
     path('user-chat', chat_views.user_chat, name='user_chat'),
+    path('user-messages', chat_views.user_support, name='user_support'),
+    path('user-notifications', user_views.user_notifications, name='user_notifications'),
+    path('user-prediction-history', user_views.user_prediction_history, name='user_prediction_history'),
+    path('user-prediction-history/<int:history_id>', user_views.user_prediction_detail, name='user_prediction_detail'),
+    path('user-appointments', user_views.user_appointments, name='user_appointments'),
+    path('user-appointments/<int:appt_id>/cancel', user_views.user_cancel_appointment, name='user_cancel_appointment'),
+    path('admin-messages', chat_views.admin_support_inbox, name='admin_messages'),
+    path('admin-messages/<int:user_sno>', chat_views.admin_support_thread, name='admin_support_thread'),
+    path('admin-appointments', admin_views.admin_appointments, name='admin_appointments'),
+    path('admin-appointments/<int:appt_id>/update', admin_views.admin_update_appointment, name='admin_update_appointment'),
+    path('admin-prediction-history', admin_views.admin_prediction_history, name='admin_prediction_history'),
 
     #BUTTON FUNCTIONS URLS
     path('allow/<int:id>',admin_views.allow,name="allow"),

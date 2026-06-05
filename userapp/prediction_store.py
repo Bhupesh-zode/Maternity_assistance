@@ -1,6 +1,7 @@
 """Persist and load per-user Predict form data and ML results."""
 
-from userapp.models import UserPrediction
+from userapp.models import PredictionHistory, UserPrediction
+from userapp.notifications import notify_user
 
 # Labels for assistant / Gemini context (form field keys → readable names).
 FIELD_LABELS = {
@@ -33,13 +34,27 @@ def save_user_prediction(user_sno, predicted_mode, form_data):
     mode = (predicted_mode or '').strip()
     if not mode or user_sno is None:
         return None
+    summary = f'The best way of child birth is {mode}'
     obj, _ = UserPrediction.objects.update_or_create(
         user_sno=user_sno,
         defaults={
             'predicted_mode': mode,
-            'summary': f'The best way of child birth is {mode}',
+            'summary': summary,
             'form_data': form_data or {},
         },
+    )
+    PredictionHistory.objects.create(
+        user_sno=user_sno,
+        predicted_mode=mode,
+        summary=summary,
+        form_data=form_data or {},
+    )
+    notify_user(
+        user_sno,
+        'prediction',
+        'Prediction saved',
+        f'Your latest result: {mode}',
+        '/user-prediction-history',
     )
     return obj
 

@@ -72,31 +72,7 @@
   {% endfor %}
   {% endif %}
 
-<header>
-	
-	<nav class="navbar navbar-expand-lg navigation mb-2" id="navbar">
-		<div class="container">
-		 	 <a class="navbar-brand" href="#">
-			  	<img src="{% static 'userapp/images/resized.png' %}" alt="" class="img-fluid">
-			  </a>
-
-		  	<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarmain" aria-controls="navbarmain" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="icofont-navigation-menu"></span>
-		  </button>
-	  
-		  <div class="collapse navbar-collapse" id="navbarmain">
-			<ul class="navbar-nav ml-auto">
-				<li class="nav-item active"><a class="nav-link" href="{% url 'user_dash' %}">Dashboard</a></li>    
-                <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' %}">My Profile</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'user_predict' %}">Predict</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'user_chat' %}">Assistant</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Logout</a></li>
-
-			</ul>
-		  </div>
-		</div>
-	</nav>
-</header>
+{% include 'userapp/includes/user-header.html' %}
 	
 
 
@@ -189,11 +165,38 @@
 			<div class="col-lg-4 col-md-6 col-sm-6">
 				<div class="service-item mb-4">
 					<div class="icon d-flex align-items-center">
-						<i class="icofont-heart-beat-alt text-lg"></i>
-						<h4 class="mt-3 mb-3">Heart Disease</h4>
+						<i class="icofont-envelope text-lg"></i>
+						<h4 class="mt-3 mb-3">Message Admin</h4>
 					</div>
 					<div class="content">
-						<p class="mb-4">Saepe nulla praesentium eaque omnis perferendis a doloremque.</p>
+						<p class="mb-4">Send private questions or updates directly to the admin team.</p>
+						<a href="{% url 'user_support' %}" class="btn btn-main btn-sm">Open messages{% if unread_message_count %} ({{ unread_message_count }}){% endif %}</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4 col-md-6 col-sm-6">
+				<div class="service-item mb-4">
+					<div class="icon d-flex align-items-center">
+						<i class="icofont-calendar text-lg"></i>
+						<h4 class="mt-3 mb-3">Book Appointment</h4>
+					</div>
+					<div class="content">
+						<p class="mb-4">Request a consultation slot and track confirmation status.</p>
+						<a href="{% url 'user_appointments' %}" class="btn btn-main btn-sm">Book now</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4 col-md-6 col-sm-6">
+				<div class="service-item mb-4">
+					<div class="icon d-flex align-items-center">
+						<i class="icofont-history text-lg"></i>
+						<h4 class="mt-3 mb-3">Prediction History</h4>
+					</div>
+					<div class="content">
+						<p class="mb-4">Review every childbirth prediction you have run.</p>
+						<a href="{% url 'user_prediction_history' %}" class="btn btn-main btn-sm">View history</a>
 					</div>
 				</div>
 			</div>
