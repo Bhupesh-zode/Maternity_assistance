@@ -733,8 +733,60 @@ body.user-portal-page[data-theme="dark"] .close {
 }
 
 /* Chat & messages */
-html.ma-theme-dark body.user-portal-page .chat-log,
-body.user-portal-page[data-theme="dark"] .chat-log {
+html.ma-theme-dark body.user-portal-page .chat-log:not(.chat-log--whatsapp),
+body.user-portal-page[data-theme="dark"] .chat-log:not(.chat-log--whatsapp) {
+  background: var(--dash-surface-alt);
+  border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.user-portal-page .chat-log--whatsapp,
+body.user-portal-page[data-theme="dark"] .chat-log--whatsapp {
+  background: #0b141a;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.03) 0, transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(255, 255, 255, 0.02) 0, transparent 35%);
+  box-shadow: inset 0 0 0 1px var(--dash-border);
+}
+
+html.ma-theme-dark body.user-portal-page .chat-bubble--out,
+body.user-portal-page[data-theme="dark"] .chat-bubble--out {
+  background: #005c4b;
+  color: #e9edef;
+}
+
+html.ma-theme-dark body.user-portal-page .chat-bubble--out::after,
+body.user-portal-page[data-theme="dark"] .chat-bubble--out::after {
+  border-top-color: #005c4b;
+}
+
+html.ma-theme-dark body.user-portal-page .chat-bubble--in,
+body.user-portal-page[data-theme="dark"] .chat-bubble--in {
+  background: #202c33;
+  color: #e9edef;
+}
+
+html.ma-theme-dark body.user-portal-page .chat-bubble--in::after,
+body.user-portal-page[data-theme="dark"] .chat-bubble--in::after {
+  border-top-color: #202c33;
+}
+
+html.ma-theme-dark body.user-portal-page .chat-bubble-time,
+body.user-portal-page[data-theme="dark"] .chat-bubble-time {
+  color: rgba(233, 237, 239, 0.55);
+}
+
+html.ma-theme-dark body.user-portal-page .chat-status--delivered,
+body.user-portal-page[data-theme="dark"] .chat-status--delivered {
+  color: rgba(233, 237, 239, 0.45);
+}
+
+html.ma-theme-dark body.user-portal-page .chat-status--seen,
+body.user-portal-page[data-theme="dark"] .chat-status--seen {
+  color: #53bdeb;
+}
+
+html.ma-theme-dark body.user-portal-page .chat-compose-bar,
+body.user-portal-page[data-theme="dark"] .chat-compose-bar {
   background: var(--dash-surface-alt);
   border-color: var(--dash-border);
 }
@@ -748,8 +800,8 @@ body.user-portal-page[data-theme="dark"] .chat-bubble.admin {
   color: var(--dash-text);
 }
 
-html.ma-theme-dark body.user-portal-page .chat-bubble.user,
-body.user-portal-page[data-theme="dark"] .chat-bubble.user {
+html.ma-theme-dark body.user-portal-page .chat-log:not(.chat-log--whatsapp) .chat-bubble.user,
+body.user-portal-page[data-theme="dark"] .chat-log:not(.chat-log--whatsapp) .chat-bubble.user {
   background: #3d5a80;
   color: #edf2f7;
 }

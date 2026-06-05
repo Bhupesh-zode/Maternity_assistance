@@ -3,7 +3,175 @@
   margin: 0 auto;
 }
 
-.chat-log {
+/* WhatsApp-style support thread */
+.chat-log--whatsapp {
+  height: 460px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #e5ddd5;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12) 0, transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.1) 0, transparent 40%);
+  border: none;
+  border-radius: 12px;
+  padding: 0.85rem 0.65rem;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.chat-log-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.chat-row {
+  display: flex;
+  margin-bottom: 0.35rem;
+  clear: both;
+}
+
+.chat-row--out {
+  justify-content: flex-end;
+}
+
+.chat-row--in {
+  justify-content: flex-start;
+}
+
+.chat-bubble {
+  position: relative;
+  max-width: min(78%, 420px);
+  padding: 0.4rem 0.55rem 0.3rem 0.65rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  word-break: break-word;
+}
+
+.chat-bubble--out {
+  background: #d9fdd3;
+  color: #111b21;
+  border-top-right-radius: 0;
+}
+
+.chat-bubble--out::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -8px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid #d9fdd3;
+  border-right: 8px solid transparent;
+}
+
+.chat-bubble--in {
+  background: #fff;
+  color: #111b21;
+  border-top-left-radius: 0;
+}
+
+.chat-bubble--in::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid #fff;
+  border-left: 8px solid transparent;
+}
+
+.chat-bubble-text {
+  margin: 0 0 0.15rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.chat-bubble-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.2rem;
+  margin-top: 0.1rem;
+  min-height: 1rem;
+}
+
+.chat-bubble-time {
+  font-size: 0.68rem;
+  line-height: 1;
+  color: rgba(17, 27, 33, 0.55);
+  white-space: nowrap;
+}
+
+.chat-status {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  color: rgba(17, 27, 33, 0.45);
+}
+
+.chat-status i {
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.chat-status i + i {
+  margin-left: -0.42rem;
+}
+
+.chat-status--seen {
+  color: #53bdeb;
+}
+
+.chat-status--delivered {
+  color: rgba(17, 27, 33, 0.45);
+}
+
+/* Compose bar */
+.chat-compose-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  background: #f0f2f5;
+  border: 1px solid #dee2e6;
+  border-radius: 999px;
+  padding: 0.35rem 0.4rem 0.35rem 1rem;
+}
+
+.chat-compose-input {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.chat-compose-input:focus {
+  background: transparent;
+  box-shadow: none;
+}
+
+.chat-compose-send {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.chat-compose-send i {
+  font-size: 1rem;
+}
+
+.chat-compose-attach {
+  margin-top: 0.65rem;
+}
+
+/* Assistant chat (legacy bubble layout) */
+.chat-log:not(.chat-log--whatsapp) {
   height: 420px;
   overflow-y: auto;
   background: #f8f9fa;
@@ -12,23 +180,22 @@
   padding: 1rem;
 }
 
-.chat-bubble {
+.chat-log:not(.chat-log--whatsapp) .chat-bubble {
   max-width: 85%;
   padding: 0.65rem 1rem;
   border-radius: 12px;
   margin-bottom: 0.75rem;
   white-space: pre-wrap;
-  word-break: break-word;
 }
 
-.chat-bubble.user {
+.chat-log:not(.chat-log--whatsapp) .chat-bubble.user {
   background: #223a66;
   color: #fff;
   margin-left: auto;
 }
 
-.chat-bubble.assistant,
-.chat-bubble.admin {
+.chat-log:not(.chat-log--whatsapp) .chat-bubble.assistant,
+.chat-log:not(.chat-log--whatsapp) .chat-bubble.admin {
   background: #fff;
   border: 1px solid #dee2e6;
   color: #333;
@@ -80,9 +247,9 @@
   font-size: 0.9rem;
 }
 
-.chat-bubble.user .msg-attachment-file {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
+.chat-bubble--out .msg-attachment-file {
+  background: rgba(0, 0, 0, 0.06);
+  color: #111b21;
 }
 
 .file-hint {
