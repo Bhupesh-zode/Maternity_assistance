@@ -156,6 +156,8 @@
             </nav>
             <!-- Navbar End -->
 
+            {% include 'adminapp/includes/admin-page-header.html' with page_heading='Admin dashboard' %}
+
             <!-- Algo cards Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
@@ -217,7 +219,7 @@
                 </div>
             </div>
              <!-- Analysis Chart End -->
-            {% include 'includes/footer.html' %}
+            {% include 'adminapp/includes/admin-footer.html' %}
         </div>
         <!-- Content End -->
 

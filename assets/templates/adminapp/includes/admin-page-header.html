@@ -1,0 +1,13 @@
+<div class="admin-page-header">
+  <div class="container-fluid px-4">
+    <div class="admin-page-header__inner">
+      <div>
+        <h1 class="admin-page-header__title">{{ page_heading|default:"Admin dashboard" }}</h1>
+        {% if page_subtitle %}
+        <p class="admin-page-header__subtitle mb-0">{{ page_subtitle }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="admin-page-header__line" aria-hidden="true"></div>
+</div>

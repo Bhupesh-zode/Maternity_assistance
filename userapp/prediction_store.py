@@ -30,6 +30,22 @@ FIELD_LABELS = {
 }
 
 
+def backfill_prediction_history():
+    """Create history rows from latest snapshots when history was never logged."""
+    created = 0
+    for snapshot in UserPrediction.objects.all():
+        if PredictionHistory.objects.filter(user_sno=snapshot.user_sno).exists():
+            continue
+        PredictionHistory.objects.create(
+            user_sno=snapshot.user_sno,
+            predicted_mode=snapshot.predicted_mode,
+            summary=snapshot.summary or f'The best way of child birth is {snapshot.predicted_mode}',
+            form_data=snapshot.form_data or {},
+        )
+        created += 1
+    return created
+
+
 def save_user_prediction(user_sno, predicted_mode, form_data):
     mode = (predicted_mode or '').strip()
     if not mode or user_sno is None:

@@ -1,0 +1,31 @@
+<div class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle{% if active_menu == 'users' %} active{% endif %}" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Manage Users</a>
+  <div class="dropdown-menu bg-transparent border-0">
+    <a href="{% url 'pending_users' %}" class="dropdown-item{% if active_sub == 'pending_users' %} active{% endif %}">Pending Users</a>
+    <a href="{% url 'all_users' %}" class="dropdown-item{% if active_sub == 'all_users' %} active{% endif %}">All Users</a>
+  </div>
+</div>
+
+<div class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle{% if active_menu == 'dataset' %} active{% endif %}" data-bs-toggle="dropdown"><i class="fa fa-database me-2"></i>Dataset</a>
+  <div class="dropdown-menu bg-transparent border-0">
+    <a href="{% url 'upload_dataset' %}" class="dropdown-item{% if active_sub == 'upload_dataset' %} active{% endif %}">Upload Dataset</a>
+    <a href="{% url 'view_dataset' %}" class="dropdown-item{% if active_sub == 'view_dataset' %} active{% endif %}">View Dataset</a>
+  </div>
+</div>
+
+<div class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle{% if active_menu == 'algorithms' %} active{% endif %}" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Algorithms</a>
+  <div class="dropdown-menu bg-transparent border-0">
+    <a href="{% url 'svm' %}" class="dropdown-item{% if active_sub == 'svm' %} active{% endif %}">Logistic Regression</a>
+    <a href="{% url 'knn' %}" class="dropdown-item{% if active_sub == 'knn' %} active{% endif %}">Gradient Boost</a>
+    <a href="{% url 'random_forest' %}" class="dropdown-item{% if active_sub == 'random_forest' %} active{% endif %}">XG Boost</a>
+  </div>
+</div>
+
+<div class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle{% if active_menu == 'analysis' %} active{% endif %}" data-bs-toggle="dropdown"><i class="fa fa-chart-bar me-2"></i>Analysis</a>
+  <div class="dropdown-menu bg-transparent border-0">
+    <a href="{% url 'algorithm_analysis' %}" class="dropdown-item{% if active_sub == 'algorithm_analysis' %} active{% endif %}">Algorithm Comparison</a>
+  </div>
+</div>

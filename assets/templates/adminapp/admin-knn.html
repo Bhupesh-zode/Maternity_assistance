@@ -154,10 +154,10 @@
                                     <tbody>
                                         <tr>
                                             <td>Gradient Boost</td>
-                                            <td>{{ data.ad_accuracy }}</td>
-                                            <td>{{ data.ad_precision}}</td>
-                                            <td>{{ data.ad_recall }}</td>
-                                            <td>{{ data.ad_f1_score }}</td>
+                                            <td>{{ metrics.accuracy }}</td>
+                                            <td>{{ metrics.precision }}</td>
+                                            <td>{{ metrics.recall }}</td>
+                                            <td>{{ metrics.f1_score }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -169,7 +169,7 @@
             </div>
         </div>
         <!-- Table End -->
-            {% include 'includes/footer.html' %}
+            {% include 'adminapp/includes/admin-footer.html' %}
         </div>
         <!-- Content End -->
 

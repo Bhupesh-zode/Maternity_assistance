@@ -65,6 +65,8 @@ urlpatterns = [
     path('admin-appointments', admin_views.admin_appointments, name='admin_appointments'),
     path('admin-appointments/<int:appt_id>/update', admin_views.admin_update_appointment, name='admin_update_appointment'),
     path('admin-prediction-history', admin_views.admin_prediction_history, name='admin_prediction_history'),
+    path('admin-prediction-history/<int:user_sno>', admin_views.admin_user_prediction_history, name='admin_user_prediction_history'),
+    path('admin-prediction-history/<int:user_sno>/<int:history_id>', admin_views.admin_user_prediction_detail, name='admin_user_prediction_detail'),
 
     #BUTTON FUNCTIONS URLS
     path('allow/<int:id>',admin_views.allow,name="allow"),
