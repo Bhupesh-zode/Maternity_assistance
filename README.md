@@ -153,7 +153,7 @@ python manage.py check
 python manage.py check_ml_pickles
 ```
 
-`migrate` creates all app tables (users, chat, support messages, predictions, appointments, notifications). `check_ml_pickles` verifies ML model files load correctly.
+`migrate` creates all app tables (users, chat, support messages, predictions, appointments, notifications). It also seeds **admin algorithm run counts** (demo values: 12 / 12 / 8) via `adminapp` migration `0006`. `check_ml_pickles` verifies ML model files load correctly.
 
 ### Step 6 — Start the server
 
@@ -255,8 +255,14 @@ If the account is not `accepted`, the command sets status to `accepted` so login
 
 1. Run `seed_demo_user` (see above).
 2. Log in as `bhupeshzode9@gmail.com`.
-3. Open **Dashboard** — stats and all 3 activity charts should show data.
+3. Open **Dashboard** — stats and both activity charts should show data.
 4. Open **Prediction History**, **Appointments**, **Messages**, and **Alerts** — each section should have content and unread badges where expected.
+
+**Admin demo checklist**
+
+1. Log in at `/adminlogin` (`admin` / `admin`).
+2. Open **Dashboard** — three algorithm cards show **Times used** (seeded on migrate; increments when you run an algorithm).
+3. Run all three algorithms on the latest dataset (see [§8.6](#86-dataset-and-algorithms)) so the dashboard and **Algorithm comparison** charts populate.
 
 ---
 
@@ -269,10 +275,9 @@ After logging in, the navbar gives access to all user features.
 - URL: `/user-dashboard`
 - Welcome panel with your name and latest prediction summary.
 - Stat cards: total predictions, appointments, and unread messages.
-- **Your activity** — three Chart.js charts from your real data:
-  - Predictions over the last 6 months (line chart)
-  - Appointments by status (doughnut chart)
-  - Prediction outcomes (horizontal bar chart)
+- **Your activity** — Chart.js charts from your data:
+  - Predictions over the last 6 months (line)
+  - Appointments by status (doughnut)
 - Quick-action cards: Predict, Assistant, Messages, Appointments, and History.
 - For a populated demo, run `python manage.py seed_demo_user` (see [Seed demo data](#seed-demo-data-college-presentation)).
 
@@ -325,21 +330,28 @@ After logging in, the navbar gives access to all user features.
 
 ## 8. Admin guide — step by step
 
-Use the sidebar on any admin page. Badges highlight unread messages and pending appointments.
+Use the sidebar on any admin page. Badges highlight unread messages and pending appointments. Admin pages share a consistent header, footer, and light/dark theme toggle.
 
-### 8.1 Approve new users
+### 8.1 Dashboard
+
+- URL: `/admin-dashboard`
+- Three algorithm stat cards (**Logistic Regression**, **Gradient Boost**, **XG Boost**) with live **Times used** counts.
+- **Algorithm performance** chart (Chart.js) when all three algorithms have been run on the latest dataset.
+- Link to full analysis: `/algorithm-analysis`
+
+### 8.2 Approve new users
 
 1. **Manage Users → Pending Users** (`/admin-pending-users`)
 2. Approve or reject registrations.
 
-### 8.2 Reply to user messages
+### 8.3 Reply to user messages
 
 1. Open **Messages** (`/admin-messages`) — inbox lists all user conversations.
 2. Click **Open chat** on a user.
 3. Reply with text and/or attach files (same rules as user side).
 4. Unread count badge updates when users send new messages.
 
-### 8.3 Manage appointments
+### 8.4 Manage appointments
 
 1. Open **Appointments** (`/admin-appointments`).
 2. For each request you can:
@@ -349,14 +361,25 @@ Use the sidebar on any admin page. Badges highlight unread messages and pending 
    - **Mark completed** — after a confirmed visit
 3. User receives an in-app notification for each update.
 
-### 8.4 View prediction history
+### 8.5 View prediction history
 
 - **Predictions** (`/admin-prediction-history`) — all users’ predict runs in one table.
 
-### 8.5 Dataset and algorithms (existing)
+### 8.6 Dataset and algorithms
 
-- Upload / view dataset
-- Run and compare ML algorithms (logistic regression, gradient boost, XGBoost, etc.)
+The admin portal compares **three** algorithms on an uploaded CSV (80/20 train/test split):
+
+| Algorithm | Admin run URL suffix | Notes |
+|-----------|----------------------|--------|
+| Logistic Regression | `/lr-runalgo/<dataset_id>/` | Metrics stored as `lr_*` |
+| Gradient Boost | `/ada-runalgo/<dataset_id>/` | Sidebar may say “KNN” (legacy label) |
+| XG Boost | `/xg-runalgo/<dataset_id>/` | Sidebar URL name `random_forest` is legacy — model is XGBoost |
+
+**Workflow:** Upload dataset → run all three from the dataset / algorithm pages → open **Algorithm comparison** (`/algorithm-analysis`) for the results table and Chart.js chart.
+
+Each successful run increments **Times used** on the admin dashboard (`algorithm_run_counts` table). Fresh installs get demo counts (12, 12, 8) from migration `0006`.
+
+User-facing predictions always use **`XGB.pkl`** at the project root — not the admin comparison runs.
 
 ---
 
@@ -387,13 +410,14 @@ Use the sidebar on any admin page. Badges highlight unread messages and pending 
 
 | Feature | URL | Description |
 |---------|-----|-------------|
-| Dashboard | `/admin-dashboard` | Admin home |
+| Dashboard | `/admin-dashboard` | Algorithm stats, run counts, performance chart |
 | Pending / All users | `/admin-pending-users`, `/admin-all-users` | User management |
 | Messages | `/admin-messages` | User support inbox |
 | Appointments | `/admin-appointments` | Confirm / reschedule bookings |
 | Predictions | `/admin-prediction-history` | All users’ predict logs |
-| Dataset | `/upload-dataset`, `/view-dataset` | CSV dataset management |
-| Algorithms | `/algorithm-analysis`, etc. | Model training and comparison |
+| Dataset | `/upload-dataset`, `/view-dataset` | CSV upload and preview |
+| Algorithms | `/algorithm-svm`, `/algorithm-knn`, `/algorithm-random-forest` | Per-algorithm metrics + run buttons |
+| Analysis | `/algorithm-analysis` | Side-by-side comparison table + chart |
 
 ### Messaging and files
 
@@ -456,7 +480,13 @@ Use the sidebar on any admin page. Badges highlight unread messages and pending 
 | `/admin-prediction-history` | All prediction runs |
 | `/view-dataset` | View dataset |
 | `/upload-dataset` | Upload dataset |
-| `/algorithm-analysis` | Algorithm comparison |
+| `/algorithm-analysis` | Algorithm comparison (table + chart) |
+| `/algorithm-svm` | Logistic regression metrics / run |
+| `/algorithm-knn` | Gradient boost metrics / run |
+| `/algorithm-random-forest` | XG Boost metrics / run (legacy URL name) |
+| `/lr-runalgo/<id>/` | Train & score logistic regression on dataset |
+| `/ada-runalgo/<id>/` | Train & score gradient boost on dataset |
+| `/xg-runalgo/<id>/` | Train & score XG Boost on dataset |
 
 ---
 
@@ -473,6 +503,8 @@ Django migrations manage these tables. Key ones:
 | `user_notifications` | userapp | In-app alerts for users |
 | `chat_messages` | chatapp | Pregnancy assistant conversation history |
 | `support_messages` | chatapp | User–admin private messages (+ file paths) |
+| `dataset_details` | adminapp | Uploaded CSVs + stored algorithm metrics (`lr_*`, `ad_*`, `xg_*`) |
+| `algorithm_run_counts` | adminapp | Per-algorithm **Times used** for admin dashboard |
 
 ---
 
@@ -490,6 +522,7 @@ Maternity_assistance/
 │       ├── check_ml_pickles.py
 │       └── seed_demo_user.py   # Fake data for college demos
 ├── adminapp/                 # admin dashboard, users, algorithms, appointments
+│   └── migrations/0006_*     # algorithm_run_counts + demo seed counts
 ├── chatapp/                  # pregnancy assistant + user–admin messaging
 │   ├── data/pregnancy_tips.json
 │   ├── services.py           # Gemini, tips, emergency checks
@@ -498,6 +531,9 @@ Maternity_assistance/
 │   ├── templates/            # HTML (userapp, chatapp, adminapp, …)
 │   │   └── userapp/includes/ # Shared user header + navbar
 │   └── static/               # CSS, JS, images
+│       └── userapp/js/
+│           ├── dashboard-charts.js      # User dashboard Chart.js
+│           └── admin-algorithm-chart.js # Admin comparison / dashboard charts
 ├── media/                    # Uploads (user photos, support attachments)
 ├── childbirth.sql            # MySQL dump (schema + sample users)
 ├── encoder_newf.pkl          # Feature encoder
@@ -582,6 +618,7 @@ net start MySQL80
 
 ```powershell
 python manage.py migrate
+python manage.py migrate adminapp   # ensures algorithm_run_counts + demo counts
 python manage.py migrate chatapp
 python manage.py migrate userapp
 ```
