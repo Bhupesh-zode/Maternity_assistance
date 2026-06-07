@@ -115,17 +115,18 @@
 
             {% include 'adminapp/includes/admin-page-header.html' with page_heading='Algorithm comparison' page_subtitle='Holdout scores for the latest uploaded dataset' %}
 
-             <!-- Chart Start -->
-             <div class="container-fluid pt-4 px-4">
+            <div class="container-fluid admin-algo-analysis-section">
                 <div class="row g-4">
-                    <div class="col-sm-12 col-xl-12">
-                        <div class="bg-light rounded h-100 p-4">
-                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-                                <h5 class="mb-0">Results summary</h5>
-                                <p class="text-muted mb-0 small">Dataset #{{ dataset_id }} · 20% holdout test split</p>
+                    <div class="col-12">
+                        <div class="bg-light rounded admin-algo-analysis-panel">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 admin-algo-analysis-panel__head">
+                                <div>
+                                    <h5 class="mb-1 admin-algo-analysis-panel__title">Results summary</h5>
+                                    <p class="text-muted mb-0 small">Dataset #{{ dataset_id }} · 20% holdout test split</p>
+                                </div>
                             </div>
 
-                            <div class="table-responsive mb-4">
+                            <div class="table-responsive admin-algo-analysis-table-wrap">
                                 <table class="table table-bordered table-hover mb-0">
                                     <thead>
                                         <tr>
@@ -150,53 +151,22 @@
                                 </table>
                             </div>
 
-                            <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-                            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-                            <script>
-                                window.onload = function () {
-                                    var algorithms = {{ chart_data_json|safe }};
-                                    var metricKeys = [
-                                        { key: 'accuracy', name: 'Accuracy', legendText: 'Accuracy' },
-                                        { key: 'precision', name: 'Precision', legendText: 'Precision' },
-                                        { key: 'f1_score', name: 'F1 Score', legendText: 'F1 Score' },
-                                        { key: 'recall', name: 'Recall', legendText: 'Recall', secondary: true },
-                                    ];
-
-                                    var series = metricKeys.map(function (metric) {
-                                        return {
-                                            type: 'column',
-                                            name: metric.name,
-                                            legendText: metric.legendText,
-                                            showInLegend: true,
-                                            axisYType: metric.secondary ? 'secondary' : 'primary',
-                                            dataPoints: algorithms.map(function (algo) {
-                                                return { label: algo.name, y: algo[metric.key] };
-                                            }),
-                                        };
-                                    });
-
-                                    var chart = new CanvasJS.Chart('chartContainer', {
-                                        animationEnabled: true,
-                                        title: { text: 'Algorithms Comparison Graph' },
-                                        toolTip: { shared: true },
-                                        legend: {
-                                            cursor: 'pointer',
-                                            itemclick: toggleDataSeries,
-                                        },
-                                        data: series,
-                                    });
-                                    chart.render();
-
-                                    function toggleDataSeries(e) {
-                                        e.dataSeries.visible = !(typeof e.dataSeries.visible === 'undefined' || e.dataSeries.visible);
-                                        chart.render();
-                                    }
-                                };
-                            </script>
+                            <div class="admin-algo-chart-panel">
+                                <div class="admin-algo-chart-header">
+                                    <div>
+                                        <h5 class="admin-algo-chart-title mb-1">Metric comparison</h5>
+                                        <p class="admin-algo-chart-subtitle mb-0">Grouped bars — higher scores indicate stronger performance (0–100%)</p>
+                                    </div>
+                                </div>
+                                <div class="admin-algo-chart-wrap">
+                                    <canvas id="algorithmComparisonChart" aria-label="Algorithm metrics comparison chart"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {{ algorithms|json_script:"admin-algorithm-chart-data" }}
             <!-- Chart End -->
 
             {% include 'adminapp/includes/admin-footer.html' %}
@@ -211,6 +181,8 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'adminapp/js/main.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="{% static 'userapp/js/admin-algorithm-chart.js' %}"></script>
 
     {% include 'includes/theme-toggle-float.html' %}
     <script src="{% static 'userapp/js/app-theme.js' %}"></script>

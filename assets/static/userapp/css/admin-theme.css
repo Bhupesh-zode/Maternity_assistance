@@ -355,3 +355,169 @@ html.ma-theme-dark body.admin-portal-page .theme-fab .portal-theme-toggle-track,
 body.admin-portal-page[data-theme="dark"] .theme-fab .portal-theme-toggle-track {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-stat-card,
+body.admin-portal-page[data-theme="dark"] .admin-algo-stat-card {
+  border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-stat-card__label,
+body.admin-portal-page[data-theme="dark"] .admin-algo-stat-card__label {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-stat-card__metric,
+body.admin-portal-page[data-theme="dark"] .admin-algo-stat-card__metric {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-stat-card__metric strong,
+body.admin-portal-page[data-theme="dark"] .admin-algo-stat-card__metric strong {
+  color: var(--dash-text);
+}
+
+/* Cards, forms, and appointment panels */
+html.ma-theme-dark body.admin-portal-page .card,
+body.admin-portal-page[data-theme="dark"] .card {
+  background: var(--dash-surface-alt);
+  border-color: var(--dash-border);
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .card-body,
+body.admin-portal-page[data-theme="dark"] .card-body {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .content p,
+body.admin-portal-page[data-theme="dark"] .content p {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .content p strong,
+body.admin-portal-page[data-theme="dark"] .content p strong {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .form-label,
+body.admin-portal-page[data-theme="dark"] .form-label {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .form-select:focus,
+body.admin-portal-page[data-theme="dark"] .form-select:focus {
+  background: var(--dash-surface-hover);
+  border-color: rgba(155, 181, 216, 0.45);
+  color: var(--dash-text);
+  box-shadow: 0 0 0 0.2rem rgba(155, 181, 216, 0.15);
+}
+
+html.ma-theme-dark body.admin-portal-page .border-top,
+html.ma-theme-dark body.admin-portal-page .border-bottom,
+body.admin-portal-page[data-theme="dark"] .border-top,
+body.admin-portal-page[data-theme="dark"] .border-bottom {
+  border-color: var(--dash-border) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .btn-secondary,
+body.admin-portal-page[data-theme="dark"] .btn-secondary {
+  background: var(--dash-surface-hover);
+  border-color: var(--dash-border);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .btn-secondary:hover,
+body.admin-portal-page[data-theme="dark"] .btn-secondary:hover {
+  background: #3a465c;
+  border-color: var(--dash-border);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .btn-outline-danger,
+body.admin-portal-page[data-theme="dark"] .btn-outline-danger {
+  color: #f08a96;
+  border-color: rgba(240, 138, 150, 0.45);
+}
+
+html.ma-theme-dark body.admin-portal-page .btn-outline-danger:hover,
+body.admin-portal-page[data-theme="dark"] .btn-outline-danger:hover {
+  background: rgba(220, 53, 69, 0.15);
+  border-color: #f08a96;
+  color: #ffb3bc;
+}
+
+html.ma-theme-dark body.admin-portal-page .badge.bg-info,
+body.admin-portal-page[data-theme="dark"] .badge.bg-info {
+  background: rgba(13, 202, 240, 0.22) !important;
+  color: #8ee8f8 !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .badge.bg-secondary,
+body.admin-portal-page[data-theme="dark"] .badge.bg-secondary {
+  background: var(--dash-surface-hover) !important;
+  color: var(--dash-text) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-appointments-panel,
+body.admin-portal-page[data-theme="dark"] .admin-appointments-panel {
+  background: var(--dash-surface) !important;
+  border: 1px solid var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-appointment-card,
+body.admin-portal-page[data-theme="dark"] .admin-appointment-card {
+  background: var(--dash-surface-alt);
+  border-color: var(--dash-border);
+  box-shadow: none;
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-appointment-card__title,
+body.admin-portal-page[data-theme="dark"] .admin-appointment-card__title {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-appointment-form,
+body.admin-portal-page[data-theme="dark"] .admin-appointment-form {
+  border-top-color: var(--dash-border) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-appointments-pagination,
+body.admin-portal-page[data-theme="dark"] .admin-appointments-pagination {
+  border-top-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-analysis-panel,
+body.admin-portal-page[data-theme="dark"] .admin-algo-analysis-panel {
+  background: var(--dash-surface) !important;
+  border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-analysis-panel__title,
+html.ma-theme-dark body.admin-portal-page .admin-algo-chart-title,
+body.admin-portal-page[data-theme="dark"] .admin-algo-analysis-panel__title,
+body.admin-portal-page[data-theme="dark"] .admin-algo-chart-title {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-chart-subtitle,
+body.admin-portal-page[data-theme="dark"] .admin-algo-chart-subtitle {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-chart-panel,
+body.admin-portal-page[data-theme="dark"] .admin-algo-chart-panel {
+  border-top-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-chart-empty,
+body.admin-portal-page[data-theme="dark"] .admin-algo-chart-empty {
+  background: var(--dash-surface-alt);
+  border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-algo-chart-empty i,
+html.ma-theme-dark body.admin-portal-page .admin-algo-chart-empty p,
+body.admin-portal-page[data-theme="dark"] .admin-algo-chart-empty i,
+body.admin-portal-page[data-theme="dark"] .admin-algo-chart-empty p {
+  color: var(--dash-text-muted);
+}
