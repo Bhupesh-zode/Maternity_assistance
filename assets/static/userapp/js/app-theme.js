@@ -47,6 +47,15 @@
     }
   }
 
+  function initAdminFooter() {
+    document.querySelectorAll('.admin-portal-footer__top').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
   function init() {
     applyTheme(isDark(), false);
 
@@ -57,6 +66,8 @@
         applyTheme(dark, true);
       });
     });
+
+    initAdminFooter();
   }
 
   if (document.readyState === 'loading') {

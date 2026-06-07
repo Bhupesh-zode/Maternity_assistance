@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Prediction History</title>
+    <title>{{ user.name }} — Predictions</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="{% static 'adminapp/img/favicon.ico' %}" rel="icon">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -34,55 +34,56 @@
                 </div>
             </nav>
 
-            {% include 'adminapp/includes/admin-page-header.html' with page_heading='Predictions' page_subtitle='Select a user to view her prediction history' %}
+            {% include 'adminapp/includes/admin-page-header.html' with page_heading=user.name page_subtitle='Prediction history' %}
 
             <div class="container-fluid pt-4 px-4">
+                <p class="mb-3">
+                    <a href="{% url 'admin_prediction_history' %}" class="text-decoration-none"><i class="fa fa-arrow-left me-1"></i>Back to all users</a>
+                </p>
                 <div class="bg-light rounded p-4">
-                    {% if user_rows %}
+                    <p class="text-muted mb-3">{{ user.email }}</p>
+                    {% if history %}
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Predictions</th>
-                                    <th>Last run</th>
+                                    <th>Date</th>
+                                    <th>Result</th>
+                                    <th>Gestational</th>
+                                    <th>BMI</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for row in user_rows %}
+                                {% for row in history %}
                                 <tr>
+                                    <td>{{ row.created_at|date:"M d, Y H:i" }}</td>
+                                    <td><strong>{{ row.predicted_mode }}</strong></td>
+                                    <td>{{ row.form_data.Gestational|default:"—" }}</td>
+                                    <td>{{ row.form_data.BMI|default:"—" }}</td>
                                     <td>
-                                        {% if row.user %}
-                                        <a href="{% url 'admin_user_prediction_history' row.user_sno %}" class="fw-semibold text-decoration-none">{{ row.user.name }}</a>
-                                        {% else %}
-                                        <a href="{% url 'admin_user_prediction_history' row.user_sno %}" class="fw-semibold text-decoration-none">User #{{ row.user_sno }}</a>
-                                        {% endif %}
+                                        <a href="{% url 'admin_user_prediction_detail' user.sno row.id %}" class="btn btn-sm btn-primary">Details</a>
                                     </td>
-                                    <td>{% if row.user %}{{ row.user.email }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
-                                    <td>{{ row.run_count }}</td>
-                                    <td>{{ row.latest_at|date:"M d, Y H:i" }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    {% if users_page.paginator.num_pages > 1 %}
+                    {% if history.paginator.num_pages > 1 %}
                     <nav class="mt-3">
                         <ul class="pagination mb-0">
-                            {% if users_page.has_previous %}
-                            <li class="page-item"><a class="page-link" href="?page={{ users_page.previous_page_number }}">Previous</a></li>
+                            {% if history.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ history.previous_page_number }}">Previous</a></li>
                             {% endif %}
-                            <li class="page-item disabled"><span class="page-link">Page {{ users_page.number }} of {{ users_page.paginator.num_pages }}</span></li>
-                            {% if users_page.has_next %}
-                            <li class="page-item"><a class="page-link" href="?page={{ users_page.next_page_number }}">Next</a></li>
+                            <li class="page-item disabled"><span class="page-link">Page {{ history.number }} of {{ history.paginator.num_pages }}</span></li>
+                            {% if history.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ history.next_page_number }}">Next</a></li>
                             {% endif %}
                         </ul>
                     </nav>
                     {% endif %}
                     {% else %}
-                    <p class="text-muted mb-2">No prediction history yet.</p>
-                    <p class="text-muted small mb-0">Users appear here after they submit a prediction from the user portal. For demo data, run <code>python manage.py seed_demo_user</code>.</p>
+                    <p class="text-muted mb-0">No predictions recorded for this user.</p>
                     {% endif %}
                 </div>
             </div>

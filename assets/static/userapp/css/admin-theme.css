@@ -23,11 +23,17 @@ body.admin-portal-page[data-theme="dark"] .container-xxl.bg-white {
   background: var(--dash-bg) !important;
 }
 
+html.ma-theme-dark body.admin-portal-page .content,
+body.admin-portal-page[data-theme="dark"] .content {
+  background: var(--dash-bg) !important;
+}
+
 html.ma-theme-dark body.admin-portal-page #spinner.bg-white,
 body.admin-portal-page[data-theme="dark"] #spinner.bg-white {
   background: var(--dash-bg) !important;
 }
 
+/* Sidebar + top navbar */
 html.ma-theme-dark body.admin-portal-page .sidebar,
 html.ma-theme-dark body.admin-portal-page .sidebar .navbar.bg-light,
 html.ma-theme-dark body.admin-portal-page .content .navbar.bg-light,
@@ -37,20 +43,100 @@ body.admin-portal-page[data-theme="dark"] .content .navbar.bg-light {
   background: var(--dash-nav-bg) !important;
 }
 
-html.ma-theme-dark body.admin-portal-page .sidebar .nav-link,
-html.ma-theme-dark body.admin-portal-page .content .navbar .nav-link,
+html.ma-theme-dark body.admin-portal-page .content .navbar.bg-light,
+body.admin-portal-page[data-theme="dark"] .content .navbar.bg-light {
+  border-bottom: none;
+}
+
 html.ma-theme-dark body.admin-portal-page .sidebar .navbar-brand h3,
-body.admin-portal-page[data-theme="dark"] .sidebar .nav-link,
-body.admin-portal-page[data-theme="dark"] .content .navbar .nav-link,
 body.admin-portal-page[data-theme="dark"] .sidebar .navbar-brand h3 {
+  color: var(--dash-text) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .navbar-nav .nav-link,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .navbar-nav .nav-link {
+  color: var(--dash-text-muted);
+  border-left-color: transparent;
+  background: transparent;
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .navbar-nav .nav-link i,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .navbar-nav .nav-link i {
+  background: var(--dash-surface-alt);
+  color: #9bb5d8;
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .navbar-nav .nav-link:hover,
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .navbar-nav .nav-link.active,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .navbar-nav .nav-link:hover,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .navbar-nav .nav-link.active {
+  color: var(--dash-text) !important;
+  background: var(--dash-surface) !important;
+  border-left-color: var(--dash-accent) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .navbar-nav .nav-link:hover i,
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .navbar-nav .nav-link.active i,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .navbar-nav .nav-link:hover i,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .navbar-nav .nav-link.active i {
+  background: rgba(232, 90, 127, 0.18);
+  color: var(--dash-accent);
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .dropdown-toggle::after,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .dropdown-toggle::after {
   color: var(--dash-text-muted);
 }
 
-html.ma-theme-dark body.admin-portal-page .sidebar .nav-link.active,
-html.ma-theme-dark body.admin-portal-page .sidebar .nav-link:hover,
-body.admin-portal-page[data-theme="dark"] .sidebar .nav-link.active,
-body.admin-portal-page[data-theme="dark"] .sidebar .nav-link:hover {
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .dropdown-item,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .dropdown-item {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .dropdown-item:hover,
+html.ma-theme-dark body.admin-portal-page .sidebar .navbar .dropdown-item.active,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .dropdown-item:hover,
+body.admin-portal-page[data-theme="dark"] .sidebar .navbar .dropdown-item.active {
+  background: var(--dash-surface-hover) !important;
+  color: var(--dash-text) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .content .navbar .sidebar-toggler,
+html.ma-theme-dark body.admin-portal-page .content .navbar .navbar-nav .nav-link i,
+body.admin-portal-page[data-theme="dark"] .content .navbar .sidebar-toggler,
+body.admin-portal-page[data-theme="dark"] .content .navbar .navbar-nav .nav-link i {
+  background: var(--dash-surface-alt) !important;
   color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .content .navbar .sidebar-toggler:hover,
+body.admin-portal-page[data-theme="dark"] .content .navbar .sidebar-toggler:hover {
+  background: var(--dash-surface-hover) !important;
+  color: var(--dash-accent);
+}
+
+html.ma-theme-dark body.admin-portal-page .content .navbar .nav-link,
+html.ma-theme-dark body.admin-portal-page .content .navbar .nav-item a,
+body.admin-portal-page[data-theme="dark"] .content .navbar .nav-link,
+body.admin-portal-page[data-theme="dark"] .content .navbar .nav-item a {
+  color: var(--dash-text-muted) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .content .navbar .nav-link:hover,
+html.ma-theme-dark body.admin-portal-page .content .navbar .nav-item a:hover,
+body.admin-portal-page[data-theme="dark"] .content .navbar .nav-link:hover,
+body.admin-portal-page[data-theme="dark"] .content .navbar .nav-item a:hover {
+  color: var(--dash-accent) !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .nav-link .badge.bg-warning,
+body.admin-portal-page[data-theme="dark"] .sidebar .nav-link .badge.bg-warning {
+  color: #1a1a1a !important;
+}
+
+html.ma-theme-dark body.admin-portal-page .sidebar .nav-link .badge.bg-danger,
+body.admin-portal-page[data-theme="dark"] .sidebar .nav-link .badge.bg-danger {
+  color: #fff !important;
 }
 
 html.ma-theme-dark body.admin-portal-page .text-primary,
@@ -137,6 +223,53 @@ html.ma-theme-dark body.admin-portal-page .btn-outline-secondary,
 body.admin-portal-page[data-theme="dark"] .btn-outline-secondary {
   color: var(--dash-text-muted);
   border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-page-header,
+body.admin-portal-page[data-theme="dark"] .admin-page-header {
+  background: transparent;
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-page-header__line,
+body.admin-portal-page[data-theme="dark"] .admin-page-header__line {
+  background: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-page-header__title,
+body.admin-portal-page[data-theme="dark"] .admin-page-header__title {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-page-header__subtitle,
+body.admin-portal-page[data-theme="dark"] .admin-page-header__subtitle {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-portal-footer__line,
+body.admin-portal-page[data-theme="dark"] .admin-portal-footer__line {
+  background: var(--dash-border);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-portal-footer,
+body.admin-portal-page[data-theme="dark"] .admin-portal-footer {
+  background: transparent;
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-portal-footer__legal,
+body.admin-portal-page[data-theme="dark"] .admin-portal-footer__legal {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-portal-footer__top,
+body.admin-portal-page[data-theme="dark"] .admin-portal-footer__top {
+  background: var(--dash-surface-alt);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.admin-portal-page .admin-portal-footer__top:hover,
+body.admin-portal-page[data-theme="dark"] .admin-portal-footer__top:hover {
+  background: var(--dash-accent);
+  color: #fff;
 }
 
 html.ma-theme-dark body.admin-portal-page footer .bg-light,

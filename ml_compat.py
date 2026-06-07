@@ -3,6 +3,9 @@ Load ML pickles saved with scikit-learn 1.2.x on newer sklearn runtimes.
 
 Pickles were trained/exported with sklearn 1.2.1. Python 3.13+ often installs
 sklearn 1.3+ where OrdinalEncoder expects _infrequent_enabled on transform().
+
+GradientBoostingClassifier.pkl must be re-exported on sklearn 1.3+ (internal
+_gb_losses module removed). Run: python manage.py retrain_gb_model
 """
 
 from pickle import load
