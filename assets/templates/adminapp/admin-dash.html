@@ -159,65 +159,48 @@
             {% include 'adminapp/includes/admin-page-header.html' with page_heading='Admin dashboard' %}
 
             <!-- Algo cards Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-line fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Logistic Regression
-                                    
-                                    </p>
-                                <h6 class="mb-0">Times used: 12</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">XG Boost</p>
-                                <h6 class="mb-0">Times used: 8</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-area fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Gradient Boost</p>
-                                <h6 class="mb-0">Times used: 12</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Random Forest Algorithm</p>
-                                <h6 class="mb-0">Times used: 12</h6>
-                            </div>
-                        </div>
-                    </div>
+            <div class="container-fluid admin-algo-stat-section">
+                <div class="row g-4 admin-algo-stat-row admin-algo-stat-row--three">
+                    {% for card in algorithm_stat_cards %}
+                    {% include 'adminapp/includes/admin-algo-stat-card.html' with icon=card.icon label=card.label times_used=card.times_used %}
+                    {% endfor %}
                 </div>
             </div>
             <!-- Algo cards End -->
 
 
             <!-- Analysis Chart Start -->
-            <div class="container-fluid pt-4 px-4">
+            <div class="container-fluid admin-algo-analysis-section">
                 <div class="row g-4">
-                    <div class="col-sm-12 col-xl-12">
-                        <div class="bg-light text-center rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Analysis</h6>
-                                <a href="">Show All</a>
+                    <div class="col-12">
+                        <div class="bg-light rounded admin-algo-analysis-panel">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 admin-algo-analysis-panel__head">
+                                <div>
+                                    <h5 class="mb-1 admin-algo-analysis-panel__title">Algorithm performance</h5>
+                                    <p class="text-muted mb-0 small">
+                                        {% if chart_ready %}Dataset #{{ dataset_id }} · latest holdout scores{% else %}Run all three algorithms on your dataset to populate this chart{% endif %}
+                                    </p>
+                                </div>
+                                <a href="{% url 'algorithm_analysis' %}" class="btn btn-sm btn-outline-primary">View full analysis</a>
                             </div>
-                            <canvas id="worldwide-sales"></canvas>
+
+                            {% if chart_ready %}
+                            <div class="admin-algo-chart-wrap admin-algo-chart-wrap--dashboard">
+                                <canvas id="adminDashboardChart" aria-label="Algorithm performance comparison chart"></canvas>
+                            </div>
+                            {% else %}
+                            <div class="admin-algo-chart-empty">
+                                <i class="fa fa-chart-bar" aria-hidden="true"></i>
+                                <p class="mb-2">No comparison data yet. Upload a dataset and run Logistic Regression, Gradient Boost, and XG Boost.</p>
+                                <a href="{% url 'upload_dataset' %}" class="btn btn-sm btn-primary me-2">Upload dataset</a>
+                                <a href="{% url 'algorithm_analysis' %}" class="btn btn-sm btn-outline-primary">Algorithm analysis</a>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
+            {% if chart_ready %}{{ algorithms|json_script:"admin-dashboard-chart-data" }}{% endif %}
              <!-- Analysis Chart End -->
             {% include 'adminapp/includes/admin-footer.html' %}
         </div>
@@ -231,7 +214,7 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'adminapp/lib/chart/chart.min.js' %} "></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="{% static 'adminapp/lib/easing/easing.min.js' %} "></script>
     <script src="{% static 'adminapp/lib/waypoints/waypoints.min.js' %} "></script>
     <script src="{% static 'adminapp/lib/owlcarousel/owl.carousel.min.js' %} "></script>
@@ -241,6 +224,7 @@
 
     <!-- Template Javascript -->
     <script src="{% static 'adminapp/js/main.js' %} "></script>
+    <script src="{% static 'userapp/js/admin-algorithm-chart.js' %}"></script>
 
     {% include 'includes/theme-toggle-float.html' %}
     <script src="{% static 'userapp/js/app-theme.js' %}"></script>

@@ -242,11 +242,11 @@ body.user-portal-page[data-theme="dark"] .site-brand .site-logo-mark {
 
 .dashboard-chart-wrap {
   position: relative;
-  height: 240px;
+  height: 260px;
 }
 
 .dashboard-chart-wrap--donut {
-  height: 270px;
+  height: 290px;
 }
 
 .dashboard-chart-wrap--bar-h {
@@ -867,16 +867,21 @@ body.admin-portal-page .content > .navbar.bg-light {
 body.admin-portal-page .admin-page-header {
   width: 100%;
   align-self: stretch;
-  padding: 0.35rem 0 0;
+  padding: 0.65rem 0 0;
   background: transparent;
   border-bottom: none;
+}
+
+body.admin-portal-page .admin-page-header > .container-fluid {
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
 }
 
 body.admin-portal-page .admin-page-header__line {
   display: block;
   width: 100%;
   height: 1px;
-  margin-top: 0.85rem;
+  margin-top: 1rem;
   background: rgba(0, 0, 0, 0.06);
 }
 
@@ -885,6 +890,7 @@ body.admin-portal-page .admin-page-header__inner {
   align-items: flex-end;
   justify-content: space-between;
   gap: 1rem;
+  padding-bottom: 0.15rem;
 }
 
 body.admin-portal-page .admin-page-header__title {
@@ -894,12 +900,14 @@ body.admin-portal-page .admin-page-header__title {
   letter-spacing: -0.01em;
   color: #191c24;
   text-transform: capitalize;
+  line-height: 1.25;
 }
 
 body.admin-portal-page .admin-page-header__subtitle {
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
   color: #6c757d;
   font-size: 0.875rem;
+  line-height: 1.45;
 }
 
 body.admin-portal-page .content > .container-fluid.pt-4 {
@@ -967,5 +975,234 @@ body.admin-portal-page .admin-portal-footer__top:hover {
 
   body.admin-portal-page .admin-portal-footer__legal {
     max-width: 100%;
+  }
+}
+
+/* Admin dashboard algorithm stat cards */
+body.admin-portal-page .admin-algo-stat-section {
+  padding: 1.75rem 1.75rem 2.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+body.admin-portal-page .admin-algo-stat-row {
+  --bs-gutter-x: 1.75rem;
+  --bs-gutter-y: 1.75rem;
+  margin: 0;
+}
+
+body.admin-portal-page .admin-algo-stat-row--three {
+  justify-content: stretch;
+}
+
+body.admin-portal-page .admin-algo-stat-row--three > [class*='col-'] {
+  display: flex;
+}
+
+body.admin-portal-page .admin-algo-stat-card {
+  display: flex;
+  align-items: stretch;
+  gap: 1.15rem;
+  padding: 1.5rem 1.35rem;
+  min-height: 7.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+body.admin-portal-page .admin-algo-stat-card__icon {
+  display: flex;
+  flex: 0 0 3.25rem;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  line-height: 1;
+}
+
+body.admin-portal-page .admin-algo-stat-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+body.admin-portal-page .admin-algo-stat-card__label {
+  display: block;
+  margin: 0;
+  color: #223a66;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+body.admin-portal-page .admin-algo-stat-card__metric {
+  display: block;
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.84rem;
+  line-height: 1.25;
+}
+
+body.admin-portal-page .admin-algo-stat-card__metric strong {
+  color: #223a66;
+  font-weight: 700;
+}
+
+/* Admin appointments panel */
+body.admin-portal-page .admin-appointments-section {
+  padding: 1.5rem 1.75rem 2rem;
+  margin-top: 0;
+}
+
+body.admin-portal-page .admin-appointments-panel {
+  padding: 1.35rem 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+body.admin-portal-page .admin-appointment-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: none;
+}
+
+body.admin-portal-page .admin-appointment-card:last-of-type {
+  margin-bottom: 0 !important;
+}
+
+body.admin-portal-page .admin-appointment-card__title {
+  color: #191c24;
+}
+
+body.admin-portal-page .admin-appointment-form {
+  border-top-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+body.admin-portal-page .admin-appointment-badge {
+  align-self: flex-start;
+}
+
+body.admin-portal-page .admin-appointments-pagination {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Admin algorithm analysis page */
+body.admin-portal-page .admin-algo-analysis-section {
+  padding: 1.5rem 1.75rem 2rem;
+}
+
+body.admin-portal-page .admin-algo-analysis-panel {
+  padding: 1.35rem 1.5rem 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+body.admin-portal-page .admin-algo-analysis-panel__head {
+  margin-bottom: 1.25rem;
+}
+
+body.admin-portal-page .admin-algo-analysis-panel__title {
+  color: #191c24;
+  font-weight: 600;
+}
+
+body.admin-portal-page .admin-algo-analysis-table-wrap {
+  margin-bottom: 1.5rem;
+}
+
+body.admin-portal-page .admin-algo-chart-panel {
+  padding-top: 1.35rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.admin-portal-page .admin-algo-chart-header {
+  margin-bottom: 1rem;
+}
+
+body.admin-portal-page .admin-algo-chart-title {
+  color: #223a66;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+body.admin-portal-page .admin-algo-chart-subtitle {
+  color: #6f8ba4;
+  font-size: 0.82rem;
+}
+
+body.admin-portal-page .admin-algo-chart-wrap {
+  position: relative;
+  height: 380px;
+  padding: 0.25rem 0.15rem 0;
+}
+
+body.admin-portal-page .admin-algo-chart-wrap--dashboard {
+  height: 360px;
+  margin-top: 0.25rem;
+}
+
+body.admin-portal-page .admin-algo-chart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 220px;
+  padding: 2rem 1.25rem;
+  border: 1px dashed rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+body.admin-portal-page .admin-algo-chart-empty i {
+  font-size: 2rem;
+  color: #6f8ba4;
+  margin-bottom: 0.85rem;
+}
+
+body.admin-portal-page .admin-algo-chart-empty p {
+  max-width: 34rem;
+  color: #6f8ba4;
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 575.98px) {
+  body.admin-portal-page .admin-page-header > .container-fluid,
+  body.admin-portal-page .admin-appointments-section,
+  body.admin-portal-page .admin-algo-analysis-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  body.admin-portal-page .admin-appointments-section {
+    padding-top: 1.15rem;
+    padding-bottom: 1.5rem;
+  }
+
+  body.admin-portal-page .admin-appointments-panel {
+    padding: 1.1rem 1rem;
+  }
+
+  body.admin-portal-page .admin-algo-analysis-section {
+    padding-top: 1.15rem;
+    padding-bottom: 1.5rem;
+  }
+
+  body.admin-portal-page .admin-algo-analysis-panel {
+    padding: 1.1rem 1rem;
+  }
+
+  body.admin-portal-page .admin-algo-chart-wrap {
+    height: 320px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.admin-portal-page .admin-algo-stat-section {
+    padding: 1.25rem 1rem 1.75rem;
+  }
+
+  body.admin-portal-page .admin-algo-stat-card {
+    padding: 1.35rem 1.15rem;
   }
 }

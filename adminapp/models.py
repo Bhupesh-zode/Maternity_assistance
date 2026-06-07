@@ -32,5 +32,18 @@ class Algorithms(models.Model):
 
     class Meta:
         db_table='Algorithms_details'
+
+
+class AlgorithmRunCount(models.Model):
+    algo_key = models.CharField(max_length=10, unique=True)
+    algo_name = models.CharField(max_length=100)
+    times_used = models.PositiveIntegerField(default=0)
+    last_run_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'algorithm_run_counts'
+
+    def __str__(self):
+        return f'{self.algo_name} ({self.times_used})'
         
 # Create your models here.

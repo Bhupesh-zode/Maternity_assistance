@@ -62,28 +62,30 @@
                     <a href="{% url 'adminlogin' %}" class="nav-item">Log Out</a>
                 </div>
             </nav>
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light rounded p-4">
-                    <h4 class="mb-4">Appointment requests</h4>
+
+            {% include 'adminapp/includes/admin-page-header.html' with page_heading='Appointment requests' page_subtitle='Review, confirm, or reschedule user booking requests' %}
+
+            <div class="container-fluid admin-appointments-section">
+                <div class="bg-light rounded admin-appointments-panel">
                     {% if appointment_rows %}
                     {% for row in appointment_rows %}
                     {% with a=row.appt u=row.user %}
-                    <div class="card mb-3">
+                    <div class="card mb-3 admin-appointment-card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between flex-wrap mb-2">
                                 <div>
-                                    <h5 class="mb-1">{% if u %}{{ u.name }} ({{ u.email }}){% else %}User #{{ a.user_sno }}{% endif %}</h5>
+                                    <h5 class="mb-1 admin-appointment-card__title">{% if u %}{{ u.name }} ({{ u.email }}){% else %}User #{{ a.user_sno }}{% endif %}</h5>
                                     <span class="text-muted">Requested: {{ a.preferred_date }} at {{ a.preferred_time }}</span>
                                     {% if a.status == 'rescheduled' or a.status == 'confirmed' %}
                                     <br><span class="text-muted">Scheduled: {{ a.display_date }} at {{ a.display_time }}</span>
                                     {% endif %}
                                 </div>
-                                <span class="badge {% if a.status == 'pending' %}bg-warning text-dark{% elif a.status == 'confirmed' %}bg-success{% elif a.status == 'rescheduled' %}bg-info{% elif a.status == 'completed' %}bg-secondary{% else %}bg-danger{% endif %}">{{ a.get_status_display }}</span>
+                                <span class="badge admin-appointment-badge {% if a.status == 'pending' %}bg-warning text-dark{% elif a.status == 'confirmed' %}bg-success{% elif a.status == 'rescheduled' %}bg-info{% elif a.status == 'completed' %}bg-secondary{% else %}bg-danger{% endif %}">{{ a.get_status_display }}</span>
                             </div>
-                            {% if a.notes %}<p class="mb-2"><strong>User notes:</strong> {{ a.notes }}</p>{% endif %}
-                            {% if a.admin_notes %}<p class="mb-2 text-muted"><strong>Admin notes:</strong> {{ a.admin_notes }}</p>{% endif %}
+                            {% if a.notes %}<p class="mb-2 admin-appointment-note"><strong>User notes:</strong> {{ a.notes }}</p>{% endif %}
+                            {% if a.admin_notes %}<p class="mb-2 text-muted admin-appointment-note"><strong>Admin notes:</strong> {{ a.admin_notes }}</p>{% endif %}
                             {% if a.status == 'pending' or a.status == 'rescheduled' %}
-                            <form method="post" action="{% url 'admin_update_appointment' a.id %}" class="border-top pt-3 mt-2">
+                            <form method="post" action="{% url 'admin_update_appointment' a.id %}" class="admin-appointment-form border-top pt-3 mt-2">
                                 {% csrf_token %}
                                 <div class="row g-2 align-items-end">
                                     <div class="col-md-3">
@@ -119,7 +121,7 @@
                     </div>
                     {% endwith %}
                     {% endfor %}
-                    <p class="text-muted small mb-0">Page {{ appointments.number }} of {{ appointments.paginator.num_pages }}</p>
+                    <p class="text-muted small mb-0 admin-appointments-pagination">Page {{ appointments.number }} of {{ appointments.paginator.num_pages }}</p>
                     {% else %}
                     <p class="text-muted mb-0">No appointment requests yet.</p>
                     {% endif %}

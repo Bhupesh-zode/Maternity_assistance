@@ -1,7 +1,7 @@
 from datetime import date
-import json
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from adminapp.models import *
 from mainapp.models import *
 from django.contrib import messages
@@ -56,6 +56,33 @@ def _save_algorithm_metrics(data, prefix, metrics, algo_name):
     setattr(data, f'{prefix}_f1_score', metrics['f1_score'])
     setattr(data, f'{prefix}_algo', algo_name)
     data.save()
+    _record_algorithm_run(prefix, algo_name)
+
+
+def _record_algorithm_run(prefix, algo_name):
+    run_count, _created = AlgorithmRunCount.objects.get_or_create(
+        algo_key=prefix,
+        defaults={'algo_name': algo_name, 'times_used': 0},
+    )
+    run_count.algo_name = algo_name
+    run_count.times_used += 1
+    run_count.last_run_at = timezone.now()
+    run_count.save(update_fields=['algo_name', 'times_used', 'last_run_at'])
+
+
+def _algorithm_stat_cards():
+    counts = {
+        row.algo_key: row.times_used
+        for row in AlgorithmRunCount.objects.all()
+    }
+    return [
+        {
+            'icon': ALGORITHM_STAT_ICONS[prefix],
+            'label': label,
+            'times_used': counts.get(prefix, 0),
+        }
+        for prefix, label in ALGORITHM_METRIC_SPECS
+    ]
 
 
 ALGORITHM_METRIC_SPECS = (
@@ -63,6 +90,12 @@ ALGORITHM_METRIC_SPECS = (
     ('ad', 'Gradient Boost'),
     ('xg', 'XG Boost'),
 )
+
+ALGORITHM_STAT_ICONS = {
+    'lr': 'fa-chart-line',
+    'ad': 'fa-chart-area',
+    'xg': 'fa-chart-bar',
+}
 
 
 def _metric_pct(value):
@@ -111,7 +144,22 @@ def _build_analysis_metrics(data):
 # Create your views here.
 
 def admin_dash(request):
-    return render(request, 'adminapp/admin-dash.html')
+    data = Dataset.objects.order_by('-data_id').first()
+    algorithms = []
+    chart_ready = False
+    dataset_id = None
+
+    if data:
+        algorithms, missing = _build_analysis_metrics(data)
+        chart_ready = not missing
+        dataset_id = data.data_id
+
+    return render(request, 'adminapp/admin-dash.html', {
+        'algorithms': algorithms,
+        'algorithm_stat_cards': _algorithm_stat_cards(),
+        'chart_ready': chart_ready,
+        'dataset_id': dataset_id,
+    })
 
 def allusers(request):
     #
@@ -168,7 +216,6 @@ def analysis(request):
     return render(request, 'adminapp/admin-algocomp.html', {
         'dataset_id': data.data_id,
         'algorithms': algorithms,
-        'chart_data_json': json.dumps(algorithms),
     })
 
 
