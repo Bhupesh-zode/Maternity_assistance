@@ -30,7 +30,7 @@
       {% endif %}
     </div>
     <div class="alerts-fab-panel-footer">
-      <a href="{% url 'user_notifications' %}" class="alerts-fab-view-all">View all alerts</a>
+      {% include 'userapp/includes/alerts-footer-actions.html' %}
     </div>
   </div>
 </div>

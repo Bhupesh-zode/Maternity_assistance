@@ -39,4 +39,12 @@
       closePanel();
     }
   });
+
+  document.querySelectorAll('.alerts-fab-clear-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      if (!window.confirm('Clear all alerts? This cannot be undone.')) {
+        e.preventDefault();
+      }
+    });
+  });
 })();

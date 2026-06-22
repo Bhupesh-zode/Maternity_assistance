@@ -22,6 +22,9 @@
     {% endfor %}
   </div>
 </div>
+<div class="alerts-fab-panel-footer portal-notifications-actions">
+  {% include 'userapp/includes/alerts-footer-actions.html' with show_view_all=False %}
+</div>
 {% else %}
 <div class="portal-panel portal-empty-state">
   <i class="icofont-notification"></i>

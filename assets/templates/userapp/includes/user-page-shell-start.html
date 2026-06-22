@@ -7,7 +7,12 @@
 <body id="top" class="user-portal-page{% if body_class %} {{ body_class }}{% endif %}">
 {% include 'includes/flash-messages.html' %}
 {% include 'userapp/includes/user-header.html' %}
-{% include 'userapp/includes/alerts-fab.html' %}
+<aside class="portal-fab-stack" aria-label="Quick actions">
+  <a href="#top" class="portal-fab portal-fab--scroll backtop js-scroll-trigger" title="Back to top" aria-label="Back to top">
+    <i class="icofont-long-arrow-up" aria-hidden="true"></i>
+  </a>
+  {% include 'userapp/includes/alerts-fab.html' %}
+</aside>
 <section class="page-title bg-2">
   <div class="overlay"></div>
   <div class="container">

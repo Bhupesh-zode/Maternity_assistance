@@ -1,0 +1,10 @@
+{% if show_view_all != False %}
+<a href="{% url 'user_notifications' %}" class="alerts-fab-view-all">View all alerts</a>
+{% endif %}
+{% if has_notifications %}
+<form method="post" action="{% url 'user_clear_notifications' %}" class="alerts-fab-clear-form">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  <button type="submit" class="alerts-fab-clear-all">Clear all alerts</button>
+</form>
+{% endif %}

@@ -119,6 +119,7 @@
   "app_help": {
     "predict": "Go to Predict in the menu, fill in your health details, and submit. The app suggests a delivery mode using our ML model — then use About Predict here for precautions and support tips.",
     "profile": "Open My Profile to update your name, contact details, and photo.",
+    "appointments": "Open Appointments in the menu to request a consultation slot. Choose a date and time; admin will confirm or reschedule. You can cancel pending requests from that page.",
     "register": "New users register on the site; an admin must approve your account before you can log in.",
     "pending": "If login says pending, wait for admin approval or contact support."
   }

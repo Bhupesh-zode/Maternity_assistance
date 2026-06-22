@@ -12,6 +12,7 @@ import pandas as pd
 
 from chatapp.utils import admin_login_required
 from userapp.models import Appointment, PredictionHistory, UserPrediction
+from userapp.appointment_slots import is_slot_booked
 from userapp.prediction_store import FIELD_LABELS, backfill_prediction_history
 from userapp.notifications import notify_user
 from sklearn.model_selection import train_test_split
@@ -371,6 +372,9 @@ def admin_update_appointment(request, appt_id):
             appt.confirmed_date = date.fromisoformat(new_date)
         except ValueError:
             messages.warning(request, 'Invalid date.')
+            return redirect('admin_appointments')
+        if is_slot_booked(appt.confirmed_date, new_time, exclude_id=appt.id):
+            messages.warning(request, 'That time slot is already booked.')
             return redirect('admin_appointments')
         appt.confirmed_time = new_time
         appt.status = Appointment.STATUS_RESCHEDULED

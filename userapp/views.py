@@ -3,6 +3,9 @@ from datetime import date, timedelta
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.http import JsonResponse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -13,8 +16,22 @@ from chatapp.utils import get_logged_in_user, user_login_required
 from mainapp.models import mainModel
 from ml_compat import load_sklearn_pickle
 from userapp.models import Appointment, PredictionHistory, UserNotification
+from userapp.appointment_slots import booked_times_for_date, is_slot_booked
 from userapp.notifications import notify_user
 from userapp.prediction_store import FIELD_LABELS, save_user_prediction
+
+
+def _appointment_slot_is_past(appt_date, preferred_time):
+    """True if the date/time slot is not strictly after now (local timezone)."""
+    today = timezone.localdate()
+    if appt_date < today:
+        return True
+    if appt_date > today:
+        return False
+    now = timezone.localtime()
+    hour, minute = map(int, preferred_time.split(':'))
+    slot_dt = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    return slot_dt <= now
 
 
 
@@ -339,8 +356,12 @@ def user_appointments(request):
             messages.warning(request, 'Invalid date selected.')
             return redirect('user_appointments')
 
-        if appt_date < date.today():
-            messages.warning(request, 'Please choose a future date.')
+        if _appointment_slot_is_past(appt_date, preferred_time):
+            messages.warning(request, 'Please choose a date and time in the future.')
+            return redirect('user_appointments')
+
+        if is_slot_booked(appt_date, preferred_time):
+            messages.warning(request, 'That time slot is already booked. Please choose another.')
             return redirect('user_appointments')
 
         Appointment.objects.create(
@@ -357,6 +378,22 @@ def user_appointments(request):
         'user': user,
         'appointments': appointments,
         'time_slots': Appointment.TIME_SLOTS,
+        'min_appointment_date': timezone.localdate().isoformat(),
+        'booked_slots_url': reverse('user_appointment_booked_slots'),
+    })
+
+
+@user_login_required
+def user_appointment_booked_slots(request):
+    date_str = request.GET.get('date', '').strip()
+    if not date_str:
+        return JsonResponse({'booked': []})
+    try:
+        appt_date = date.fromisoformat(date_str)
+    except ValueError:
+        return JsonResponse({'error': 'Invalid date.'}, status=400)
+    return JsonResponse({
+        'booked': sorted(booked_times_for_date(appt_date)),
     })
 
 
@@ -382,3 +419,19 @@ def user_notifications(request):
         'user': user,
         'notifications': items,
     })
+
+
+@user_login_required
+@require_http_methods(['POST'])
+def user_clear_notifications(request):
+    user = get_logged_in_user(request)
+    UserNotification.objects.filter(user_sno=user.sno).delete()
+    messages.success(request, 'All alerts cleared.')
+    next_url = request.POST.get('next') or reverse('user_dash')
+    if not url_has_allowed_host_and_scheme(
+        next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        next_url = reverse('user_dash')
+    return redirect(next_url)

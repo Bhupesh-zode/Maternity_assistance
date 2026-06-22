@@ -19,6 +19,7 @@ def user_portal(request):
         'alert_preview_notifications': UserNotification.objects.filter(
             user_sno=sno,
         ).order_by('-created_at')[:5],
+        'has_notifications': UserNotification.objects.filter(user_sno=sno).exists(),
     }
 
 

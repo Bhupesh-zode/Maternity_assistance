@@ -317,16 +317,26 @@ body.user-portal-page[data-theme="dark"] .footer-contact-list li i {
   color: #9bb5d8;
 }
 
-html.ma-theme-dark body.user-portal-page .footer-btm .backtop,
-body.user-portal-page[data-theme="dark"] .footer-btm .backtop {
+html.ma-theme-dark body.user-portal-page .portal-fab,
+html.ma-theme-dark body.user-portal-page .portal-fab-stack .portal-fab--scroll.backtop,
+body.user-portal-page[data-theme="dark"] .portal-fab,
+body.user-portal-page[data-theme="dark"] .portal-fab-stack .portal-fab--scroll.backtop {
   background: var(--dash-surface-alt);
   color: var(--dash-text);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
-html.ma-theme-dark body.user-portal-page .footer-btm .backtop:hover,
-body.user-portal-page[data-theme="dark"] .footer-btm .backtop:hover {
+html.ma-theme-dark body.user-portal-page .portal-fab:hover,
+html.ma-theme-dark body.user-portal-page .portal-fab-stack .portal-fab--scroll.backtop:hover,
+body.user-portal-page[data-theme="dark"] .portal-fab:hover,
+body.user-portal-page[data-theme="dark"] .portal-fab-stack .portal-fab--scroll.backtop:hover {
   background: var(--dash-accent);
   color: #fff;
+}
+
+html.ma-theme-dark body.user-portal-page .portal-fab i,
+body.user-portal-page[data-theme="dark"] .portal-fab i {
+  color: inherit;
 }
 
 html.ma-theme-dark body.user-portal-page .footer-btm,
@@ -594,6 +604,24 @@ body.user-portal-page[data-theme="dark"] .text-primary {
 html.ma-theme-dark body.user-portal-page .text-muted,
 body.user-portal-page[data-theme="dark"] .text-muted {
   color: var(--dash-text-muted) !important;
+}
+
+/* Links — override style.css #222 on dark surfaces */
+html.ma-theme-dark body.user-portal-page a:not(.btn):not(.nav-link):not(.site-brand),
+body.user-portal-page[data-theme="dark"] a:not(.btn):not(.nav-link):not(.site-brand) {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.user-portal-page a:not(.btn):not(.nav-link):not(.site-brand):hover,
+html.ma-theme-dark body.user-portal-page a:not(.btn):not(.nav-link):not(.site-brand):focus,
+body.user-portal-page[data-theme="dark"] a:not(.btn):not(.nav-link):not(.site-brand):hover,
+body.user-portal-page[data-theme="dark"] a:not(.btn):not(.nav-link):not(.site-brand):focus {
+  color: var(--dash-accent);
+}
+
+html.ma-theme-dark body.user-portal-page label,
+body.user-portal-page[data-theme="dark"] label {
+  color: var(--dash-text);
 }
 
 html.ma-theme-dark body.user-portal-page .form-control,
@@ -980,4 +1008,29 @@ body.user-portal-page[data-theme="dark"] .alerts-fab-view-all {
 html.ma-theme-dark body.user-portal-page .alerts-fab-view-all:hover,
 body.user-portal-page[data-theme="dark"] .alerts-fab-view-all:hover {
   color: var(--dash-accent);
+}
+
+html.ma-theme-dark body.user-portal-page .alerts-fab-clear-all,
+body.user-portal-page[data-theme="dark"] .alerts-fab-clear-all {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.user-portal-page .alerts-fab-clear-all:hover,
+body.user-portal-page[data-theme="dark"] .alerts-fab-clear-all:hover {
+  color: var(--dash-accent);
+}
+
+html.ma-theme-dark body.user-portal-page .portal-notifications-actions,
+body.user-portal-page[data-theme="dark"] .portal-notifications-actions {
+  border-color: var(--dash-border);
+}
+
+html.ma-theme-dark body.user-portal-page .appointment-slot-hint,
+body.user-portal-page[data-theme="dark"] .appointment-slot-hint {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.user-portal-page .appointment-time-select option.appointment-slot-booked,
+body.user-portal-page[data-theme="dark"] .appointment-time-select option.appointment-slot-booked {
+  color: var(--dash-text-muted);
 }

@@ -4,20 +4,21 @@
   <div class="col-lg-5 mb-4">
     <div class="portal-panel">
       <h5 class="portal-form-section-title mb-3"><i class="icofont-calendar"></i>New request</h5>
-      <form method="post">
+      <form method="post" id="appointmentBookingForm" data-booked-slots-url="{{ booked_slots_url }}">
         {% csrf_token %}
         <div class="form-group">
           <label class="portal-field-label">Preferred date</label>
-          <input type="date" name="preferred_date" class="form-control" required>
+          <input type="date" name="preferred_date" id="preferredDate" class="form-control" required min="{{ min_appointment_date }}">
         </div>
         <div class="form-group">
           <label class="portal-field-label">Preferred time</label>
-          <select name="preferred_time" class="form-control" required>
+          <select name="preferred_time" id="preferredTime" class="form-control appointment-time-select" required>
             <option value="">Select a slot</option>
             {% for val, label in time_slots %}
-            <option value="{{ val }}">{{ label }}</option>
+            <option value="{{ val }}" data-label="{{ label }}">{{ label }}</option>
             {% endfor %}
           </select>
+          <small class="form-text text-muted appointment-slot-hint">Unavailable slots are marked as Booked.</small>
         </div>
         <div class="form-group">
           <label class="portal-field-label">Notes <span class="text-muted font-weight-normal">(optional)</span></label>
@@ -77,5 +78,8 @@
     </div>
   </div>
 </div>
+
+{% load static %}
+<script src="{% static 'userapp/js/user-appointments.js' %}"></script>
 
 {% include 'userapp/includes/user-page-shell-end.html' %}

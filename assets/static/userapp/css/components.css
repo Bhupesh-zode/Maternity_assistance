@@ -546,18 +546,101 @@ body.user-portal-page[data-theme="dark"] .site-brand .site-logo-mark {
   }
 }
 
-/* Floating alerts */
-.alerts-fab {
+/* Floating action buttons (user portal) */
+body.user-portal-page {
+  --portal-fab-size: 52px;
+  --portal-fab-gap: 0.75rem;
+  --portal-fab-inset-x: 1.25rem;
+  --portal-fab-inset-bottom: 1.75rem;
+}
+
+.portal-fab-stack {
   position: fixed;
-  right: 1.25rem;
-  bottom: 1.75rem;
+  right: var(--portal-fab-inset-x);
+  bottom: var(--portal-fab-inset-bottom);
   z-index: 1040;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+}
+
+.portal-fab-stack .alerts-fab {
+  position: static;
+  right: auto;
+  bottom: auto;
+}
+
+.portal-fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--portal-fab-size);
+  height: var(--portal-fab-size);
+  border: none;
+  border-radius: 50%;
+  background: #223a66;
+  color: #fff;
+  font-size: 1.35rem;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(34, 58, 102, 0.35);
+  transition: opacity 0.3s ease, transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.portal-fab:hover {
+  background: #e12454;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(225, 36, 84, 0.35);
+  text-decoration: none;
+}
+
+.portal-fab i {
+  color: #fff;
+  font-size: 1.35rem;
+}
+
+/* Scroll-up lives in the stack; override legacy fixed .backtop from style.css */
+body.user-portal-page .portal-fab-stack .portal-fab--scroll.backtop {
+  position: static !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: var(--portal-fab-size) !important;
+  height: var(--portal-fab-size) !important;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  z-index: auto;
+  overflow: hidden;
+  transition: opacity 0.3s ease, transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, max-height 0.3s ease, margin 0.3s ease;
+}
+
+body.user-portal-page .portal-fab-stack .portal-fab--scroll.backtop:not(.reveal) {
+  max-height: 0;
+  height: 0 !important;
+  margin: 0;
+  box-shadow: none;
+}
+
+body.user-portal-page .portal-fab-stack .portal-fab--scroll.backtop.reveal {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  max-height: var(--portal-fab-size);
+  height: var(--portal-fab-size) !important;
+  margin-bottom: var(--portal-fab-gap);
+}
+
+body.user-portal-page .footer-btm .backtop {
+  display: none !important;
 }
 
 .alerts-fab-btn {
   position: relative;
-  width: 52px;
-  height: 52px;
+  width: var(--portal-fab-size, 52px);
+  height: var(--portal-fab-size, 52px);
   border: none;
   border-radius: 50%;
   background: #223a66;
@@ -694,13 +777,18 @@ body.user-portal-page[data-theme="dark"] .site-brand .site-logo-mark {
 }
 
 .alerts-fab-panel-footer {
-  padding: 0.65rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  padding: 0.75rem 1rem;
   border-top: 1px solid rgba(34, 58, 102, 0.08);
   text-align: center;
   background: #fafbfc;
 }
 
 .alerts-fab-view-all {
+  display: block;
   color: #223a66;
   font-size: 0.82rem;
   font-weight: 600;
@@ -712,10 +800,54 @@ body.user-portal-page[data-theme="dark"] .site-brand .site-logo-mark {
   text-decoration: none;
 }
 
+.alerts-fab-clear-form {
+  width: 100%;
+  margin: 0;
+}
+
+.alerts-fab-clear-all {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #6f8ba4;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.2s ease;
+}
+
+.alerts-fab-clear-all:hover {
+  color: #e12454;
+}
+
+.portal-notifications-actions {
+  border-radius: 12px;
+  border: 1px solid rgba(34, 58, 102, 0.1);
+  margin-top: 1rem;
+}
+
+.appointment-slot-hint {
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+}
+
+.appointment-time-select option.appointment-slot-booked {
+  color: #6f8ba4;
+  font-style: italic;
+}
+
+.appointment-time-select option:disabled {
+  color: #9aa8b8;
+}
+
 @media (max-width: 575.98px) {
-  .alerts-fab {
-    right: 1rem;
-    bottom: 1.25rem;
+  body.user-portal-page {
+    --portal-fab-inset-x: 1rem;
+    --portal-fab-inset-bottom: 1.25rem;
   }
 
   .alerts-fab-panel {
@@ -850,6 +982,10 @@ body.admin-portal-page a.back-to-top.btn-lg-square {
   color: #223a66;
   font-size: 0.9rem;
   transition: background 0.2s ease, color 0.2s ease;
+}
+
+body.user-portal-page .footer-btm .backtop {
+  display: none !important;
 }
 
 .footer-btm .backtop:hover {

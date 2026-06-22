@@ -123,6 +123,83 @@ body.public-portal-page[data-theme="dark"] label {
   color: var(--dash-text);
 }
 
+/* Links & body copy — override style.css #222 on dark surfaces */
+html.ma-theme-dark body.public-portal-page a:not(.btn):not(.nav-link):not(.btn-main):not(.btn-main-2):not(.site-brand),
+body.public-portal-page[data-theme="dark"] a:not(.btn):not(.nav-link):not(.btn-main):not(.btn-main-2):not(.site-brand) {
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.public-portal-page a:not(.btn):not(.nav-link):not(.btn-main):not(.btn-main-2):not(.site-brand):hover,
+html.ma-theme-dark body.public-portal-page a:not(.btn):not(.nav-link):not(.btn-main):not(.btn-main-2):not(.site-brand):focus,
+body.public-portal-page[data-theme="dark"] a:not(.btn):not(.nav-link):not(.btn-main):not(.btn-main-2):not(.site-brand):hover,
+body.public-portal-page[data-theme="dark"] a:not(.btn):not(.nav-link):not(.btn-main):not(.btn-main-2):not(.site-brand):focus {
+  color: var(--dash-accent);
+}
+
+html.ma-theme-dark body.public-portal-page .card p,
+html.ma-theme-dark body.public-portal-page .form p,
+html.ma-theme-dark body.public-portal-page .section p,
+body.public-portal-page[data-theme="dark"] .card p,
+body.public-portal-page[data-theme="dark"] .form p,
+body.public-portal-page[data-theme="dark"] .section p {
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.public-portal-page .title-color,
+html.ma-theme-dark body.public-portal-page .section-title h2,
+html.ma-theme-dark body.public-portal-page .text-md,
+html.ma-theme-dark body.public-portal-page .doctor-details h2,
+html.ma-theme-dark body.public-portal-page .about-block-item h4,
+html.ma-theme-dark body.public-portal-page .contact-block h5,
+body.public-portal-page[data-theme="dark"] .title-color,
+body.public-portal-page[data-theme="dark"] .section-title h2,
+body.public-portal-page[data-theme="dark"] .text-md,
+body.public-portal-page[data-theme="dark"] .doctor-details h2,
+body.public-portal-page[data-theme="dark"] .about-block-item h4,
+body.public-portal-page[data-theme="dark"] .contact-block h5 {
+  color: var(--dash-text) !important;
+}
+
+html.ma-theme-dark body.public-portal-page .contact-block,
+body.public-portal-page[data-theme="dark"] .contact-block {
+  background: var(--dash-surface);
+  border-color: var(--dash-border);
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.public-portal-page .doctor-single,
+html.ma-theme-dark body.public-portal-page .about-page,
+html.ma-theme-dark body.public-portal-page .feature-page,
+html.ma-theme-dark body.public-portal-page .contact-info,
+html.ma-theme-dark body.public-portal-page .contact-form-wrap,
+body.public-portal-page[data-theme="dark"] .doctor-single,
+body.public-portal-page[data-theme="dark"] .about-page,
+body.public-portal-page[data-theme="dark"] .feature-page,
+body.public-portal-page[data-theme="dark"] .contact-info,
+body.public-portal-page[data-theme="dark"] .contact-form-wrap {
+  background: var(--dash-bg);
+  color: var(--dash-text-muted);
+}
+
+html.ma-theme-dark body.public-portal-page select.form-control,
+html.ma-theme-dark body.public-portal-page .custom-select,
+body.public-portal-page[data-theme="dark"] select.form-control,
+body.public-portal-page[data-theme="dark"] .custom-select {
+  background: var(--dash-surface-alt);
+  border-color: var(--dash-border);
+  color: var(--dash-text);
+}
+
+html.ma-theme-dark body.public-portal-page .form-control::placeholder,
+body.public-portal-page[data-theme="dark"] .form-control::placeholder {
+  color: rgba(154, 173, 192, 0.65);
+}
+
+html.ma-theme-dark body.public-portal-page .form-label,
+body.public-portal-page[data-theme="dark"] .form-label {
+  color: var(--dash-text);
+}
+
 html.ma-theme-dark body.public-portal-page .btn-main,
 body.public-portal-page[data-theme="dark"] .btn-main {
   background: #3d5a80;
